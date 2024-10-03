@@ -13,14 +13,15 @@ class LoginView extends StatefulWidget {
 
 class _LoginViewState extends State<LoginView> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
   bool _obscurePassword = true;
 
+  String? _errorMessage;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+      backgroundColor: const Color.fromARGB(255, 66, 161, 238),
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -41,13 +42,16 @@ class _LoginViewState extends State<LoginView> {
               inputForm(
                 (value) {
                   if (value == null || value.isEmpty) {
-                    return "Please enter username.";
+                    return "Please enter email.";
+                  }
+                  if (!value.contains('@')) {
+                      return 'Email Must Contain @';
                   }
                   return null;
                 },
-                controller: _usernameController,
-                hintTxt: "Username",
-                helperTxt: "Enter your username",
+                controller: emailController,
+                hintTxt: "Email",
+                helperTxt: "Enter your email",
                 iconData: Icons.person_outline,
               ),
               const SizedBox(height: 10),
@@ -62,7 +66,7 @@ class _LoginViewState extends State<LoginView> {
                       }
                       return null;
                     },
-                    controller: _passwordController,
+                    controller: passwordController,
                     obscureText: _obscurePassword,
                     decoration: InputDecoration(
                       hintText: "Password",
@@ -83,6 +87,14 @@ class _LoginViewState extends State<LoginView> {
                   ),
                 ),
               ),
+              if (_errorMessage != null)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Text(
+                    _errorMessage!,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                ),
               const SizedBox(height: 60),
               Column(
                 children: [
@@ -95,14 +107,35 @@ class _LoginViewState extends State<LoginView> {
                     ),
                     onPressed: () {
                       if (_formKey.currentState?.validate() ?? false) {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return const HomeView();
-                            },
-                          ),
-                        );
+                        if (widget.data == null) {
+                          setState(() {
+                            _errorMessage = "Email not registered!";
+                          });
+                        } else {
+                          String email = widget.data?['email'];
+                          String password = widget.data?['password'];
+
+                          if (emailController.text == email) {
+                            if (passwordController.text == password) {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return const HomeView();
+                                  },
+                                ),
+                              );
+                            } else {
+                              setState(() {
+                                _errorMessage = "Password is incorrect!";
+                              });
+                            }
+                          } else {
+                            setState(() {
+                              _errorMessage = "Email not registered!";
+                            });
+                          }
+                        }
                       }
                     },
                     child: const Text("Login"),
@@ -136,3 +169,4 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 }
+
