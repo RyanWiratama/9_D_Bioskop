@@ -13,6 +13,11 @@ class _HomeViewState extends State<HomeView> {
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
+
+
+  int _selectedIndex = 0;
+
+  void _onItemTapped(int index){
     setState(() {
       _selectedIndex = index;
     });
@@ -24,6 +29,14 @@ class _HomeViewState extends State<HomeView> {
     ),
     ListNamaView(), 
     ProfileView(),  
+      child: Image(image: NetworkImage(''))
+    ),
+    // PageListView();
+    Center(
+      child: Text(
+        'Index 3: Profile',
+      )
+    )
   ];
 
   @override
@@ -40,5 +53,38 @@ class _HomeViewState extends State<HomeView> {
       ),
       body: _widgetOptions.elementAt(_selectedIndex),
     );
+  }
+}
+      appBar: AppBar(
+        title: const Text('Atmacinema'),
+        centerTitle: true,
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.person),
+            onPressed: () {},
+          ),
+        ],
+
+      ),
+      backgroundColor: const Color.fromARGB(255, 19, 36, 66),
+      bottomNavigationBar: BottomNavigationBar(
+      items: const[
+         BottomNavigationBarItem(icon: Icon(Icons.home,),label: 'Home'),
+         BottomNavigationBarItem(icon: Icon(Icons.movie,),label: 'Ticket'),
+         BottomNavigationBarItem(icon: Icon(Icons.restaurant,),label: 'FnB'),
+      ],
+    ),
+         BottomNavigationBarItem(icon: Icon(Icons.movie,),label: 'List'),
+         BottomNavigationBarItem(icon: Icon(Icons.person,),label: 'Profile'),
+      ],
+      currentIndex: _selectedIndex,
+      onTap: _onItemTapped,
+    ),
+    body: _widgetOptions.elementAt(_selectedIndex),
+
+    );
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
   }
 }
