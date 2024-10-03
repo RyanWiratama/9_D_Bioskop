@@ -19,10 +19,12 @@ class _RegisterViewState extends State<RegisterView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+      backgroundColor: const Color.fromARGB(255, 66, 161, 238),
       appBar: AppBar(
         title: const Text('Register'),
         backgroundColor: Colors.transparent,
+        iconTheme: const IconThemeData(color: Colors.black),
+        titleTextStyle: const TextStyle(color: Colors.black, fontSize: 20),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -44,7 +46,10 @@ class _RegisterViewState extends State<RegisterView> {
               children: [
                 const Text(
                   'Username',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
                 ),
                 inputForm(
                   (p0) {
@@ -61,7 +66,10 @@ class _RegisterViewState extends State<RegisterView> {
                 const SizedBox(height: 16),
                 const Text(
                   'Email',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
                 ),
                 inputForm(
                   (p0) {
@@ -81,7 +89,10 @@ class _RegisterViewState extends State<RegisterView> {
                 const SizedBox(height: 16),
                 const Text(
                   'Password',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
                 ),
                 inputForm(
                   (p0) {
@@ -94,7 +105,10 @@ class _RegisterViewState extends State<RegisterView> {
                     if (!RegExp(r'[A-Z]').hasMatch(p0)) {
                       return 'Password must contain at least one uppercase letter!';
                     }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
                     if (!RegExp(r'[0-9]').hasMatch(p0)) {
                       return 'Password must contain at least one number!';
                     }
@@ -109,7 +123,10 @@ class _RegisterViewState extends State<RegisterView> {
                 const SizedBox(height: 16),
                 const Text(
                   'Phone Number',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
                 ),
                 inputForm(
                   (p0) {
@@ -117,7 +134,11 @@ class _RegisterViewState extends State<RegisterView> {
                       return 'Required Phone Number!';
                     }
                     if (!RegExp(r'^[0-9]+$').hasMatch(p0)) {
+<<<<<<< Updated upstream
                       return 'Phone Number must contain only digits!';
+=======
+                      return 'Phone number must contain only digits!';
+>>>>>>> Stashed changes
                     }
                     return null;
                   },
@@ -133,7 +154,7 @@ class _RegisterViewState extends State<RegisterView> {
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         Map<String, dynamic> formData = {};
-                        formData['username'] = usernameController.text;
+                        formData['email'] = emailController.text;
                         formData['password'] = passwordController.text;
 
                         Navigator.push(
@@ -170,7 +191,7 @@ class _RegisterViewState extends State<RegisterView> {
                       child: Text(
                         'Sign up with',
                         style: TextStyle(
-                          color: Colors.black45,
+                          color: Colors.black,
                         ),
                       ),
                     ),
@@ -187,11 +208,13 @@ class _RegisterViewState extends State<RegisterView> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     IconButton(
-                      icon: const Icon(Icons.g_mobiledata, size: 40),
+                      icon: const Icon(Icons.g_mobiledata,
+                          size: 40, color: Colors.black),
                       onPressed: () {},
                     ),
                     IconButton(
-                      icon: const Icon(Icons.facebook, size: 40),
+                      icon: const Icon(Icons.facebook,
+                          size: 40, color: Colors.black),
                       onPressed: () {},
                     ),
                   ],
@@ -204,8 +227,11 @@ class _RegisterViewState extends State<RegisterView> {
     );
   }
 }
+<<<<<<< Updated upstream
 
 @override
 Widget build(BuildContext context) {
   return const Placeholder();
 }
+=======
+>>>>>>> Stashed changes
