@@ -10,7 +10,6 @@ class RegisterView extends StatefulWidget {
 }
 
 class _RegisterViewState extends State<RegisterView> {
-
   final _formKey = GlobalKey<FormState>();
   TextEditingController usernameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -205,8 +204,8 @@ class _RegisterViewState extends State<RegisterView> {
     );
   }
 }
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
+
+@override
+Widget build(BuildContext context) {
+  return const Placeholder();
 }
