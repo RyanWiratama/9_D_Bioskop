@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tubes_pbp_9/View/view_list.dart';
+import 'package:tubes_pbp_9/View/profile_view.dart'; 
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -8,6 +10,9 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
+  int _selectedIndex = 0;
+
+  void _onItemTapped(int index) {
 
 
   int _selectedIndex = 0;
@@ -20,6 +25,10 @@ class _HomeViewState extends State<HomeView> {
 
   static const List<Widget> _widgetOptions = <Widget>[
     Center(
+      child: Image(image: NetworkImage('https://picsum.photos/200/300')),
+    ),
+    ListNamaView(), 
+    ProfileView(),  
       child: Image(image: NetworkImage(''))
     ),
     // PageListView();
@@ -33,6 +42,19 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.list), label: 'List'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+      ),
+      body: _widgetOptions.elementAt(_selectedIndex),
+    );
+  }
+}
       appBar: AppBar(
         title: const Text('Atmacinema'),
         centerTitle: true,
