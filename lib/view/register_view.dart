@@ -202,7 +202,15 @@ class _RegisterViewState extends State<RegisterView> {
     );
   }
 }
+
+
+@override
+Widget build(BuildContext context) {
+  return const Placeholder();
+}
+
   @override
   Widget build(BuildContext context) {
     return const Placeholder();
   }
+

@@ -13,8 +13,11 @@ class MainApp extends StatelessWidget {
     return const MaterialApp(
       home: Scaffold(
         body: Center(
+
+          child: Text('Jean-220712030'),
           child: Text('Radit-220711620'),
           child: Text('Ryan - 220711897'),
+
         ),
       ),
       home: LoginView(),

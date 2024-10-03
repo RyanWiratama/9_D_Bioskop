@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+
+import 'package:tubes_pbp_9/view/list_view.dart';
+import 'package:tubes_pbp_9/view/view_list.dart';
 import 'package:tubes_pbp_9/View/view_list.dart';
 import 'package:tubes_pbp_9/View/profile_view.dart'; 
 
@@ -11,6 +14,10 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   int _selectedIndex = 0;
+  late List<Widget> _widgetOptions;
+
+  void _onItemTapped(int index) {
+
 
   void _onItemTapped(int index) {
 
@@ -22,6 +29,17 @@ class _HomeViewState extends State<HomeView> {
       _selectedIndex = index;
     });
   }
+
+
+  @override
+  Widget build(BuildContext context) {
+    _widgetOptions = <Widget>[
+      ListPageView(),
+    ];
+  static const List<Widget> _widgetOptions = <Widget>[
+    ListPageView(),
+    ListPageView(),
+    ListPageView(),
 
   static const List<Widget> _widgetOptions = <Widget>[
     Center(
@@ -41,16 +59,51 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Atmacinema'),
+        centerTitle: true,
+      ),
+      backgroundColor: const Color.fromARGB(255, 19, 36, 66),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.home,
+              ),
+              label: 'Home'),
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.movie,
+              ),
+              label: 'List'),
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.person,
+              ),
+              label: 'Profile'),
+
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.list), label: 'List'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
       ),
+
+      body: _widgetOptions.elementAt(_selectedIndex),
+
+      body: _widgetOptions[_selectedIndex],
+
+    );
+  }
+}
+
       body: _widgetOptions.elementAt(_selectedIndex),
     );
   }
@@ -88,3 +141,4 @@ class _HomeViewState extends State<HomeView> {
     return const Placeholder();
   }
 }
+
