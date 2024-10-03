@@ -1,0 +1,141 @@
+import 'package:flutter/material.dart';
+import 'package:tubes_pbp_9/view/home_view.dart';
+import 'package:tubes_pbp_9/view/register_view.dart';
+import 'package:tubes_pbp_9/component/form_component.dart';
+
+class LoginView extends StatefulWidget {
+  final Map? data;
+  const LoginView({super.key, this.data});
+
+  @override
+  State<LoginView> createState() => _LoginViewState();
+}
+
+class _LoginViewState extends State<LoginView> {
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _obscurePassword = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+      body: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(30.0),
+          child: Column(
+            children: [
+              const SizedBox(height: 150),
+              Text(
+                "Welcome back",
+                style: Theme.of(context).textTheme.headlineLarge,
+              ),
+              const SizedBox(height: 10),
+              Text(
+                "Login to your account",
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              const SizedBox(height: 60),
+              inputForm(
+                (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter username.";
+                  }
+                  return null;
+                },
+                controller: _usernameController,
+                hintTxt: "Username",
+                helperTxt: "Enter your username",
+                iconData: Icons.person_outline,
+              ),
+              const SizedBox(height: 10),
+              Padding(
+                padding: const EdgeInsets.only(left: 20, top: 10),
+                child: SizedBox(
+                  width: 350,
+                  child: TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please enter password.";
+                      }
+                      return null;
+                    },
+                    controller: _passwordController,
+                    obscureText: _obscurePassword,
+                    decoration: InputDecoration(
+                      hintText: "Password",
+                      border: const OutlineInputBorder(),
+                      helperText: "Enter your password",
+                      prefixIcon: const Icon(Icons.password_outlined),
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _obscurePassword = !_obscurePassword;
+                          });
+                        },
+                        icon: _obscurePassword
+                            ? const Icon(Icons.visibility_outlined)
+                            : const Icon(Icons.visibility_off_outlined),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 60),
+              Column(
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size.fromHeight(50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                    onPressed: () {
+                      if (_formKey.currentState?.validate() ?? false) {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return const HomeView();
+                            },
+                          ),
+                        );
+                      }
+                    },
+                    child: const Text("Login"),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text("Don't have an account?"),
+                      TextButton(
+                        onPressed: () {
+                          _formKey.currentState?.reset();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return const RegisterView();
+                              },
+                            ),
+                          );
+                        },
+                        child: const Text("Register"),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+
