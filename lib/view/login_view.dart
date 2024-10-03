@@ -4,7 +4,7 @@ import 'package:tubes_pbp_9/view/register_view.dart';
 import 'package:tubes_pbp_9/component/form_component.dart';
 
 class LoginView extends StatefulWidget {
-  final Map? data;
+  final Map? data; // Data dari RegisterView
   const LoginView({super.key, this.data});
 
   @override
@@ -20,6 +20,7 @@ class _LoginViewState extends State<LoginView> {
   String? _errorMessage;
   @override
   Widget build(BuildContext context) {
+    Map? dataForm = widget.data;
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 66, 161, 238),
       body: Form(
@@ -106,7 +107,65 @@ class _LoginViewState extends State<LoginView> {
                       ),
                     ),
                     onPressed: () {
+
+                      if (_formKey.currentState!.validate()) {
+                        if (dataForm!['username'] == _usernameController.text &&
+                            dataForm['password'] == _passwordController.text) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => const HomeView()));
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (_) => AlertDialog(
+                              title: const Text('Password Salah'),
+                              content: TextButton(
+                                  onPressed: () => pushRegister(context),
+                                  child: const Text('Daftar Disini !!')),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(context, 'Cancel'),
+                                  child: const Text('Cancel'),
+                                ),
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context, 'OK'),
+                                  child: const Text('OK'),
+                                ),
+                              ],
+                            ),
+                          );
                       if (_formKey.currentState?.validate() ?? false) {
+                        // Validasi apakah data register tersedia
+                        if (widget.data == null) {
+                          // Jika data dari register kosong
+                          setState(() {
+                            _errorMessage =
+                                "You must register before logging in!";
+                          });
+                        } else {
+                          // Cek apakah username dan password cocok
+                          String username = widget.data?['username'];
+                          String password = widget.data?['password'];
+
+                          if (_usernameController.text == username &&
+                              _passwordController.text == password) {
+                            // Jika login berhasil
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return const HomeView();
+                                },
+                              ),
+                            );
+                          } else {
+                            // Jika username atau password salah
+                            setState(() {
+                              _errorMessage = "Invalid username or password!";
+                            });
+                          }
                         if (widget.data == null) {
                           setState(() {
                             _errorMessage = "Email not registered!";
@@ -138,7 +197,7 @@ class _LoginViewState extends State<LoginView> {
                         }
                       }
                     },
-                    child: const Text("Login"),
+                    child: const Text('Login'),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -165,6 +224,15 @@ class _LoginViewState extends State<LoginView> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  void pushRegister(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => const RegisterView(),
       ),
     );
   }
