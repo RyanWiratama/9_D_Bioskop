@@ -4,7 +4,7 @@ import 'package:tubes_pbp_9/view/register_view.dart';
 import 'package:tubes_pbp_9/component/form_component.dart';
 
 class LoginView extends StatefulWidget {
-  final Map? data;
+  final Map? data; // Data dari RegisterView
   const LoginView({super.key, this.data});
 
   @override
@@ -16,6 +16,8 @@ class _LoginViewState extends State<LoginView> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _obscurePassword = true;
+
+  String? _errorMessage; // Variabel untuk menyimpan pesan error
 
   @override
   Widget build(BuildContext context) {
@@ -84,6 +86,14 @@ class _LoginViewState extends State<LoginView> {
                   ),
                 ),
               ),
+              if (_errorMessage != null) // Tampilkan error message jika ada
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Text(
+                    _errorMessage!,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                ),
               const SizedBox(height: 60),
               Column(
                 children: [
@@ -95,6 +105,7 @@ class _LoginViewState extends State<LoginView> {
                       ),
                     ),
                     onPressed: () {
+<<<<<<< Updated upstream
                       if (_formKey.currentState!.validate()) {
                         if (dataForm!['username'] == _usernameController.text &&
                             dataForm['password'] == _passwordController.text) {
@@ -123,6 +134,38 @@ class _LoginViewState extends State<LoginView> {
                               ],
                             ),
                           );
+=======
+                      if (_formKey.currentState?.validate() ?? false) {
+                        // Validasi apakah data register tersedia
+                        if (widget.data == null) {
+                          // Jika data dari register kosong
+                          setState(() {
+                            _errorMessage =
+                                "You must register before logging in!";
+                          });
+                        } else {
+                          // Cek apakah username dan password cocok
+                          String username = widget.data?['username'];
+                          String password = widget.data?['password'];
+
+                          if (_usernameController.text == username &&
+                              _passwordController.text == password) {
+                            // Jika login berhasil
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return const HomeView();
+                                },
+                              ),
+                            );
+                          } else {
+                            // Jika username atau password salah
+                            setState(() {
+                              _errorMessage = "Invalid username or password!";
+                            });
+                          }
+>>>>>>> Stashed changes
                         }
                       }
                     },
