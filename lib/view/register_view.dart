@@ -105,10 +105,6 @@ class _RegisterViewState extends State<RegisterView> {
                     if (!RegExp(r'[A-Z]').hasMatch(p0)) {
                       return 'Password must contain at least one uppercase letter!';
                     }
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
                     if (!RegExp(r'[0-9]').hasMatch(p0)) {
                       return 'Password must contain at least one number!';
                     }
@@ -134,11 +130,7 @@ class _RegisterViewState extends State<RegisterView> {
                       return 'Required Phone Number!';
                     }
                     if (!RegExp(r'^[0-9]+$').hasMatch(p0)) {
-<<<<<<< Updated upstream
                       return 'Phone Number must contain only digits!';
-=======
-                      return 'Phone number must contain only digits!';
->>>>>>> Stashed changes
                     }
                     return null;
                   },
@@ -227,11 +219,3 @@ class _RegisterViewState extends State<RegisterView> {
     );
   }
 }
-<<<<<<< Updated upstream
-
-@override
-Widget build(BuildContext context) {
-  return const Placeholder();
-}
-=======
->>>>>>> Stashed changes
