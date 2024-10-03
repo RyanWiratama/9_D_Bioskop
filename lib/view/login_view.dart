@@ -19,6 +19,7 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
+    Map? dataForm = widget.data;
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primaryContainer,
       body: Form(
@@ -94,18 +95,38 @@ class _LoginViewState extends State<LoginView> {
                       ),
                     ),
                     onPressed: () {
-                      if (_formKey.currentState?.validate() ?? false) {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return const HomeView();
-                            },
-                          ),
-                        );
+                      if (_formKey.currentState!.validate()) {
+                        if (dataForm!['username'] == _usernameController.text &&
+                            dataForm['password'] == _passwordController.text) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => const HomeView()));
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (_) => AlertDialog(
+                              title: const Text('Password Salah'),
+                              content: TextButton(
+                                  onPressed: () => pushRegister(context),
+                                  child: const Text('Daftar Disini !!')),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(context, 'Cancel'),
+                                  child: const Text('Cancel'),
+                                ),
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context, 'OK'),
+                                  child: const Text('OK'),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
                       }
                     },
-                    child: const Text("Login"),
+                    child: const Text('Login'),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -135,7 +156,13 @@ class _LoginViewState extends State<LoginView> {
       ),
     );
   }
+
+  void pushRegister(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => const RegisterView(),
+      ),
+    );
+  }
 }
-
-
-

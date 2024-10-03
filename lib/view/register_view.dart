@@ -94,7 +94,7 @@ class _RegisterViewState extends State<RegisterView> {
                     if (!RegExp(r'[A-Z]').hasMatch(p0)) {
                       return 'Password must contain at least one uppercase letter!';
                     }
-                    // Cek jika tidak mengandung angka
+
                     if (!RegExp(r'[0-9]').hasMatch(p0)) {
                       return 'Password must contain at least one number!';
                     }
@@ -115,6 +115,9 @@ class _RegisterViewState extends State<RegisterView> {
                   (p0) {
                     if (p0 == null || p0.isEmpty) {
                       return 'Required Phone Number!';
+                    }
+                    if (!RegExp(r'^[0-9]+$').hasMatch(p0)) {
+                      return 'Phone Number must contain only digits!';
                     }
                     return null;
                   },
