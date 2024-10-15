@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tubes_pbp_9/view/home_view.dart';
 import 'package:tubes_pbp_9/view/register_view.dart';
-import 'package:tubes_pbp_9/component/form_component.dart';
+import 'package:tubes_pbp_9/view/home_view.dart';
 
 class LoginView extends StatefulWidget {
   final Map? data;
@@ -16,237 +15,215 @@ class _LoginViewState extends State<LoginView> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool _obscurePassword = true;
-
   String? _errorMessage;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFF0D1E3A), Color(0xFF1E375C)], // Background gradient
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(30.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 100),
-                Text(
-                  "Sign in to your Account",
-                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  "Sign in to your Account",
-                  style: TextStyle(
-                    color: Colors.grey[300],
-                    fontSize: 16,
-                  ),
-                ),
-                const SizedBox(height: 40),
-                inputForm(
-                  (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Please enter email.";
-                    }
-                    if (!value.contains('@')) {
-                      return 'Email must contain @';
-                    }
-                    return null;
-                  },
-                  controller: emailController,
-                  hintTxt: "Email",
-                  helperTxt: "",
-                  iconData: Icons.email_outlined,
-                ),
-                const SizedBox(height: 20),
-                TextFormField(
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Please enter password.";
-                    }
-                    return null;
-                  },
-                  controller: passwordController,
-                  obscureText: _obscurePassword,
-                  decoration: InputDecoration(
-                    hintText: "Password",
-                    border: const OutlineInputBorder(),
-                    prefixIcon: const Icon(Icons.lock_outline),
-                    suffixIcon: IconButton(
-                      onPressed: () {
-                        setState(() {
-                          _obscurePassword = !_obscurePassword;
-                        });
-                      },
-                      icon: _obscurePassword
-                          ? const Icon(Icons.visibility_outlined)
-                          : const Icon(Icons.visibility_off_outlined),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () {
-<<<<<<< Updated upstream
-                      if (_formKey.currentState?.validate() ?? false) {
-                        if (widget.data == null) {
-                          setState(() {
-                            _errorMessage = "Email not registered!";
-                          });
-                        } else {
-                          String email = widget.data?['email'];
-                          String password = widget.data?['password'];
-
-                          if (emailController.text == email) {
-                            if (passwordController.text == password) {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return const HomeView();
-                                  },
-                                ),
-                              );
-                            } else {
-                              setState(() {
-                                _errorMessage = "Password is incorrect!";
-                              });
-                            }
-                          } else {
-                            setState(() {
-                              _errorMessage = "Email not registered!";
-                            });
-                          }
-                        }
-                      }
-                    },
-                    child: const Text("Login"),
-=======
-                      // Forgot password logic goes here
-                    },
-                    child: const Text(
-                      "Forgot Password?",
-                      style: TextStyle(color: Color(0xFF6FCE4E)),
-                    ),
->>>>>>> Stashed changes
-                  ),
-                ),
-                if (_errorMessage != null)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: Text(
-                      _errorMessage!,
-                      style: const TextStyle(color: Colors.red),
-                    ),
-                  ),
-                const SizedBox(height: 40),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF6FCE4E),
-                    minimumSize: const Size.fromHeight(50),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  onPressed: () {
-                    if (_formKey.currentState?.validate() ?? false) {
-                      if (widget.data == null) {
-                        setState(() {
-                          _errorMessage = "Email not registered!";
-                        });
-                      } else {
-                        String email = widget.data?['email'];
-                        String password = widget.data?['password'];
-
-                        if (emailController.text == email &&
-                            passwordController.text == password) {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) {
-                                return const HomeView();
-                              },
-                            ),
-                          );
-                        } else {
-                          setState(() {
-                            _errorMessage = "Invalid username or password!";
-                          });
-                        }
-                      }
-                    }
-                  },
-                  child: const Text("Login"),
-                ),
-                const SizedBox(height: 20),
-                const Text(
-                  "Or login with",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.grey),
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        // Google login logic
-                      },
-                      icon: const Image(
-                        image: AssetImage('assets/google_icon.png'),
-                        height: 40,
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                    IconButton(
-                      onPressed: () {
-                        // Facebook login logic
-                      },
-                      icon: const Image(
-                        image: AssetImage('assets/facebook_icon.png'),
-                        height: 40,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      "Don't have an account?",
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const RegisterView(),
-                          ),
-                        );
-                      },
-                      child: const Text("Register"),
-                    ),
-                  ],
-                ),
-              ],
+      backgroundColor: const Color(0xFF7B2C27),
+      body: Stack(
+        children: [
+          // Upper red part of the background
+          Container(
+            height: MediaQuery.of(context).size.height * 0.27,
+            color: const Color(0xFF7B2C27), // Warna marun untuk header
+            child: const Center(
+              child: Icon(
+                Icons.movie, // Ikon rol film
+                size: 80,
+                color: Colors.white,
+              ),
             ),
           ),
-        ),
+          // Beige container for the form
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.73,
+              decoration: const BoxDecoration(
+                color: Color(0xFFE8D5BE), // Beige color
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(50),
+                ),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 50),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Welcome Back!",
+                      style: TextStyle(
+                        fontSize: 40,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    const Text(
+                      "New movie is waiting for you!",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.black54,
+                      ),
+                    ),
+                    const SizedBox(height: 40),
+                    // Email field
+                    TextFormField(
+                      controller: emailController,
+                      decoration: InputDecoration(
+                        hintText: "email@gmail.com",
+                        labelText: "Email",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your email.';
+                        }
+                        if (!value.contains('@')) {
+                          return 'Email must contain @.';
+                        }
+                        return null; // Valid
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    // Password field
+                    TextFormField(
+                      controller: passwordController,
+                      obscureText: _obscurePassword,
+                      decoration: InputDecoration(
+                        labelText: "Password",
+                        hintText: "********",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscurePassword
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscurePassword = !_obscurePassword;
+                            });
+                          },
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your password.';
+                        }
+                        return null; // Valid
+                      },
+                    ),
+                    const SizedBox(height: 30),
+                    // Sign In Button
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              const Color(0xFF7B2C27), // Maroon color
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                        onPressed: () {
+                          if (_formKey.currentState?.validate() ?? false) {
+                            if (widget.data == null) {
+                              setState(() {
+                                _errorMessage = "Email not registered!";
+                              });
+                            } else {
+                              String email = widget.data?['email'];
+                              String password = widget.data?['password'];
+
+                              if (emailController.text == email &&
+                                  passwordController.text == password) {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return const HomeView();
+                                    },
+                                  ),
+                                );
+                              } else {
+                                setState(() {
+                                  _errorMessage =
+                                      "Invalid username or password!";
+                                });
+                              }
+                            }
+                          }
+                        },
+                        child: const Text(
+                          "Sign In",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    // Tampilkan pesan kesalahan
+                    if (_errorMessage != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: Text(
+                          _errorMessage!,
+                          style: const TextStyle(color: Colors.red),
+                        ),
+                      ),
+                    const SizedBox(height: 20),
+                    // Register link
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          "Don't have any account?",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.black54,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const RegisterView(),
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            "Sign Up",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
