@@ -22,6 +22,7 @@ class _RegisterViewState extends State<RegisterView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       backgroundColor: const Color(0xFF7B2C27),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -64,6 +65,152 @@ class _RegisterViewState extends State<RegisterView> {
                   color: Color(0xFFE8D5BE),
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(50),
+
+      backgroundColor: const Color.fromARGB(255, 66, 161, 238),
+      appBar: AppBar(
+        title: const Text('Register'),
+        backgroundColor: Colors.transparent,
+        iconTheme: const IconThemeData(color: Colors.black),
+        titleTextStyle: const TextStyle(color: Colors.black, fontSize: 20),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const LoginView()),
+            );
+          },
+        ),
+      ),
+      resizeToAvoidBottomInset: true,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Username',
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
+                ),
+                inputForm(
+                  (p0) {
+                    if (p0 == null || p0.isEmpty) {
+                      return 'Required Username!';
+                    }
+                    return null;
+                  },
+                  controller: usernameController,
+                  hintTxt: "Username",
+                  helperTxt: "Enter Username",
+                  iconData: Icons.person,
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Email',
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
+                ),
+                inputForm(
+                  (p0) {
+                    if (p0 == null || p0.isEmpty) {
+                      return 'Required Email!';
+                    }
+                    if (!p0.contains('@')) {
+                      return 'Email Must Contain @';
+                    }
+                    return null;
+                  },
+                  controller: emailController,
+                  hintTxt: "Email",
+                  helperTxt: "Enter Email Adresses",
+                  iconData: Icons.email,
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Password',
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
+                ),
+                inputForm(
+                  (p0) {
+                    if (p0 == null || p0.isEmpty) {
+                      return 'Required Password!';
+                    }
+                    if (p0.length < 8) {
+                      return 'Required 8 digits Password!';
+                    }
+                    if (!RegExp(r'[A-Z]').hasMatch(p0)) {
+                      return 'Password must contain at least one uppercase letter!';
+                    }
+                    if (!RegExp(r'[0-9]').hasMatch(p0)) {
+                      return 'Password must contain at least one number!';
+                    }
+                    return null;
+                  },
+                  controller: passwordController,
+                  hintTxt: "Password",
+                  helperTxt: "Enter Password",
+                  iconData: Icons.password,
+                  password: true,
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Phone Number',
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
+                ),
+                inputForm(
+                  (p0) {
+                    if (p0 == null || p0.isEmpty) {
+                      return 'Required Phone Number!';
+                    }
+                    if (!RegExp(r'^[0-9]+$').hasMatch(p0)) {
+                      return 'Phone Number must contain only digits!';
+                    }
+                    return null;
+                  },
+                  controller: notelpController,
+                  hintTxt: "Phone Number",
+                  helperTxt: "Enter Phone Number",
+                  iconData: Icons.phone_android,
+                ),
+                const SizedBox(height: 32),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        Map<String, dynamic> formData = {};
+                        formData['email'] = emailController.text;
+                        formData['password'] = passwordController.text;
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => LoginView(
+                              data: formData,
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                    child: const Text(
+                      'Register',
+                      style: TextStyle(fontSize: 18),
+                    ),
+
                   ),
                 ),
                 padding: const EdgeInsets.all(24.0),
@@ -122,6 +269,7 @@ class _RegisterViewState extends State<RegisterView> {
                           const Text('I agree to the terms and conditions'),
                         ],
                       ),
+
                       // Conditional Error Message
                       if (isAttemptedToSignUp && !isAgreed)
                         const Padding(
@@ -175,6 +323,12 @@ class _RegisterViewState extends State<RegisterView> {
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white),
                           ),
+
+                      child: Text(
+                        'Sign up with',
+                        style: TextStyle(
+                          color: Colors.black,
+
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -204,8 +358,29 @@ class _RegisterViewState extends State<RegisterView> {
                           ),
                         ],
                       ),
+
                     ],
                   ),
+
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.g_mobiledata,
+                          size: 40, color: Colors.black),
+                      onPressed: () {},
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.facebook,
+                          size: 40, color: Colors.black),
+                      onPressed: () {},
+                    ),
+                  ],
+
                 ),
               ),
             ],
