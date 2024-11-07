@@ -22,6 +22,7 @@ class _LoginViewState extends State<LoginView> {
   Widget build(BuildContext context) {
     Map? dataForm = widget.data;
     return Scaffold(
+<<<<<<< Updated upstream
       backgroundColor: const Color.fromARGB(255, 66, 161, 238),
       body: Form(
         key: _formKey,
@@ -86,6 +87,32 @@ class _LoginViewState extends State<LoginView> {
                       ),
                     ),
                   ),
+=======
+      backgroundColor: const Color(0xFF384357),
+      body: Stack(
+        children: [
+          // Upper red part of the background
+          Container(
+            height: MediaQuery.of(context).size.height * 0.27,
+            color: const Color(0xFF384357), // Warna marun untuk header
+            child: const Center(
+              child: Icon(
+                Icons.movie, // Ikon rol film
+                size: 80,
+                color: Colors.white,
+              ),
+            ),
+          ),
+          // Beige container for the form
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.73,
+              decoration: const BoxDecoration(
+                color: Color.fromARGB(255, 255, 255, 255), // Beige color
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(50),
+>>>>>>> Stashed changes
                 ),
               ),
               if (_errorMessage != null)
@@ -106,7 +133,96 @@ class _LoginViewState extends State<LoginView> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),
+<<<<<<< Updated upstream
                     onPressed: () {
+=======
+                    const SizedBox(height: 10),
+                    const Text(
+                      "New movie is waiting for you!",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.black54,
+                      ),
+                    ),
+                    const SizedBox(height: 40),
+                    // Email field
+                    TextFormField(
+                      controller: emailController,
+                      decoration: InputDecoration(
+                        hintText: "email@gmail.com",
+                        labelText: "Email",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your email.';
+                        }
+                        if (!value.contains('@')) {
+                          return 'Email must contain @.';
+                        }
+                        return null; // Valid
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    // Password field
+                    TextFormField(
+                      controller: passwordController,
+                      obscureText: _obscurePassword,
+                      decoration: InputDecoration(
+                        labelText: "Password",
+                        hintText: "********",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscurePassword
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscurePassword = !_obscurePassword;
+                            });
+                          },
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your password.';
+                        }
+                        return null; // Valid
+                      },
+                    ),
+                    const SizedBox(height: 30),
+                    // Sign In Button
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              const Color(0xFF384357), // Maroon color
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                        onPressed: () {
+                          if (_formKey.currentState?.validate() ?? false) {
+                            if (widget.data == null) {
+                              setState(() {
+                                _errorMessage = "Email not registered!";
+                              });
+                            } else {
+                              String email = widget.data?['email'];
+                              String password = widget.data?['password'];
+>>>>>>> Stashed changes
 
                       if (_formKey.currentState!.validate()) {
                         if (dataForm!['username'] == _usernameController.text &&
@@ -160,6 +276,7 @@ class _LoginViewState extends State<LoginView> {
                                 },
                               ),
                             );
+<<<<<<< Updated upstream
                           } else {
                             // Jika username atau password salah
                             setState(() {
@@ -212,6 +329,16 @@ class _LoginViewState extends State<LoginView> {
                               builder: (context) {
                                 return const RegisterView();
                               },
+=======
+                          },
+                          child: const Text(
+                            "Sign Up",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue,
+                              decoration: TextDecoration.underline,
+>>>>>>> Stashed changes
                             ),
                           );
                         },
