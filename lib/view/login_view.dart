@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:tubes_pbp_9/view/home_view.dart';
 import 'package:tubes_pbp_9/view/register_view.dart';
-import 'package:tubes_pbp_9/component/form_component.dart';
+import 'package:tubes_pbp_9/view/home_view.dart';
 
 class LoginView extends StatefulWidget {
-  final Map? data; // Data dari RegisterView
+  final Map? data;
   const LoginView({super.key, this.data});
 
   @override
@@ -16,13 +15,11 @@ class _LoginViewState extends State<LoginView> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool _obscurePassword = true;
-
   String? _errorMessage;
+
   @override
   Widget build(BuildContext context) {
-    Map? dataForm = widget.data;
     return Scaffold(
-<<<<<<< Updated upstream
       backgroundColor: const Color.fromARGB(255, 66, 161, 238),
       body: Form(
         key: _formKey,
@@ -34,60 +31,47 @@ class _LoginViewState extends State<LoginView> {
               Text(
                 "Welcome back",
                 style: Theme.of(context).textTheme.headlineLarge,
+      backgroundColor: const Color(0xFF7B2C27),
+      body: Stack(
+        children: [
+          // Upper red part of the background
+          Container(
+            height: MediaQuery.of(context).size.height * 0.27,
+            color: const Color(0xFF7B2C27), // Warna marun untuk header
+            child: const Center(
+              child: Icon(
+                Icons.movie, // Ikon rol film
+                size: 80,
+                color: Colors.white,
               ),
-              const SizedBox(height: 10),
-              Text(
-                "Login to your account",
-                style: Theme.of(context).textTheme.bodyMedium,
+            ),
+          ),
+          // Beige container for the form
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.73,
+              decoration: const BoxDecoration(
+                color: Color(0xFFE8D5BE), // Beige color
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(50),
+                ),
               ),
-              const SizedBox(height: 60),
-              inputForm(
-                (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please enter email.";
-                  }
-                  if (!value.contains('@')) {
-                      return 'Email Must Contain @';
-                  }
-                  return null;
-                },
-                controller: emailController,
-                hintTxt: "Email",
-                helperTxt: "Enter your email",
-                iconData: Icons.person_outline,
-              ),
-              const SizedBox(height: 10),
-              Padding(
-                padding: const EdgeInsets.only(left: 20, top: 10),
-                child: SizedBox(
-                  width: 350,
-                  child: TextFormField(
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Please enter password.";
-                      }
-                      return null;
-                    },
-                    controller: passwordController,
-                    obscureText: _obscurePassword,
-                    decoration: InputDecoration(
-                      hintText: "Password",
-                      border: const OutlineInputBorder(),
-                      helperText: "Enter your password",
-                      prefixIcon: const Icon(Icons.password_outlined),
-                      suffixIcon: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            _obscurePassword = !_obscurePassword;
-                          });
-                        },
-                        icon: _obscurePassword
-                            ? const Icon(Icons.visibility_outlined)
-                            : const Icon(Icons.visibility_off_outlined),
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 50),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Welcome Back!",
+                      style: TextStyle(
+                        fontSize: 40,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
                       ),
                     ),
                   ),
-=======
       backgroundColor: const Color(0xFF384357),
       body: Stack(
         children: [
@@ -112,7 +96,6 @@ class _LoginViewState extends State<LoginView> {
                 color: Color.fromARGB(255, 255, 255, 255), // Beige color
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(50),
->>>>>>> Stashed changes
                 ),
               ),
               if (_errorMessage != null)
@@ -133,9 +116,15 @@ class _LoginViewState extends State<LoginView> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),
-<<<<<<< Updated upstream
                     onPressed: () {
-=======
+                    const SizedBox(height: 10),
+                    const Text(
+                      "New movie is waiting for you!",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.black54,
+                      ),
+                    ),
                     const SizedBox(height: 10),
                     const Text(
                       "New movie is waiting for you!",
@@ -222,8 +211,6 @@ class _LoginViewState extends State<LoginView> {
                             } else {
                               String email = widget.data?['email'];
                               String password = widget.data?['password'];
->>>>>>> Stashed changes
-
                       if (_formKey.currentState!.validate()) {
                         if (dataForm!['username'] == _usernameController.text &&
                             dataForm['password'] == _passwordController.text) {
@@ -276,40 +263,61 @@ class _LoginViewState extends State<LoginView> {
                                 },
                               ),
                             );
-<<<<<<< Updated upstream
                           } else {
                             // Jika username atau password salah
                             setState(() {
-                              _errorMessage = "Invalid username or password!";
+                              _obscurePassword = !_obscurePassword;
                             });
-                          }
-                        if (widget.data == null) {
-                          setState(() {
-                            _errorMessage = "Email not registered!";
-                          });
-                        } else {
-                          String email = widget.data?['email'];
-                          String password = widget.data?['password'];
-
-                          if (emailController.text == email) {
-                            if (passwordController.text == password) {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return const HomeView();
-                                  },
-                                ),
-                              );
-                            } else {
+                          },
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your password.';
+                        }
+                        return null; // Valid
+                      },
+                    ),
+                    const SizedBox(height: 30),
+                    // Sign In Button
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              const Color(0xFF7B2C27), // Maroon color
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                        onPressed: () {
+                          if (_formKey.currentState?.validate() ?? false) {
+                            if (widget.data == null) {
                               setState(() {
-                                _errorMessage = "Password is incorrect!";
+                                _errorMessage = "Email not registered!";
                               });
+                            } else {
+                              String email = widget.data?['email'];
+                              String password = widget.data?['password'];
+
+                              if (emailController.text == email &&
+                                  passwordController.text == password) {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return const HomeView();
+                                    },
+                                  ),
+                                );
+                              } else {
+                                setState(() {
+                                  _errorMessage =
+                                      "Invalid username or password!";
+                                });
+                              }
                             }
-                          } else {
-                            setState(() {
-                              _errorMessage = "Email not registered!";
-                            });
                           }
                         }
                       }
@@ -329,7 +337,6 @@ class _LoginViewState extends State<LoginView> {
                               builder: (context) {
                                 return const RegisterView();
                               },
-=======
                           },
                           child: const Text(
                             "Sign Up",
@@ -338,30 +345,68 @@ class _LoginViewState extends State<LoginView> {
                               fontWeight: FontWeight.bold,
                               color: Colors.blue,
                               decoration: TextDecoration.underline,
->>>>>>> Stashed changes
                             ),
                           );
                         },
-                        child: const Text("Register"),
+                        child: const Text(
+                          "Sign In",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
-                    ],
-                  ),
-                ],
+                    ),
+                    // Tampilkan pesan kesalahan
+                    if (_errorMessage != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: Text(
+                          _errorMessage!,
+                          style: const TextStyle(color: Colors.red),
+                        ),
+                      ),
+                    const SizedBox(height: 20),
+                    // Register link
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          "Don't have any account?",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.black54,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const RegisterView(),
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            "Sign Up",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ],
+            ),
           ),
-        ),
-      ),
-    );
-  }
-
-  void pushRegister(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => const RegisterView(),
+        ],
       ),
     );
   }
 }
-
