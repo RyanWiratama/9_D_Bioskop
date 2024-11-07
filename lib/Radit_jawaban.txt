@@ -1,4 +1,0 @@
-Apa susahnya modul Git dan Github?
-
-Modul Git dan GitHub lumayan asing bagi saya pemula, terutama karena baru mengenal Git dan GitHub. Tapi untuk modul ini saya cukup memahami sedikit cara menggunakan Git dan Github.
-Namun, dengan latihan dan pemahaman bertahap, Git dan GitHub menjadi lebih mudah dan sangat bermanfaat untuk kolaborasi proyek serta pengelolaan kode.
