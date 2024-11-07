@@ -22,6 +22,7 @@ class _RegisterViewState extends State<RegisterView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+<<<<<<< Updated upstream
       backgroundColor: const Color.fromARGB(255, 66, 161, 238),
       appBar: AppBar(
         title: const Text('Register'),
@@ -40,12 +41,15 @@ class _RegisterViewState extends State<RegisterView> {
       ),
       resizeToAvoidBottomInset: true,
       backgroundColor: const Color(0xFF7B2C27),
+=======
+      backgroundColor: const Color(0xFF384357),
+>>>>>>> Stashed changes
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [
               Container(
-                color: const Color(0xFF7B2C27), // Maroon color for the header
+                color: const Color(0xFF384357), // Maroon color for the header
                 child: Padding(
                   padding:
                       const EdgeInsets.all(16.0), // Add padding to the header
@@ -78,7 +82,7 @@ class _RegisterViewState extends State<RegisterView> {
               ),
               Container(
                 decoration: const BoxDecoration(
-                  color: Color(0xFFE8D5BE),
+                  color: Colors.white,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(50),
                   ),
@@ -210,7 +214,7 @@ class _RegisterViewState extends State<RegisterView> {
                             }
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF7B2C27),
+                            backgroundColor: const Color(0xFF384357),
                             padding: const EdgeInsets.symmetric(vertical: 16),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
@@ -244,7 +248,7 @@ class _RegisterViewState extends State<RegisterView> {
                             child: const Text(
                               "Sign In",
                               style: TextStyle(
-                                color: Colors.black,
+                                color: Colors.blue,
                                 fontWeight: FontWeight.bold,
                                 decoration: TextDecoration.underline,
                               ),
