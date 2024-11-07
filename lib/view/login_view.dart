@@ -20,6 +20,7 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+<<<<<<< Updated upstream
       backgroundColor: const Color.fromARGB(255, 66, 161, 238),
       body: Form(
         key: _formKey,
@@ -32,12 +33,15 @@ class _LoginViewState extends State<LoginView> {
                 "Welcome back",
                 style: Theme.of(context).textTheme.headlineLarge,
       backgroundColor: const Color(0xFF7B2C27),
+=======
+      backgroundColor: const Color(0xFF384357),
+>>>>>>> Stashed changes
       body: Stack(
         children: [
           // Upper red part of the background
           Container(
             height: MediaQuery.of(context).size.height * 0.27,
-            color: const Color(0xFF7B2C27), // Warna marun untuk header
+            color: const Color(0xFF384357), // Warna marun untuk header
             child: const Center(
               child: Icon(
                 Icons.movie, // Ikon rol film
@@ -52,7 +56,7 @@ class _LoginViewState extends State<LoginView> {
             child: Container(
               height: MediaQuery.of(context).size.height * 0.73,
               decoration: const BoxDecoration(
-                color: Color(0xFFE8D5BE), // Beige color
+                color: Colors.white, // Beige color
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(50),
                 ),
@@ -198,6 +202,7 @@ class _LoginViewState extends State<LoginView> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
                               const Color(0xFF384357), // Maroon color
+<<<<<<< Updated upstream
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
@@ -287,6 +292,8 @@ class _LoginViewState extends State<LoginView> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
                               const Color(0xFF7B2C27), // Maroon color
+=======
+>>>>>>> Stashed changes
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
@@ -393,7 +400,7 @@ class _LoginViewState extends State<LoginView> {
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
-                              color: Colors.black,
+                              color: Colors.blue,
                               decoration: TextDecoration.underline,
                             ),
                           ),
