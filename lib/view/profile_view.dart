@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:tubes_pbp_9/view/list_view.dart';
 import 'package:tubes_pbp_9/view/fnb_view.dart';
 import 'package:tubes_pbp_9/view/home_view.dart';
+import 'package:tubes_pbp_9/view/history_profile_view.dart'; 
+import 'package:tubes_pbp_9/view/edit_profile_view.dart';
+import 'package:tubes_pbp_9/view/settings_profile_view.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({super.key});
@@ -42,21 +45,13 @@ class _ProfileViewState extends State<ProfileView> {
       backgroundColor: const Color(0xFF384357),
       appBar: AppBar(
         centerTitle: true,
-        title: Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: const [
-              Text(
-                'Cineatma',
-                style: TextStyle(
-                  fontFamily: 'Poppins',
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24,
-                ),
-              ),
-            ],
+        title: const Text(
+          'Cineatma',
+          style: TextStyle(
+            fontFamily: 'Poppins',
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 24,
           ),
         ),
         backgroundColor: const Color(0xFF384357),
@@ -76,25 +71,24 @@ class _ProfileViewState extends State<ProfileView> {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 10), // Padding from AppBar
+              const SizedBox(height: 20),
               const Text(
-                'Profile', // New Text widget for Profile
+                'Profile',
                 style: TextStyle(
                   fontFamily: 'Poppins',
-                  color: Colors.white,
+                  fontSize: 26,
                   fontWeight: FontWeight.bold,
-                  fontSize: 24,
+                  color: Colors.white,
                 ),
               ),
-              const SizedBox(height: 20), // Margin between "Profile" and other elements
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    width: 120, // Increased size of the profile picture
-                    height: 120, // Increased size of the profile picture
+                    width: 120,
+                    height: 120,
                     decoration: BoxDecoration(
                       color: Colors.grey.shade400,
                       borderRadius: BorderRadius.circular(20),
@@ -107,6 +101,7 @@ class _ProfileViewState extends State<ProfileView> {
                       Text(
                         'Hi! Ryan',
                         style: TextStyle(
+                          fontFamily: 'Poppins',
                           fontSize: 18,
                           color: Colors.white,
                         ),
@@ -114,6 +109,7 @@ class _ProfileViewState extends State<ProfileView> {
                       Text(
                         'Welcome',
                         style: TextStyle(
+                          fontFamily: 'Poppins',
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
@@ -132,21 +128,13 @@ class _ProfileViewState extends State<ProfileView> {
               const Spacer(),
               ElevatedButton.icon(
                 onPressed: () {},
-                icon: Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(Icons.arrow_back, color: Colors.red, size: 18),
-                ),
+                icon: const Icon(Icons.arrow_back, color: Colors.white),
                 label: const Text(
                   'Logout',
                   style: TextStyle(color: Colors.white),
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,
-                  minimumSize: const Size.fromHeight(50),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                   ),
@@ -157,37 +145,28 @@ class _ProfileViewState extends State<ProfileView> {
           ),
         ),
       ),
-      bottomNavigationBar: Container(
-        margin: const EdgeInsets.only(bottom: 16.0),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(20.0)),
-        ),
-        child: BottomNavigationBar(
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home, color: Colors.grey),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.movie, color: Colors.grey),
-              label: 'Movies',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.fastfood, color: Colors.grey),
-              label: 'FnB',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person, color: Colors.grey),
-              label: 'Profile',
-            ),
-          ],
-          currentIndex: _selectedIndex,
-          selectedItemColor: Colors.black,
-          unselectedItemColor: Colors.grey,
-          backgroundColor: Colors.transparent,
-          onTap: _onItemTapped,
-        ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home, color: _selectedIndex == 0 ? Colors.black : Colors.grey),
+            label: _selectedIndex == 0 ? 'Home' : '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.movie, color: _selectedIndex == 1 ? Colors.black : Colors.grey),
+            label: _selectedIndex == 1 ? 'Movies' : '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.fastfood, color: _selectedIndex == 2 ? Colors.black : Colors.grey),
+            label: _selectedIndex == 2 ? 'FnB' : '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person, color: _selectedIndex == 3 ? Colors.black : Colors.grey),
+            label: _selectedIndex == 3 ? 'Profile' : '',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
       ),
     );
   }
@@ -202,10 +181,27 @@ class _ProfileViewState extends State<ProfileView> {
         leading: Icon(icon, color: Colors.white),
         title: Text(
           title,
-          style: const TextStyle(color: Colors.white, fontSize: 18),
+          style: const TextStyle(color: Colors.white, fontSize: 18, fontFamily: 'Poppins'),
         ),
         trailing: const Icon(Icons.arrow_forward_ios, color: Colors.white),
-        onTap: () {},
+        onTap: () {
+          if (title == 'Edit profile') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const EditProfileView()),
+            );
+          } else if (title == 'History') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const HistoryView()),
+            );
+          } else if (title == 'Settings') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const SettingsProfileView()),
+            );
+          }
+        },
       ),
     );
   }
