@@ -39,19 +39,23 @@ class _HomeViewState extends State<HomeView> {
 
   static const List<Map<String, String>> nowPlayingMovies = [
     {
-      'image': 'https://m.media-amazon.com/images/M/MV5BNWY1NjFmNDItZDhmOC00NjI1LWE0ZDItMTM0MjBjZThiOTQ2XkEyXkFqcGc@.V1.jpg',
+      'image':
+          'https://m.media-amazon.com/images/M/MV5BNWY1NjFmNDItZDhmOC00NjI1LWE0ZDItMTM0MjBjZThiOTQ2XkEyXkFqcGc@.V1.jpg',
       'title': 'Captain America: The Winter Soldier',
     },
     {
-      'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHDuMTc7OO-1HfPZIinsCLxY9rwcQiR-cvVg&s',
+      'image':
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHDuMTc7OO-1HfPZIinsCLxY9rwcQiR-cvVg&s',
       'title': 'Interstellar',
     },
     {
-      'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRD-f-DREjOJg-aJUG4CwOJQlRDNuIpFhiCiA&s',
+      'image':
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRD-f-DREjOJg-aJUG4CwOJQlRDNuIpFhiCiA&s',
       'title': 'Dune',
     },
     {
-      'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxhs43qHULjieIhZVbT2OmDafk6ke6nf_mvQ&s',
+      'image':
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxhs43qHULjieIhZVbT2OmDafk6ke6nf_mvQ&s',
       'title': 'Parasite',
     },
   ];
@@ -199,7 +203,8 @@ class _HomeViewState extends State<HomeView> {
                                 color: Colors.grey,
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
-                              child: const Center(child: Text('Image not available')),
+                              child: const Center(
+                                  child: Text('Image not available')),
                             );
                           },
                         ),
