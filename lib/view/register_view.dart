@@ -22,46 +22,43 @@ class _RegisterViewState extends State<RegisterView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF7B2C27),
+      backgroundColor: const Color(0xFF384357),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [
+              // Header Section
               Container(
-                color: const Color(0xFF7B2C27), // Maroon color for the header
-                child: Padding(
-                  padding:
-                      const EdgeInsets.all(16.0), // Add padding to the header
-                  child: Row(
-                    children: [
-                      // Back button
-                      IconButton(
-                        icon: const Icon(Icons.arrow_back, color: Colors.white),
-                        onPressed: () {
-                          // Navigate to LoginView
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const LoginView()),
-                          );
-                        },
+                color: const Color(0xFF384357),
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back, color: Colors.white),
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const LoginView()),
+                        );
+                      },
+                    ),
+                    const SizedBox(width: 16),
+                    const Text(
+                      "Back",
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
                       ),
-                      const SizedBox(width: 16),
-                      const Text(
-                        "Back",
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
+              // Form Section
               Container(
                 decoration: const BoxDecoration(
-                  color: Color(0xFFE8D5BE),
+                  color: Colors.white,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(50),
                   ),
@@ -70,12 +67,11 @@ class _RegisterViewState extends State<RegisterView> {
                 child: Form(
                   key: _formKey,
                   child: Column(
-                    crossAxisAlignment:
-                        CrossAxisAlignment.start, // Align to start
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Header Texts
+                      // Header Text
                       const Padding(
-                        padding: EdgeInsets.only(top: 16.0, left: 24.0),
+                        padding: EdgeInsets.only(bottom: 24.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -96,7 +92,7 @@ class _RegisterViewState extends State<RegisterView> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 24),
+                      // Input Fields
                       inputField("First Name", firstNameController),
                       const SizedBox(height: 16),
                       inputField("Last Name", lastNameController),
@@ -109,6 +105,7 @@ class _RegisterViewState extends State<RegisterView> {
                       inputField("Confirm Password", confirmPasswordController,
                           isConfirmPassword: true),
                       const SizedBox(height: 16),
+                      // Terms & Conditions
                       Row(
                         children: [
                           Checkbox(
@@ -122,7 +119,6 @@ class _RegisterViewState extends State<RegisterView> {
                           const Text('I agree to the terms and conditions'),
                         ],
                       ),
-                      // Conditional Error Message
                       if (isAttemptedToSignUp && !isAgreed)
                         const Padding(
                           padding: EdgeInsets.only(left: 8),
@@ -132,6 +128,7 @@ class _RegisterViewState extends State<RegisterView> {
                           ),
                         ),
                       const SizedBox(height: 24),
+                      // Sign Up Button
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
@@ -162,7 +159,7 @@ class _RegisterViewState extends State<RegisterView> {
                             }
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF7B2C27),
+                            backgroundColor: const Color(0xFF384357),
                             padding: const EdgeInsets.symmetric(vertical: 16),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
@@ -178,6 +175,7 @@ class _RegisterViewState extends State<RegisterView> {
                         ),
                       ),
                       const SizedBox(height: 16),
+                      // Sign In Link
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -196,7 +194,7 @@ class _RegisterViewState extends State<RegisterView> {
                             child: const Text(
                               "Sign In",
                               style: TextStyle(
-                                color: Colors.black,
+                                color: Colors.blue,
                                 fontWeight: FontWeight.bold,
                                 decoration: TextDecoration.underline,
                               ),
@@ -215,7 +213,7 @@ class _RegisterViewState extends State<RegisterView> {
     );
   }
 
-  // Helper function for TextFormField with validations for email and password
+  // Input Field Helper
   Widget inputField(String label, TextEditingController controller,
       {bool isPassword = false,
       bool email = false,
@@ -243,15 +241,12 @@ class _RegisterViewState extends State<RegisterView> {
             hintStyle: const TextStyle(color: Colors.black45),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Colors.black),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Colors.black),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Colors.black),
             ),
             contentPadding:
                 const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -263,13 +258,11 @@ class _RegisterViewState extends State<RegisterView> {
             if (email && !value.contains('@')) {
               return 'Please enter a valid email address';
             }
-            if (isPassword) {
-              if (!RegExp(r'(?=.*[A-Z])').hasMatch(value)) {
-                return 'Password must contain at least one uppercase letter';
-              }
-              if (!RegExp(r'(?=.*[!@#\$&*~])').hasMatch(value)) {
-                return 'Password must contain at least one special character (!@#\$&*~)';
-              }
+            if (isPassword && !RegExp(r'(?=.*[A-Z])').hasMatch(value)) {
+              return 'Password must contain at least one uppercase letter';
+            }
+            if (isPassword && !RegExp(r'(?=.*[!@#\$&*~])').hasMatch(value)) {
+              return 'Password must contain at least one special character (!@#\$&*~)';
             }
             if (isConfirmPassword && value != passwordController.text) {
               return 'Confirm Password must match the Password';

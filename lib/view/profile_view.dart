@@ -1,87 +1,208 @@
-// import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:tubes_pbp_9/view/list_view.dart';
+import 'package:tubes_pbp_9/view/fnb_view.dart';
+import 'package:tubes_pbp_9/view/home_view.dart';
+import 'package:tubes_pbp_9/view/history_profile_view.dart'; 
+import 'package:tubes_pbp_9/view/edit_profile_view.dart';
+import 'package:tubes_pbp_9/view/settings_profile_view.dart';
 
-// class ProfileView extends StatelessWidget {
-//   const ProfileView({super.key});
+class ProfileView extends StatefulWidget {
+  const ProfileView({super.key});
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text(
-//           'Cinema Profile',
-//           style: TextStyle(color: Colors.black),
-//         ),
-//         backgroundColor: Colors.white,
-//         iconTheme: const IconThemeData(color: Colors.white),
-//       ),
-//       backgroundColor: const Color.fromARGB(255, 19, 36, 66),
-//       body: Padding(
-//         padding: const EdgeInsets.all(16.0),
-//         child: Column(
-//           children: [
-//             Container(
-//               width: double.infinity,
-//               height: 200,
-//               decoration: BoxDecoration(
-//                 image: const DecorationImage(
-//                   image: NetworkImage(
-//                       'https://image.tmdb.org/t/p/w500/6KErczPBROQty7QoIsaa6wJYXZi.jpg'),
-//                   fit: BoxFit.cover,
-//                 ),
-//                 borderRadius: BorderRadius.circular(16),
-//               ),
-//             ),
-//             const SizedBox(height: 20),
-//             Text(
-//               'Christophorus Raditya',
-//               style: TextStyle(
-//                 fontSize: 28,
-//                 fontWeight: FontWeight.bold,
-//                 color: Colors.white,
-//               ),
-//             ),
-//             const SizedBox(height: 10),
-//             const Text(
-//               'Super Hero Fan and Movie Enthusiast',
-//               textAlign: TextAlign.center,
-//               style: TextStyle(
-//                 fontSize: 18,
-//                 color: Colors.white,
-//               ),
-//             ),
-//             const SizedBox(height: 30),
-//             Row(
-//               mainAxisAlignment: MainAxisAlignment.spaceAround,
-//               children: const [
-//                 Column(
-//                   children: [
-//                     Icon(Icons.movie, size: 30, color: Colors.white),
-//                     SizedBox(height: 5),
-//                     Text('Watched', style: TextStyle(color: Colors.white)),
-//                     Text('50', style: TextStyle(color: Colors.white)),
-//                   ],
-//                 ),
-//                 Column(
-//                   children: [
-//                     Icon(Icons.favorite, size: 30, color: Colors.white),
-//                     SizedBox(height: 5),
-//                     Text('Favorites', style: TextStyle(color: Colors.white)),
-//                     Text('15', style: TextStyle(color: Colors.white)),
-//                   ],
-//                 ),
-//                 Column(
-//                   children: [
-//                     Icon(Icons.star, size: 30, color: Colors.white),
-//                     SizedBox(height: 5),
-//                     Text('Ratings', style: TextStyle(color: Colors.white)),
-//                     Text('90', style: TextStyle(color: Colors.white)),
-//                   ],
-//                 ),
-//               ],
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
+  @override
+  State<ProfileView> createState() => _ProfileViewState();
+}
+
+class _ProfileViewState extends State<ProfileView> {
+  int _selectedIndex = 3;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    if (index == 0) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeView()),
+      );
+    } else if (index == 1) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const ListPageView()),
+      );
+    } else if (index == 2) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const FnBPageView()),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFF384357),
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text(
+          'Cineatma',
+          style: TextStyle(
+            fontFamily: 'Poppins',
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 24,
+          ),
+        ),
+        backgroundColor: const Color(0xFF384357),
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.search, color: Colors.white),
+          onPressed: () {},
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.notifications, color: Colors.white),
+            onPressed: () {},
+          ),
+        ],
+      ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              const SizedBox(height: 20),
+              const Text(
+                'Profile',
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 120,
+                    height: 120,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade400,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Text(
+                        'Hi! Ryan',
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: 18,
+                          color: Colors.white,
+                        ),
+                      ),
+                      Text(
+                        'Welcome',
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 30),
+              _buildProfileOption(Icons.edit, 'Edit profile'),
+              const SizedBox(height: 10),
+              _buildProfileOption(Icons.history, 'History'),
+              const SizedBox(height: 10),
+              _buildProfileOption(Icons.settings, 'Settings'),
+              const Spacer(),
+              ElevatedButton.icon(
+                onPressed: () {},
+                icon: const Icon(Icons.arrow_back, color: Colors.white),
+                label: const Text(
+                  'Logout',
+                  style: TextStyle(color: Colors.white),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+            ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home, color: _selectedIndex == 0 ? Colors.black : Colors.grey),
+            label: _selectedIndex == 0 ? 'Home' : '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.movie, color: _selectedIndex == 1 ? Colors.black : Colors.grey),
+            label: _selectedIndex == 1 ? 'Movies' : '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.fastfood, color: _selectedIndex == 2 ? Colors.black : Colors.grey),
+            label: _selectedIndex == 2 ? 'FnB' : '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person, color: _selectedIndex == 3 ? Colors.black : Colors.grey),
+            label: _selectedIndex == 3 ? 'Profile' : '',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+      ),
+    );
+  }
+
+  Widget _buildProfileOption(IconData icon, String title) {
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xFF252B40),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: ListTile(
+        leading: Icon(icon, color: Colors.white),
+        title: Text(
+          title,
+          style: const TextStyle(color: Colors.white, fontSize: 18, fontFamily: 'Poppins'),
+        ),
+        trailing: const Icon(Icons.arrow_forward_ios, color: Colors.white),
+        onTap: () {
+          if (title == 'Edit profile') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const EditProfileView()),
+            );
+          } else if (title == 'History') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const HistoryView()),
+            );
+          } else if (title == 'Settings') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const SettingsProfileView()),
+            );
+          }
+        },
+      ),
+    );
+  }
+}

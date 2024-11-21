@@ -20,28 +20,28 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF7B2C27),
+      backgroundColor: const Color(0xFF384357),
       body: Stack(
         children: [
-          // Upper red part of the background
+          // Header bagian atas
           Container(
             height: MediaQuery.of(context).size.height * 0.27,
-            color: const Color(0xFF7B2C27), // Warna marun untuk header
+            color: const Color(0xFF384357),
             child: const Center(
               child: Icon(
-                Icons.movie, // Ikon rol film
+                Icons.movie,
                 size: 80,
                 color: Colors.white,
               ),
             ),
           ),
-          // Beige container for the form
+          // Form login di bagian bawah
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
               height: MediaQuery.of(context).size.height * 0.73,
               decoration: const BoxDecoration(
-                color: Color(0xFFE8D5BE), // Beige color
+                color: Colors.white,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(50),
                 ),
@@ -69,7 +69,7 @@ class _LoginViewState extends State<LoginView> {
                       ),
                     ),
                     const SizedBox(height: 40),
-                    // Email field
+                    // Input email
                     TextFormField(
                       controller: emailController,
                       decoration: InputDecoration(
@@ -88,11 +88,11 @@ class _LoginViewState extends State<LoginView> {
                         if (!value.contains('@')) {
                           return 'Email must contain @.';
                         }
-                        return null; // Valid
+                        return null;
                       },
                     ),
                     const SizedBox(height: 20),
-                    // Password field
+                    // Input password
                     TextFormField(
                       controller: passwordController,
                       obscureText: _obscurePassword,
@@ -121,18 +121,17 @@ class _LoginViewState extends State<LoginView> {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your password.';
                         }
-                        return null; // Valid
+                        return null;
                       },
                     ),
                     const SizedBox(height: 30),
-                    // Sign In Button
+                    // Tombol Login
                     SizedBox(
                       width: double.infinity,
                       height: 50,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              const Color(0xFF7B2C27), // Maroon color
+                          backgroundColor: const Color(0xFF384357),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
@@ -152,9 +151,7 @@ class _LoginViewState extends State<LoginView> {
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) {
-                                      return const HomeView();
-                                    },
+                                    builder: (context) => const HomeView(),
                                   ),
                                 );
                               } else {
@@ -166,36 +163,24 @@ class _LoginViewState extends State<LoginView> {
                             }
                           }
                         },
-                        child: const Text(
-                          "Sign In",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
+                        child: const Text('Login'),
                       ),
                     ),
-                    // Tampilkan pesan kesalahan
+                    const SizedBox(height: 20),
+                    // Pesan kesalahan
                     if (_errorMessage != null)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10),
-                        child: Text(
-                          _errorMessage!,
-                          style: const TextStyle(color: Colors.red),
-                        ),
+                      Text(
+                        _errorMessage!,
+                        style: const TextStyle(color: Colors.red),
                       ),
                     const SizedBox(height: 20),
-                    // Register link
+                    // Tautan Sign Up
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Text(
-                          "Don't have any account?",
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.black54,
-                          ),
+                          "Don't have an account?",
+                          style: TextStyle(fontSize: 14, color: Colors.black54),
                         ),
                         TextButton(
                           onPressed: () {
@@ -211,7 +196,7 @@ class _LoginViewState extends State<LoginView> {
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
-                              color: Colors.black,
+                              color: Colors.blue,
                               decoration: TextDecoration.underline,
                             ),
                           ),

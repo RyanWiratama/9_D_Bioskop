@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class ListPageView extends StatefulWidget {
-  const ListPageView({super.key});
+class FnBPageView extends StatefulWidget {
+  const FnBPageView({super.key});
 
   @override
-  State<ListPageView> createState() => _ListPageState();
+  State<FnBPageView> createState() => _ListPageState();
 }
 
-class _ListPageState extends State<ListPageView> {
+class _ListPageState extends State<FnBPageView> {
   final List<Map<String, String>> movies = [
     {
       'title': 'Avengers: Endgame',
