@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_pbp_9/view/list_view.dart';
 import 'package:tubes_pbp_9/view/fnb_view.dart';
+import 'package:tubes_pbp_9/view/movie_details.dart';
 import 'package:tubes_pbp_9/view/profile_view.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
@@ -148,40 +149,52 @@ class _HomeViewState extends State<HomeView> {
   }
 
   Widget _buildNowPlayingSection() {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: const [
-              Text(
-                'Now Playing Movies',
-                style: TextStyle(
-                  fontFamily: 'Poppins',
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
+  return Column(
+    children: [
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: const [
+            Text(
+              'Now Playing Movies',
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                color: Colors.white,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
               ),
-            ],
-          ),
-        ),
-        Container(
-          margin: const EdgeInsets.only(top: 16.0),
-          height: carouselHeight,
-          child: CarouselSlider(
-            options: CarouselOptions(
-              height: carouselHeight,
-              autoPlay: true,
-              enlargeCenterPage: true,
-              aspectRatio: 16 / 9,
-              autoPlayInterval: const Duration(seconds: 3),
-              autoPlayAnimationDuration: const Duration(milliseconds: 800),
-              pauseAutoPlayOnTouch: true,
             ),
-            items: nowPlayingMovies.map((item) {
-              return Container(
+          ],
+        ),
+      ),
+      Container(
+        margin: const EdgeInsets.only(top: 16.0),
+        height: carouselHeight,
+        child: CarouselSlider(
+          options: CarouselOptions(
+            height: carouselHeight,
+            autoPlay: true,
+            enlargeCenterPage: true,
+            aspectRatio: 16 / 9,
+            autoPlayInterval: const Duration(seconds: 3),
+            autoPlayAnimationDuration: const Duration(milliseconds: 800),
+            pauseAutoPlayOnTouch: true,
+          ),
+          items: nowPlayingMovies.map((item) {
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MovieDetailsView(
+                      title: item['title']!,
+                      imageUrl: item['image']!,
+                    ),
+                  ),
+                );
+              },
+              child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 5.0),
                 child: Stack(
                   children: [
@@ -220,13 +233,14 @@ class _HomeViewState extends State<HomeView> {
                     ),
                   ],
                 ),
-              );
-            }).toList(),
-          ),
+              ),
+            );
+          }).toList(),
         ),
-      ],
-    );
-  }
+      ),
+    ],
+  );
+}
 
   Widget _buildImageFlexSection(String title, List<String> imgList) {
     return Column(
