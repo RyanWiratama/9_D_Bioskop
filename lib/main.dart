@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+<<<<<<< Updated upstream
+=======
+import 'package:tubes_pbp_9/view/home_view.dart';
+>>>>>>> Stashed changes
 import 'package:tubes_pbp_9/view/login_view.dart';
 
 void main() {
