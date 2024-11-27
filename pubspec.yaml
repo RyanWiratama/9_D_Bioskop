@@ -25,3 +25,12 @@ flutter:
         - asset: fonts/Poppins-Regular.ttf
         - asset: fonts/Poppins-Bold.ttf
           weight: 700
+  assets:
+    - assets/combo1.jpg
+    - assets/combo2.jpg
+    - assets/coke.jpg
+    - assets/fries.jpg
+    - assets/popcorn_l.png
+    - assets/popcorn_m.png
+    - assets/popcorn_r.png
+    - assets/sprite.jpg
