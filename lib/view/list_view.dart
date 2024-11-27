@@ -1,4 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:tubes_pbp_9/view/home_view.dart';
+import 'package:tubes_pbp_9/view/fnb_view.dart';
+import 'package:tubes_pbp_9/view/profile_view.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: ThemeData(
+        fontFamily: 'Poppins', // Set default font globally
+      ),
+      home: const ListPageView(),
+    );
+  }
+}
 
 class ListPageView extends StatefulWidget {
   const ListPageView({super.key});
@@ -8,6 +29,32 @@ class ListPageView extends StatefulWidget {
 }
 
 class _ListPageState extends State<ListPageView> {
+  int _selectedIndex = 1;
+  TextEditingController _searchController = TextEditingController();
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    if (index == 0) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeView()),
+      );
+    } else if (index == 2) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const FnBPageView()),
+      );
+    } else if (index == 3) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const ProfileView()),
+      );
+    }
+  }
+
   final List<Map<String, String>> movies = [
     {
       'title': 'Avengers: Endgame',
@@ -36,60 +83,158 @@ class _ListPageState extends State<ListPageView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          "NOW SHOWING",
-          style: const TextStyle(
-            fontFamily: 'Poppins',
-            fontSize: 20, // You can adjust the font size as needed
-            fontWeight: FontWeight.bold,
-          ),
+        backgroundColor: const Color(0xFF384357),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Text(
+              'Cineatma',
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 24,
+              ),
+            ),
+          ],
         ),
-        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+        leading: IconButton(
+          icon: const Icon(Icons.search, color: Colors.white),
+          onPressed: () {},
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.notifications, color: Colors.white),
+            onPressed: () {},
+          ),
+        ],
       ),
       body: Container(
-        color: const Color(0xFF384357), // Set the background color here
-        child: ListView.builder(
-          itemCount: movies.length,
-          itemBuilder: (context, index) {
-            final movie = movies[index];
-            return Card(
-              margin: const EdgeInsets.all(10.0),
-              elevation: 4,
-              child: ListTile(
-                contentPadding: const EdgeInsets.all(10.0),
-                leading: Image.network(movie['poster']!,
-                    width: 100, fit: BoxFit.cover),
-                title: Text(
-                  movie['title']!,
-                  style: const TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+        color: const Color(0xFF384357), // Warna latar belakang
+        padding: const EdgeInsets.all(10.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Search Bar
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
+              child: TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  hintText: 'Search My Tickets...',
+                  hintStyle: const TextStyle(color: Colors.white70),
+                  filled: true,
+                  fillColor: const Color.fromARGB(255, 255, 255, 255).withOpacity(0.5),
+                  prefixIcon: const Icon(Icons.search, color: Colors.white),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(25.0),
+                    borderSide: BorderSide.none,
                   ),
                 ),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 5),
-                    Text(
-                      movie['description']!,
-                      style: const TextStyle(fontFamily: 'Poppins'),
+                style: const TextStyle(color: Colors.white),
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: movies.length,
+                itemBuilder: (context, index) {
+                  final movie = movies[index];
+                  return Card(
+                    color: const Color(0xFF495366), // Warna kartu
+                    margin: const EdgeInsets.symmetric(vertical: 10.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.0),
                     ),
-                    const SizedBox(height: 10),
-                    Text(
-                      "Showtimes: ${movie['showtime']!}",
-                      style: const TextStyle(
-                        fontFamily: 'Poppins',
-                        color: Colors.grey,
+                    elevation: 4,
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Image.network(
+                              movie['poster']!,
+                              width: 80,
+                              height: 120,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  movie['title']!,
+                                  style: const TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                const SizedBox(height: 5),
+                                Text(
+                                  movie['description']!,
+                                  style: const TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontSize: 14,
+                                    color: Colors.white70,
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                Text(
+                                  "Showtimes: ${movie['showtime']!}",
+                                  style: const TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontSize: 12,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-                trailing: const Icon(Icons.chevron_right),
-                onTap: () {},
+                  );
+                },
               ),
-            );
-          },
+            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: Container(
+        margin: const EdgeInsets.only(bottom: 16.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20.0)),
+        ),
+        child: BottomNavigationBar(
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home, color: Colors.grey),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.movie, color: Colors.grey),
+              label: 'Movies',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.fastfood, color: Colors.grey),
+              label: 'FnB',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person, color: Colors.grey),
+              label: 'Profile',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.black,
+          unselectedItemColor: Colors.grey,
+          backgroundColor: Colors.transparent,
+          onTap: _onItemTapped,
         ),
       ),
     );
