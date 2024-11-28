@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_pbp_9/view/home_view.dart';
 import 'package:tubes_pbp_9/view/login_view.dart';
-import 'package:tubes_pbp_9/view/home_view.dart';
 
 void main() {
   runApp(const MainApp());
@@ -13,6 +12,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: HomeView(),
     );
   }
