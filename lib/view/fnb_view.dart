@@ -11,7 +11,7 @@ class FnBPageView extends StatefulWidget {
 }
 
 class _ListPageState extends State<FnBPageView> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 2;
   String selectedMenu = "Bites";
 
   final Map<String, List<Map<String, String>>> menuData = {
@@ -60,7 +60,12 @@ class _ListPageState extends State<FnBPageView> {
       _selectedIndex = index;
     });
 
-    if (index == 1) {
+    if (index == 0) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeView()),
+      );
+    } else if (index == 1) {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const ListPageView()),
@@ -70,7 +75,7 @@ class _ListPageState extends State<FnBPageView> {
         context,
         MaterialPageRoute(builder: (context) => const FnBPageView()),
       );
-    } else if (index == 3) {
+    }else if (index == 3){
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const ProfileView()),

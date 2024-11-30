@@ -9,9 +9,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  image_picker: ^0.8.7+5
+  fluttertoast: ^8.0.9
   font_awesome_flutter: ^10.1.0
   carousel_slider: ^5.0.0
   video_player: ^2.6.1
+  photo_manager: ^2.6.0
 
 dev_dependencies:
   flutter_test:
@@ -35,3 +38,7 @@ flutter:
     - assets/popcorn_m.png
     - assets/popcorn_r.png
     - assets/sprite.jpg
+    - assets/images/avengers.jpeg
+    - assets/images/spiderman.jpg
+    - assets/images/ironman.jpeg
+    - assets/images/ryan.jpg
