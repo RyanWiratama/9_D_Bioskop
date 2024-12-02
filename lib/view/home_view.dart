@@ -3,6 +3,7 @@ import 'package:tubes_pbp_9/view/list_view.dart';
 import 'package:tubes_pbp_9/view/Food%20&%20Bev/fnb_view.dart';
 import 'package:tubes_pbp_9/view/movie_details.dart';
 import 'package:tubes_pbp_9/view/Profile/profile_view.dart';
+import 'package:tubes_pbp_9/view/notification.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 class HomeView extends StatefulWidget {
@@ -108,8 +109,14 @@ class _HomeViewState extends State<HomeView> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.notifications, color: Colors.white),
-            onPressed: () {},
+            icon: const Icon(Icons.notifications, color: Colors.black),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const NotificationPage()),
+              );
+            },
           ),
         ],
       ),
