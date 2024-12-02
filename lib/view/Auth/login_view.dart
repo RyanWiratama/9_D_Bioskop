@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_pbp_9/view/Auth/register_view.dart';
 import 'package:tubes_pbp_9/view/home_view.dart';
+import 'package:tubes_pbp_9/requests/userReq.dart';
 
 class LoginView extends StatefulWidget {
   final Map? data;
@@ -23,7 +24,6 @@ class _LoginViewState extends State<LoginView> {
       backgroundColor: const Color(0xFF384357),
       body: Stack(
         children: [
-          // Header bagian atas
           Container(
             height: MediaQuery.of(context).size.height * 0.27,
             color: const Color(0xFF384357),
@@ -35,7 +35,6 @@ class _LoginViewState extends State<LoginView> {
               ),
             ),
           ),
-          // Form login di bagian bawah
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
@@ -69,7 +68,6 @@ class _LoginViewState extends State<LoginView> {
                       ),
                     ),
                     const SizedBox(height: 40),
-                    // Input email
                     TextFormField(
                       controller: emailController,
                       decoration: InputDecoration(
@@ -92,7 +90,6 @@ class _LoginViewState extends State<LoginView> {
                       },
                     ),
                     const SizedBox(height: 20),
-                    // Input password
                     TextFormField(
                       controller: passwordController,
                       obscureText: _obscurePassword,
@@ -125,7 +122,6 @@ class _LoginViewState extends State<LoginView> {
                       },
                     ),
                     const SizedBox(height: 30),
-                    // Tombol Login
                     SizedBox(
                       width: double.infinity,
                       height: 50,
@@ -136,18 +132,20 @@ class _LoginViewState extends State<LoginView> {
                             borderRadius: BorderRadius.circular(20),
                           ),
                         ),
-                        onPressed: () {
+                        onPressed: () async {
                           if (_formKey.currentState?.validate() ?? false) {
-                            if (widget.data == null) {
-                              setState(() {
-                                _errorMessage = "Email not registered!";
-                              });
-                            } else {
-                              String email = widget.data?['email'];
-                              String password = widget.data?['password'];
+                            String email = emailController.text;
+                            String password = passwordController.text;
 
-                              if (emailController.text == email &&
-                                  passwordController.text == password) {
+                            try {
+                              Map<String, String> data = {
+                                'email': email,
+                                'password': password,
+                              };
+
+                              final response = await UserReq.login(data);
+
+                              if (response.statusCode == 200) {
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
@@ -160,6 +158,10 @@ class _LoginViewState extends State<LoginView> {
                                       "Invalid username or password!";
                                 });
                               }
+                            } catch (e) {
+                              setState(() {
+                                _errorMessage = "Error: $e";
+                              });
                             }
                           }
                         },
@@ -167,20 +169,18 @@ class _LoginViewState extends State<LoginView> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    // Pesan kesalahan
                     if (_errorMessage != null)
                       Text(
                         _errorMessage!,
                         style: const TextStyle(color: Colors.red),
                       ),
                     const SizedBox(height: 20),
-                    // Tautan Sign Up
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Text(
                           "Don't have an account?",
-                          style: TextStyle(fontSize: 14, color: Colors.black54),
+                          style: TextStyle(fontSize: 16),
                         ),
                         TextButton(
                           onPressed: () {
@@ -193,12 +193,7 @@ class _LoginViewState extends State<LoginView> {
                           },
                           child: const Text(
                             "Sign Up",
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blue,
-                              decoration: TextDecoration.underline,
-                            ),
+                            style: TextStyle(fontSize: 16),
                           ),
                         ),
                       ],
