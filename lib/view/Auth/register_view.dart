@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tubes_pbp_9/view/login_view.dart';
+import 'package:tubes_pbp_9/view/Auth/login_view.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});

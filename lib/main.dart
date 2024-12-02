@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tubes_pbp_9/view/home_view.dart';
-import 'package:tubes_pbp_9/view/login_view.dart';
+import 'package:tubes_pbp_9/view/Auth/login_view.dart';
 
 void main() {
-  runApp(const MainApp());
+  runApp(ProviderScope(child: const MainApp()));
 }
 
 class MainApp extends StatelessWidget {
@@ -12,6 +13,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
+      title: 'Tubes PBP',
       debugShowCheckedModeBanner: false,
       home: HomeView(),
     );

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tubes_pbp_9/view/register_view.dart';
+import 'package:tubes_pbp_9/view/Auth/register_view.dart';
 import 'package:tubes_pbp_9/view/home_view.dart';
 
 class LoginView extends StatefulWidget {

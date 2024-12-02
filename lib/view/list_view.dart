@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_pbp_9/view/home_view.dart';
-import 'package:tubes_pbp_9/view/fnb_view.dart';
-import 'package:tubes_pbp_9/view/profile_view.dart';
+import 'package:tubes_pbp_9/view/Food%20&%20Bev/fnb_view.dart';
+import 'package:tubes_pbp_9/view/Profile/profile_view.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        fontFamily: 'Poppins', // Set default font globally
+        fontFamily: 'Poppins',
       ),
       home: const ListPageView(),
     );
@@ -110,12 +110,11 @@ class _ListPageState extends State<ListPageView> {
         ],
       ),
       body: Container(
-        color: const Color(0xFF384357), // Warna latar belakang
+        color: const Color(0xFF384357),
         padding: const EdgeInsets.all(10.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Search Bar
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10.0),
               child: TextField(
@@ -124,7 +123,8 @@ class _ListPageState extends State<ListPageView> {
                   hintText: 'Search My Tickets...',
                   hintStyle: const TextStyle(color: Colors.white70),
                   filled: true,
-                  fillColor: const Color.fromARGB(255, 255, 255, 255).withOpacity(0.5),
+                  fillColor:
+                      const Color.fromARGB(255, 255, 255, 255).withOpacity(0.5),
                   prefixIcon: const Icon(Icons.search, color: Colors.white),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(25.0),
@@ -140,7 +140,7 @@ class _ListPageState extends State<ListPageView> {
                 itemBuilder: (context, index) {
                   final movie = movies[index];
                   return Card(
-                    color: const Color(0xFF495366), // Warna kartu
+                    color: const Color(0xFF495366),
                     margin: const EdgeInsets.symmetric(vertical: 10.0),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12.0),
