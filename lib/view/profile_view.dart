@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_pbp_9/view/list_view.dart';
+<<<<<<< Updated upstream:lib/view/profile_view.dart
 import 'package:tubes_pbp_9/view/fnb_view.dart';
+=======
+import 'package:tubes_pbp_9/view/Food & Bev/fnb_view.dart';
+>>>>>>> Stashed changes:lib/view/Profile/profile_view.dart
 import 'package:tubes_pbp_9/view/home_view.dart';
 
 class ProfileView extends StatefulWidget {

@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_pbp_9/view/list_view.dart';
+<<<<<<< Updated upstream
 import 'package:tubes_pbp_9/view/fnb_view.dart';
 import 'package:tubes_pbp_9/view/profile_view.dart';
+=======
+import 'package:tubes_pbp_9/view/Food%20&%20Bev/fnb_view.dart';
+import 'package:tubes_pbp_9/view/movie_details.dart';
+import 'package:tubes_pbp_9/view/Profile/profile_view.dart';
+import 'package:tubes_pbp_9/view/notification.dart';
+>>>>>>> Stashed changes
 import 'package:carousel_slider/carousel_slider.dart';
 
 class HomeView extends StatefulWidget {
@@ -95,8 +102,19 @@ class _HomeViewState extends State<HomeView> {
         ),
         actions: [
           IconButton(
+<<<<<<< Updated upstream
             icon: const Icon(Icons.notifications, color: Colors.black),
             onPressed: () {},
+=======
+            icon: const Icon(Icons.notifications, color: Colors.white),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const NotificationPage()),
+              );
+            },
+>>>>>>> Stashed changes
           ),
         ],
       ),
