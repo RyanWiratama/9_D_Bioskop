@@ -2,21 +2,55 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tubes_pbp_9/entity/fnb.dart';
 import 'package:tubes_pbp_9/requests/fnbReq.dart';
+import 'package:tubes_pbp_9/view/home_view.dart';
+import 'package:tubes_pbp_9/view/list_view.dart';
+import 'package:tubes_pbp_9/view/Profile/profile_view.dart';
 
 final fnbProvider =
     FutureProvider.family<List<Foodbev>, String>((ref, category) async {
   return FoodnBev.fetchByCategory(category);
 });
 
-class FnBPageView extends ConsumerWidget {
+class FnBPageView extends ConsumerStatefulWidget {
   const FnBPageView({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  _FnBPageViewState createState() => _FnBPageViewState();
+}
+
+class _FnBPageViewState extends ConsumerState<FnBPageView> {
+  int _selectedIndex = 2;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    if (index == 0) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeView()),
+      );
+    } else if (index == 1) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const ListPageView()),
+      );
+    } else if (index == 3) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const ProfileView()),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final menuList = ["Promo", "Bites", "Drinks"];
     final selectedMenu = ValueNotifier<String>(menuList[0]);
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: const Color(0xFF384357),
         title: const Text(
@@ -112,9 +146,17 @@ class FnBPageView extends ConsumerWidget {
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: ListTile(
-                                leading: Icon(Icons.fastfood,
-                                    color: Colors
-                                        .white), // Ganti dengan gambar nanti
+                                leading: Container(
+                                  width: 50,
+                                  height: double.infinity,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                    image: DecorationImage(
+                                      image: AssetImage('${item.gambar}'),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
                                 title: Text(
                                   item.name,
                                   style: const TextStyle(
@@ -148,6 +190,33 @@ class FnBPageView extends ConsumerWidget {
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home,
+                color: _selectedIndex == 0 ? Colors.black : Colors.grey),
+            label: _selectedIndex == 0 ? 'Home' : '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.movie,
+                color: _selectedIndex == 1 ? Colors.black : Colors.grey),
+            label: _selectedIndex == 1 ? 'Movies' : '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.fastfood,
+                color: _selectedIndex == 2 ? Colors.black : Colors.grey),
+            label: _selectedIndex == 2 ? 'FnB' : '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person,
+                color: _selectedIndex == 3 ? Colors.black : Colors.grey),
+            label: _selectedIndex == 3 ? 'Profile' : '',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
       ),
     );
   }
