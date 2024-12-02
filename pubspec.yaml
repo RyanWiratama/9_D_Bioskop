@@ -1,6 +1,6 @@
 name: tubes_pbp_9
 description: "A new Flutter project."
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0
 
 environment:
@@ -14,6 +14,9 @@ dependencies:
   video_player: ^2.6.1
   http: ^1.2.2
   flutter_riverpod: ^2.6.1
+  image_picker: ^0.8.7+5
+  fluttertoast: ^8.0.9
+  photo_manager: ^2.6.0
 
 dev_dependencies:
   flutter_test:
@@ -37,3 +40,7 @@ flutter:
     - assets/popcorn_m.png
     - assets/popcorn_r.png
     - assets/sprite.jpg
+    - assets/images/avengers.jpeg
+    - assets/images/spiderman.jpg
+    - assets/images/ironman.jpeg
+    - assets/images/ryan.jpg

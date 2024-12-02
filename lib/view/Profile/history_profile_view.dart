@@ -136,24 +136,21 @@ class HistoryView extends StatelessWidget {
               child: ListView(
                 children: [
                   _buildHistoryItem(
-                    image:
-                        'https://image.tmdb.org/t/p/w500/k9fd4KZ4z9ibZCIslhpN13U4fTz.jpg',
+                    image: 'assets/images/avengers.jpeg',
                     title: 'Avengers',
                     location: 'EMPIRE XXI, #1',
                     tickets: '2 Tickets',
                     date: 'Friday, Oct 20, 2024, 12:00',
                   ),
                   _buildHistoryItem(
-                    image:
-                        'https://image.tmdb.org/t/p/w500/ohOnrHtpOaI2J79Ko1T3DwaeXsM.jpg',
+                    image: 'assets/images/spiderman.jpg',
                     title: 'Spiderman',
                     location: 'AMBARRUKMO XXI, #2',
                     tickets: '2 Tickets',
                     date: 'Monday, Oct 8, 2023, 12:00',
                   ),
                   _buildHistoryItem(
-                    image:
-                        'https://image.tmdb.org/t/p/w500/eevV78N0HVFFd62ftwDdd8Zxmio.jpg',
+                    image: 'assets/images/ironman.jpeg', 
                     title: 'Iron Man 2',
                     location: 'JOGJA CITY MALL XXI, #3',
                     tickets: '2 Tickets',
