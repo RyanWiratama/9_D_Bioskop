@@ -4,6 +4,7 @@ import 'package:tubes_pbp_9/view/fnb_view.dart';
 import 'package:tubes_pbp_9/view/movie_details.dart';
 import 'package:tubes_pbp_9/view/profile_view.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:tubes_pbp_9/view/notification.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
@@ -70,7 +71,7 @@ class _HomeViewState extends State<HomeView> {
   static const List<String> promoImgList = [
     'https://marketplace.canva.com/EAFkFT3PNBE/1/0/1600w/canva-red-yellow-modern-bold-fast-food-discount-promotion-video-Tihzn5PsC2M.jpg',
     'https://marketplace.canva.com/EAFxfoUeq0M/2/0/900w/canva-red-and-yellow-modern-burger-food-promo-animated-mobile-video-u8oNVV8iiWw.jpg',
-    'https://example.com/promo-3.jpg',
+    'https://marketplace.canva.com/EAFkFT3PNBE/1/0/1600w/canva-red-yellow-modern-bold-fast-food-discount-promotion-video-Tihzn5PsC2M.jpg',
   ];
 
   static const double carouselHeight = 250.0;
@@ -101,7 +102,13 @@ class _HomeViewState extends State<HomeView> {
         actions: [
           IconButton(
             icon: const Icon(Icons.notifications, color: Colors.black),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const NotificationPage()),
+              );
+            },
           ),
         ],
       ),
@@ -153,99 +160,99 @@ class _HomeViewState extends State<HomeView> {
   }
 
   Widget _buildNowPlayingSection() {
-  return Column(
-    children: [
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: const [
-            Text(
-              'Now Playing Movies',
-              style: TextStyle(
-                fontFamily: 'Poppins',
-                color: Colors.white,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-      ),
-      Container(
-        margin: const EdgeInsets.only(top: 16.0),
-        height: carouselHeight,
-        child: CarouselSlider(
-          options: CarouselOptions(
-            height: carouselHeight,
-            autoPlay: true,
-            enlargeCenterPage: true,
-            aspectRatio: 16 / 9,
-            autoPlayInterval: const Duration(seconds: 3),
-            autoPlayAnimationDuration: const Duration(milliseconds: 800),
-            pauseAutoPlayOnTouch: true,
-          ),
-          items: nowPlayingMovies.map((item) {
-            return GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MovieDetailsView(
-                      title: item['title']!,
-                      imageUrl: item['image']!,
-                    ),
-                  ),
-                );
-              },
-              child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                child: Stack(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(10.0),
-                      child: Opacity(
-                        opacity: 0.8,
-                        child: Image.network(
-                          item['image']!,
-                          fit: BoxFit.cover,
-                          width: MediaQuery.of(context).size.width,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Container(
-                              decoration: BoxDecoration(
-                                color: Colors.grey,
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              child: const Center(
-                                  child: Text('Image not available')),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 10,
-                      left: 10,
-                      child: Text(
-                        item['title']!,
-                        style: const TextStyle(
-                          fontFamily: 'Poppins',
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: const [
+              Text(
+                'Now Playing Movies',
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-            );
-          }).toList(),
+            ],
+          ),
         ),
-      ),
-    ],
-  );
-}
+        Container(
+          margin: const EdgeInsets.only(top: 16.0),
+          height: carouselHeight,
+          child: CarouselSlider(
+            options: CarouselOptions(
+              height: carouselHeight,
+              autoPlay: true,
+              enlargeCenterPage: true,
+              aspectRatio: 16 / 9,
+              autoPlayInterval: const Duration(seconds: 3),
+              autoPlayAnimationDuration: const Duration(milliseconds: 800),
+              pauseAutoPlayOnTouch: true,
+            ),
+            items: nowPlayingMovies.map((item) {
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MovieDetailsView(
+                        title: item['title']!,
+                        imageUrl: item['image']!,
+                      ),
+                    ),
+                  );
+                },
+                child: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                  child: Stack(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10.0),
+                        child: Opacity(
+                          opacity: 0.8,
+                          child: Image.network(
+                            item['image']!,
+                            fit: BoxFit.cover,
+                            width: MediaQuery.of(context).size.width,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                child: const Center(
+                                    child: Text('Image not available')),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 10,
+                        left: 10,
+                        child: Text(
+                          item['title']!,
+                          style: const TextStyle(
+                            fontFamily: 'Poppins',
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+      ],
+    );
+  }
 
   Widget _buildImageFlexSection(String title, List<String> imgList) {
     return Column(

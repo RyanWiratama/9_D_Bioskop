@@ -51,30 +51,46 @@ class _ListPageState extends State<FnBPageView> {
         "subtitle": "Popcorn salt / caramel",
         "image": "assets/popcorn_l.png"
       },
-      {"title": "French Fries", "subtitle": "", "image": "assets/fries.jpg"},
+      {
+        "title": "French Fries",
+        "subtitle": "French Fries with tomato sauce",
+        "image": "assets/fries.jpg"
+      },
     ],
   };
 
   void _onItemTapped(int index) {
+    if (index == _selectedIndex) {
+      // Prevent navigating to the same page again
+      return;
+    }
+
     setState(() {
       _selectedIndex = index;
     });
 
-    if (index == 1) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const ListPageView()),
-      );
-    } else if (index == 2) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const FnBPageView()),
-      );
-    } else if (index == 3) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const ProfileView()),
-      );
+    switch (index) {
+      case 0:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomeView()),
+        );
+        break;
+      case 1:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const ListPageView()),
+        );
+        break;
+      case 2:
+        // Current page is FnB, so no need to navigate
+        break;
+      case 3:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const ProfileView()),
+        );
+        break;
     }
   }
 
@@ -229,7 +245,7 @@ class _ListPageState extends State<FnBPageView> {
           currentIndex: _selectedIndex,
           selectedItemColor: Colors.black,
           unselectedItemColor: Colors.grey,
-          backgroundColor: Color(0xFF384357),
+          backgroundColor: const Color(0xFF384357),
           onTap: _onItemTapped,
         ),
       ),
