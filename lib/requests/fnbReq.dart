@@ -1,4 +1,4 @@
-import 'package:tubes_pbp_9/entity/fnb.dart'; // File model
+import 'package:tubes_pbp_9/entity/fnb.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -14,7 +14,7 @@ class FoodnBev {
         url,
         headers: {
           'Authorization':
-              'Bearer 1|F29oBstWAnKCsSyfF9D4ww5Oc44SsphEAOEXXPbt141c0895',
+              'Bearer 1|M3X3sEQpmXxLLAHD9POWYCdV6u7ds06C5laNIWq751027286',
         },
       );
 
