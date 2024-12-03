@@ -10,6 +10,12 @@ class FilmReq {
 
   static Future<List<Film>> fetchAllFilms() async {
     final Uri url = Uri.http(baseUrl, endpoint);
+  
+  static Future<List<Film>> fetchall() async {
+    final Uri url = Uri.http(baseUrl, endpoint);
+
+  static Future<List<Film>> fetchByGenre(String genre) async {
+    final Uri url = Uri.http(baseUrl, endpoint, {'genre': genre});
 
     try {
       final String? token = await FlutterSecureStorage().read(key: 'token');
