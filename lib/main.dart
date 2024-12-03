@@ -15,7 +15,7 @@ class MainApp extends StatelessWidget {
     return const MaterialApp(
       title: 'Tubes PBP',
       debugShowCheckedModeBanner: false,
-      home: HomeView(),
+      home: LoginView(),
     );
   }
 }
