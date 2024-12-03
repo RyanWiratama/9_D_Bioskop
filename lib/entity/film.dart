@@ -4,7 +4,7 @@ class Film {
   int id;
   String judul;
   String deskripsi;
-  String durasi; // Menggunakan String karena format waktu (time)
+  String durasi;
   String genre;
   String sutradara;
   String ratingUsia;
@@ -47,5 +47,5 @@ class Film {
         'ratingUsia': ratingUsia,
         'poster': poster,
         'trailer': trailer,
-    };
+      };
 }
