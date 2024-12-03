@@ -2,6 +2,7 @@ import 'dart:convert';
 
 class Foodbev {
   int id;
+  String gambar;
   String name;
   String deskripsi;
   double harga;
@@ -9,6 +10,7 @@ class Foodbev {
 
   Foodbev({
     required this.id,
+    required this.gambar,
     required this.name,
     required this.deskripsi,
     required this.harga,
@@ -18,6 +20,7 @@ class Foodbev {
   factory Foodbev.fromRawJson(String str) => Foodbev.fromJson(json.decode(str));
   factory Foodbev.fromJson(Map<String, dynamic> json) => Foodbev(
         id: json['id'],
+        gambar: json['gambar'],
         name: json['name'],
         deskripsi: json['deskripsi'],
         harga: json['harga'] is String
@@ -29,6 +32,7 @@ class Foodbev {
   String toRawJson() => json.encode(toJson());
   Map<String, dynamic> toJson() => {
         'id': id,
+        'gambar': gambar,
         'name': name,
         'deskripsi': deskripsi,
         'harga': harga,

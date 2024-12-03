@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
 import 'package:tubes_pbp_9/view/Auth/login_view.dart';
 
 class RegisterView extends StatefulWidget {
@@ -15,9 +18,60 @@ class _RegisterViewState extends State<RegisterView> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
+  TextEditingController noTelpController = TextEditingController();
 
   bool isAgreed = false;
   bool isAttemptedToSignUp = false;
+  bool isLoading = false;
+
+  Future<void> registerUser() async {
+    final url = Uri.parse('http://10.0.2.2:8000/api/register');
+
+    final data = {
+      'name': '${firstNameController.text} ${lastNameController.text}',
+      'email': emailController.text,
+      'password': passwordController.text,
+      'no_telp': noTelpController.text,
+    };
+
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(data),
+      );
+
+      if (response.statusCode == 201) {
+        final responseBody = json.decode(response.body);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(responseBody['message'])),
+        );
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginView()),
+        );
+      } else {
+        final responseBody = json.decode(response.body);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text(responseBody['message'] ?? 'Registration failed')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('An error occurred: $e')),
+      );
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +146,6 @@ class _RegisterViewState extends State<RegisterView> {
                           ],
                         ),
                       ),
-                      // Input Fields
                       inputField("First Name", firstNameController),
                       const SizedBox(height: 16),
                       inputField("Last Name", lastNameController),
@@ -105,7 +158,8 @@ class _RegisterViewState extends State<RegisterView> {
                       inputField("Confirm Password", confirmPasswordController,
                           isConfirmPassword: true),
                       const SizedBox(height: 16),
-                      // Terms & Conditions
+                      inputField("Phone Number", noTelpController, phone: true),
+                      const SizedBox(height: 16),
                       Row(
                         children: [
                           Checkbox(
@@ -128,36 +182,29 @@ class _RegisterViewState extends State<RegisterView> {
                           ),
                         ),
                       const SizedBox(height: 24),
-                      // Sign Up Button
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              isAttemptedToSignUp = true;
-                            });
-                            if (_formKey.currentState!.validate()) {
-                              if (!isAgreed) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text(
-                                        'You must agree to the terms and conditions'),
-                                  ),
-                                );
-                              } else {
-                                Map<String, dynamic> formData = {
-                                  'email': emailController.text,
-                                  'password': passwordController.text,
-                                };
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (_) => LoginView(data: formData),
-                                  ),
-                                );
-                              }
-                            }
-                          },
+                          onPressed: isLoading
+                              ? null
+                              : () {
+                                  setState(() {
+                                    isAttemptedToSignUp = true;
+                                  });
+                                  if (_formKey.currentState!.validate()) {
+                                    if (!isAgreed) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                              'You must agree to the terms and conditions'),
+                                        ),
+                                      );
+                                    } else {
+                                      registerUser();
+                                    }
+                                  }
+                                },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF384357),
                             padding: const EdgeInsets.symmetric(vertical: 16),
@@ -165,17 +212,20 @@ class _RegisterViewState extends State<RegisterView> {
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          child: const Text(
-                            "Sign Up",
-                            style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white),
-                          ),
+                          child: isLoading
+                              ? const CircularProgressIndicator(
+                                  color: Colors.white,
+                                )
+                              : const Text(
+                                  "Sign Up",
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
+                                ),
                         ),
                       ),
                       const SizedBox(height: 16),
-                      // Sign In Link
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -213,10 +263,10 @@ class _RegisterViewState extends State<RegisterView> {
     );
   }
 
-  // Input Field Helper
   Widget inputField(String label, TextEditingController controller,
       {bool isPassword = false,
       bool email = false,
+      bool phone = false,
       bool isConfirmPassword = false}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -233,7 +283,11 @@ class _RegisterViewState extends State<RegisterView> {
         TextFormField(
           controller: controller,
           obscureText: isPassword || isConfirmPassword,
-          keyboardType: email ? TextInputType.emailAddress : TextInputType.text,
+          keyboardType: email
+              ? TextInputType.emailAddress
+              : phone
+                  ? TextInputType.phone
+                  : TextInputType.text,
           decoration: InputDecoration(
             filled: true,
             fillColor: Colors.white,
@@ -255,17 +309,15 @@ class _RegisterViewState extends State<RegisterView> {
             if (value == null || value.isEmpty) {
               return 'Please enter your $label';
             }
-            if (email && !value.contains('@')) {
+            if (email &&
+                !RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w]{2,4}').hasMatch(value)) {
               return 'Please enter a valid email address';
             }
-            if (isPassword && !RegExp(r'(?=.*[A-Z])').hasMatch(value)) {
-              return 'Password must contain at least one uppercase letter';
+            if (isPassword && value.length < 8) {
+              return 'Password must be at least 8 characters';
             }
-            if (isPassword && !RegExp(r'(?=.*[!@#\$&*~])').hasMatch(value)) {
-              return 'Password must contain at least one special character (!@#\$&*~)';
-            }
-            if (isConfirmPassword && value != passwordController.text) {
-              return 'Confirm Password must match the Password';
+            if (isPassword && value != confirmPasswordController.text) {
+              return 'Passwords do not match';
             }
             return null;
           },

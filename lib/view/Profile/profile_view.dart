@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_pbp_9/view/list_view.dart';
-import 'package:tubes_pbp_9/view/Food%20&%20Bev/fnb_view.dart';
+import 'package:tubes_pbp_9/view/Food & Bev/fnb_view.dart';
 import 'package:tubes_pbp_9/view/home_view.dart';
-import 'package:tubes_pbp_9/view/Profile/history_profile_view.dart';
+import 'package:tubes_pbp_9/view/Profile/history_profile_view.dart'; 
 import 'package:tubes_pbp_9/view/Profile/edit_profile_view.dart';
 import 'package:tubes_pbp_9/view/Profile/settings_profile_view.dart';
 
@@ -149,23 +149,19 @@ class _ProfileViewState extends State<ProfileView> {
         type: BottomNavigationBarType.fixed,
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home,
-                color: _selectedIndex == 0 ? Colors.black : Colors.grey),
+            icon: Icon(Icons.home, color: _selectedIndex == 0 ? Colors.black : Colors.grey),
             label: _selectedIndex == 0 ? 'Home' : '',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.movie,
-                color: _selectedIndex == 1 ? Colors.black : Colors.grey),
+            icon: Icon(Icons.movie, color: _selectedIndex == 1 ? Colors.black : Colors.grey),
             label: _selectedIndex == 1 ? 'Movies' : '',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.fastfood,
-                color: _selectedIndex == 2 ? Colors.black : Colors.grey),
+            icon: Icon(Icons.fastfood, color: _selectedIndex == 2 ? Colors.black : Colors.grey),
             label: _selectedIndex == 2 ? 'FnB' : '',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person,
-                color: _selectedIndex == 3 ? Colors.black : Colors.grey),
+            icon: Icon(Icons.person, color: _selectedIndex == 3 ? Colors.black : Colors.grey),
             label: _selectedIndex == 3 ? 'Profile' : '',
           ),
         ],
@@ -185,8 +181,7 @@ class _ProfileViewState extends State<ProfileView> {
         leading: Icon(icon, color: Colors.white),
         title: Text(
           title,
-          style: const TextStyle(
-              color: Colors.white, fontSize: 18, fontFamily: 'Poppins'),
+          style: const TextStyle(color: Colors.white, fontSize: 18, fontFamily: 'Poppins'),
         ),
         trailing: const Icon(Icons.arrow_forward_ios, color: Colors.white),
         onTap: () {
@@ -203,8 +198,7 @@ class _ProfileViewState extends State<ProfileView> {
           } else if (title == 'Settings') {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                  builder: (context) => const SettingsProfileView()),
+              MaterialPageRoute(builder: (context) => const SettingsProfileView()),
             );
           }
         },

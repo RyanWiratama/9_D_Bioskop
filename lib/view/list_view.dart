@@ -205,37 +205,32 @@ class _ListPageState extends State<ListPageView> {
           ],
         ),
       ),
-      bottomNavigationBar: Container(
-        margin: const EdgeInsets.only(bottom: 16.0),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(20.0)),
-        ),
-        child: BottomNavigationBar(
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home, color: Colors.grey),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.movie, color: Colors.grey),
-              label: 'Movies',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.fastfood, color: Colors.grey),
-              label: 'FnB',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person, color: Colors.grey),
-              label: 'Profile',
-            ),
-          ],
-          currentIndex: _selectedIndex,
-          selectedItemColor: Colors.black,
-          unselectedItemColor: Colors.grey,
-          backgroundColor: Colors.transparent,
-          onTap: _onItemTapped,
-        ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home,
+                color: _selectedIndex == 0 ? Colors.black : Colors.grey),
+            label: _selectedIndex == 0 ? 'Home' : '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.movie,
+                color: _selectedIndex == 1 ? Colors.black : Colors.grey),
+            label: _selectedIndex == 1 ? 'Movies' : '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.fastfood,
+                color: _selectedIndex == 2 ? Colors.black : Colors.grey),
+            label: _selectedIndex == 2 ? 'FnB' : '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person,
+                color: _selectedIndex == 3 ? Colors.black : Colors.grey),
+            label: _selectedIndex == 3 ? 'Profile' : '',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
       ),
     );
   }

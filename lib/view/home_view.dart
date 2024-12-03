@@ -3,6 +3,7 @@ import 'package:tubes_pbp_9/view/list_view.dart';
 import 'package:tubes_pbp_9/view/Food%20&%20Bev/fnb_view.dart';
 import 'package:tubes_pbp_9/view/movie_details.dart';
 import 'package:tubes_pbp_9/view/Profile/profile_view.dart';
+import 'package:tubes_pbp_9/view/notification.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 class HomeView extends StatefulWidget {
@@ -108,8 +109,14 @@ class _HomeViewState extends State<HomeView> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.notifications, color: Colors.white),
-            onPressed: () {},
+            icon: const Icon(Icons.notifications, color: Colors.black),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const NotificationPage()),
+              );
+            },
           ),
         ],
       ),
@@ -126,37 +133,32 @@ class _HomeViewState extends State<HomeView> {
           ),
         ),
       ),
-      bottomNavigationBar: Container(
-        margin: const EdgeInsets.only(bottom: 16.0),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(20.0)),
-        ),
-        child: BottomNavigationBar(
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home, color: Colors.grey),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.movie, color: Colors.grey),
-              label: 'Movies',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.fastfood, color: Colors.grey),
-              label: 'FnB',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person, color: Colors.grey),
-              label: 'Profile',
-            ),
-          ],
-          currentIndex: _selectedIndex,
-          selectedItemColor: Colors.black,
-          unselectedItemColor: Colors.grey,
-          backgroundColor: Colors.transparent,
-          onTap: _onItemTapped,
-        ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home,
+                color: _selectedIndex == 0 ? Colors.black : Colors.grey),
+            label: _selectedIndex == 0 ? 'Home' : '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.movie,
+                color: _selectedIndex == 1 ? Colors.black : Colors.grey),
+            label: _selectedIndex == 1 ? 'Movies' : '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.fastfood,
+                color: _selectedIndex == 2 ? Colors.black : Colors.grey),
+            label: _selectedIndex == 2 ? 'FnB' : '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person,
+                color: _selectedIndex == 3 ? Colors.black : Colors.grey),
+            label: _selectedIndex == 3 ? 'Profile' : '',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
       ),
     );
   }
@@ -214,11 +216,10 @@ class _HomeViewState extends State<HomeView> {
                   margin: const EdgeInsets.symmetric(horizontal: 5.0),
                   child: Stack(
                     children: [
-                      // Background Poster Image with lower opacity
                       ClipRRect(
                         borderRadius: BorderRadius.circular(10.0),
                         child: Opacity(
-                          opacity: 0.5, // Set opacity of the background poster
+                          opacity: 0.5,
                           child: Image.network(
                             item['image']!,
                             fit: BoxFit.cover,
@@ -237,7 +238,6 @@ class _HomeViewState extends State<HomeView> {
                           ),
                         ),
                       ),
-                      // Overlay Details
                       Positioned(
                         bottom: 10,
                         left: 10,
@@ -245,13 +245,10 @@ class _HomeViewState extends State<HomeView> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Small Poster Image above the title
                             Container(
                               width: 90,
                               height: 120,
-                              margin: const EdgeInsets.only(
-                                  bottom:
-                                      8.0), // Spacing between image and title
+                              margin: const EdgeInsets.only(bottom: 8.0),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8),
                                 image: DecorationImage(
@@ -260,7 +257,6 @@ class _HomeViewState extends State<HomeView> {
                                 ),
                               ),
                             ),
-                            // Title of the movie
                             Text(
                               item['title']!,
                               style: const TextStyle(
@@ -271,7 +267,6 @@ class _HomeViewState extends State<HomeView> {
                               ),
                             ),
                             const SizedBox(height: 5),
-                            // Rating
                             Row(
                               children: const [
                                 Icon(
@@ -281,7 +276,7 @@ class _HomeViewState extends State<HomeView> {
                                 ),
                                 SizedBox(width: 5),
                                 Text(
-                                  '7.7', // Rating bisa dimodifikasi
+                                  '7.7',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 14,
