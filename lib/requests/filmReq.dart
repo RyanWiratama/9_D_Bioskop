@@ -6,6 +6,9 @@ class FilmReq {
   static final String baseUrl = '10.0.2.2:8000';
   static final String endpoint = '/api/film';
 
+  static Future<List<Film>> fetchall() async {
+    final Uri url = Uri.http(baseUrl, endpoint);
+
   static Future<List<Film>> fetchByGenre(String genre) async {
     final Uri url = Uri.http(baseUrl, endpoint, {'genre': genre});
 
