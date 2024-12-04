@@ -226,10 +226,11 @@ class UserReq {
       if (response.statusCode == 200) {
         return response;
       } else {
-        throw Exception('Failed to update password: ${response.reasonPhrase}');
+        throw Exception(
+            'Failed to update phone number: ${response.reasonPhrase}');
       }
     } catch (e) {
-      throw Exception('Error: $e');
+      throw Exception("Error: $e");
     }
   }
 }

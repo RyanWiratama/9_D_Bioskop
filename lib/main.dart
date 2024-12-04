@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tubes_pbp_9/view/home_view.dart';
 import 'package:tubes_pbp_9/view/Auth/login_view.dart';
 
 void main() {

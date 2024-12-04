@@ -39,7 +39,18 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
 
       if (newPassword != confirmPassword) {
         Fluttertoast.showToast(
-          msg: "Kata sandi baru dan konfirmasi kata sandi tidak cocok!",
+          msg: "New password and confirmation do not match.",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+        );
+        return;
+      }
+
+      if (currentPassword == newPassword) {
+        Fluttertoast.showToast(
+          msg: "New password cannot be the same as the current password.",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           backgroundColor: Colors.red,
@@ -54,16 +65,17 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
 
         if (response.statusCode == 200) {
           Fluttertoast.showToast(
-            msg: "Kata sandi berhasil diubah!",
+            msg: "Password updated successfully!",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             backgroundColor: Colors.green,
             textColor: Colors.white,
           );
-          Navigator.pop(context);
+
+          Navigator.pop(context, true);
         } else {
           Fluttertoast.showToast(
-            msg: "Gagal mengubah kata sandi!",
+            msg: "Failed to update password: ${response.reasonPhrase}",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             backgroundColor: Colors.red,
@@ -72,21 +84,13 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
         }
       } catch (e) {
         Fluttertoast.showToast(
-          msg: "Terjadi kesalahan: $e",
+          msg: "Error occurred: $e",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           backgroundColor: Colors.red,
           textColor: Colors.white,
         );
       }
-    } else {
-      Fluttertoast.showToast(
-        msg: "Semua kolom harus diisi dengan benar.",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-      );
     }
   }
 
