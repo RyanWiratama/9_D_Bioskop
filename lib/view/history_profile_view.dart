@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:tubes_pbp_9/entity/history.dart';
+import 'package:tubes_pbp_9/requests/historyReq.dart';
 
 class HistoryView extends StatelessWidget {
   const HistoryView({Key? key}) : super(key: key);
 
   Widget _buildHistoryItem({
-    required String image,
-    required String title,
-    required String location,
-    required String tickets,
-    required String date,
+    required String? image,
+    required String? title,
+    required String? date,
   }) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16.0),
@@ -22,7 +22,8 @@ class HistoryView extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(8.0),
             child: Image.network(
-              image,
+              image ??
+                  'https://via.placeholder.com/60x90', // Default placeholder image
               width: 60,
               height: 90,
               fit: BoxFit.cover,
@@ -34,7 +35,7 @@ class HistoryView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  title,
+                  title ?? 'No Title', // Fallback if title is null
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
@@ -43,23 +44,7 @@ class HistoryView extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  location,
-                  style: const TextStyle(
-                    color: Colors.white70,
-                    fontSize: 14,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  tickets,
-                  style: const TextStyle(
-                    color: Colors.white70,
-                    fontSize: 14,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  date,
+                  date ?? 'No Date', // Fallback if date is null
                   style: const TextStyle(
                     color: Colors.white70,
                     fontSize: 14,
@@ -133,33 +118,32 @@ class HistoryView extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Expanded(
-              child: ListView(
-                children: [
-                  _buildHistoryItem(
-                    image:
-                        'https://image.tmdb.org/t/p/w500/k9fd4KZ4z9ibZCIslhpN13U4fTz.jpg',
-                    title: 'Avengers',
-                    location: 'EMPIRE XXI, #1',
-                    tickets: '2 Tickets',
-                    date: 'Friday, Oct 20, 2024, 12:00',
-                  ),
-                  _buildHistoryItem(
-                    image:
-                        'https://image.tmdb.org/t/p/w500/ohOnrHtpOaI2J79Ko1T3DwaeXsM.jpg',
-                    title: 'Spiderman',
-                    location: 'AMBARRUKMO XXI, #2',
-                    tickets: '2 Tickets',
-                    date: 'Monday, Oct 8, 2023, 12:00',
-                  ),
-                  _buildHistoryItem(
-                    image:
-                        'https://image.tmdb.org/t/p/w500/eevV78N0HVFFd62ftwDdd8Zxmio.jpg',
-                    title: 'Iron Man 2',
-                    location: 'JOGJA CITY MALL XXI, #3',
-                    tickets: '2 Tickets',
-                    date: 'Friday, Oct 6, 2023, 12:00',
-                  ),
-                ],
+              child: FutureBuilder<List<History>>(
+                future: HistoryReq.fetchAllHistories(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Center(child: Text('No history found.'));
+                  } else {
+                    final histories = snapshot.data!;
+
+                    return ListView.builder(
+                      itemCount: histories.length,
+                      itemBuilder: (context, index) {
+                        final history = histories[index];
+                        return _buildHistoryItem(
+                          image: history.film.poster, // Poster of the film
+                          title: history.film.judul, // Title of the film
+                          date:
+                              history.tanggalNonton, // Date format should match
+                        );
+                      },
+                    );
+                  }
+                },
               ),
             ),
           ],
