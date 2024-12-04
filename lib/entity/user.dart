@@ -6,6 +6,7 @@ class User {
   String email;
   String password;
   BigInt no_telp;
+  String foto;
 
   User({
     required this.id,
@@ -13,6 +14,7 @@ class User {
     required this.email,
     required this.password,
     required this.no_telp,
+    required this.foto,
   });
 
   factory User.fromRawJson(String str) => User.fromJson(json.decode(str));
@@ -21,7 +23,8 @@ class User {
         name: json['name'],
         email: json['email'],
         password: json['password'],
-        no_telp: json['no_telp'],
+        no_telp: BigInt.parse(json['no_telp'].toString()),
+        foto: json['foto'] ?? '',
       );
 
   String toRawJson() => json.encode(toJson());
@@ -30,6 +33,7 @@ class User {
         'name': name,
         'email': email,
         'password': password,
-        'no_telp': no_telp,
+        'no_telp': no_telp.toString(),
+        'foto': foto,
       };
 }

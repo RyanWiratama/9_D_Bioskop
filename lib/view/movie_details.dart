@@ -76,7 +76,6 @@ class _MovieDetailsViewState extends State<MovieDetailsView> {
       );
     }
 
-    // Ganti Image.network menjadi Image.asset dan tentukan path untuk poster.
     String posterPath = '${_film!.poster}';
 
     return Scaffold(
@@ -118,11 +117,9 @@ class _MovieDetailsViewState extends State<MovieDetailsView> {
                 ],
               ),
               const SizedBox(height: 16),
-
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Poster
                   Expanded(
                     flex: 1,
                     child: AspectRatio(
@@ -131,7 +128,6 @@ class _MovieDetailsViewState extends State<MovieDetailsView> {
                     ),
                   ),
                   const SizedBox(width: 16),
-
                   Expanded(
                     flex: 1,
                     child: Column(
@@ -160,7 +156,6 @@ class _MovieDetailsViewState extends State<MovieDetailsView> {
                 ],
               ),
               const SizedBox(height: 16),
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -175,8 +170,6 @@ class _MovieDetailsViewState extends State<MovieDetailsView> {
                 ],
               ),
               const SizedBox(height: 16),
-
-              // Synopsis Section
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
