@@ -1,25 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:tubes_pbp_9/view/home_view.dart';
+import 'package:tubes_pbp_9/entity/film.dart';
+import 'package:tubes_pbp_9/requests/filmReq.dart';
 import 'package:tubes_pbp_9/view/Food%20&%20Bev/fnb_view.dart';
 import 'package:tubes_pbp_9/view/Profile/profile_view.dart';
-
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        fontFamily: 'Poppins',
-      ),
-      home: const ListPageView(),
-    );
-  }
-}
+import 'package:tubes_pbp_9/view/home_view.dart';
+import 'package:tubes_pbp_9/view/list_viewDetails.dart'; // Import the movie detail page
 
 class ListPageView extends StatefulWidget {
   const ListPageView({super.key});
@@ -55,60 +40,33 @@ class _ListPageState extends State<ListPageView> {
     }
   }
 
-  final List<Map<String, String>> movies = [
-    {
-      'title': 'Avengers: Endgame',
-      'description': 'Lorem ipsum dolor sit amet',
-      'poster':
-          'https://images-cdn.ubuy.co.id/635aa3f5e29f902a352def13-marvel-the-avengers-endgame-movie.jpg',
-      'showtime': '12:00 PM, 3:00 PM, 6:00 PM',
-    },
-    {
-      'title': 'Avengers: Infinity War',
-      'description': 'Lorem ipsum dolor sit amet',
-      'poster':
-          'https://images-cdn.ubuy.co.id/668f03f763dc6918441092c0-avengers-infinity-war-movie-poster.jpg',
-      'showtime': '1:00 PM, 4:00 PM, 7:00 PM',
-    },
-    {
-      'title': 'Captain America: The Winter Soldier',
-      'description': 'Lorem ipsum dolor sit amet',
-      'poster':
-          'https://m.media-amazon.com/images/M/MV5BNWY1NjFmNDItZDhmOC00NjI1LWE0ZDItMTM0MjBjZThiOTQ2XkEyXkFqcGc@.V1.jpg',
-      'showtime': '1:00 PM, 4:00 PM, 7:00 PM',
-    },
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF384357),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Text(
-              'Cineatma',
-              style: TextStyle(
-                fontFamily: 'Poppins',
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 24,
-              ),
-            ),
-          ],
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.search, color: Colors.white),
-          onPressed: () {},
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications, color: Colors.white),
-            onPressed: () {},
-          ),
-        ],
-      ),
+      // appBar: AppBar(
+      //   backgroundColor: const Color(0xFF384357),
+      //   title: const Center(
+      //     child: Text(
+      //       'Cineatma',
+      //       style: TextStyle(
+      //         fontFamily: 'Poppins',
+      //         color: Colors.white,
+      //         fontWeight: FontWeight.bold,
+      //         fontSize: 24,
+      //       ),
+      //     ),
+      //   ),
+      //   leading: IconButton(
+      //     icon: const Icon(Icons.search, color: Colors.white),
+      //     onPressed: () {},
+      //   ),
+      //   actions: [
+      //     IconButton(
+      //       icon: const Icon(Icons.notifications, color: Colors.white),
+      //       onPressed: () {},
+      //     ),
+      //   ],
+      // ),
       body: Container(
         color: const Color(0xFF384357),
         padding: const EdgeInsets.all(10.0),
@@ -123,8 +81,7 @@ class _ListPageState extends State<ListPageView> {
                   hintText: 'Search My Tickets...',
                   hintStyle: const TextStyle(color: Colors.white70),
                   filled: true,
-                  fillColor:
-                      const Color.fromARGB(255, 255, 255, 255).withOpacity(0.5),
+                  fillColor: Colors.white.withOpacity(0.5),
                   prefixIcon: const Icon(Icons.search, color: Colors.white),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(25.0),
@@ -135,70 +92,97 @@ class _ListPageState extends State<ListPageView> {
               ),
             ),
             Expanded(
-              child: ListView.builder(
-                itemCount: movies.length,
-                itemBuilder: (context, index) {
-                  final movie = movies[index];
-                  return Card(
-                    color: const Color(0xFF495366),
-                    margin: const EdgeInsets.symmetric(vertical: 10.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                    elevation: 4,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(8.0),
-                            child: Image.network(
-                              movie['poster']!,
-                              width: 80,
-                              height: 120,
-                              fit: BoxFit.cover,
+              child: FutureBuilder<List<Film>>(
+                future: FilmReq.fetchAllFilms(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Center(child: Text('No data available.'));
+                  } else {
+                    final films = snapshot.data!;
+                    return ListView.builder(
+                      itemCount: films.length,
+                      itemBuilder: (context, index) {
+                        final film = films[index];
+                        return GestureDetector(
+                          onTap: () {
+                            // Navigate to the movie detail page
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    MovieDetailPage(film: film),
+                              ),
+                            );
+                          },
+                          child: Card(
+                            color: const Color(0xFF495366),
+                            margin: const EdgeInsets.symmetric(vertical: 10.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                            elevation: 4,
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    child: Image.asset(
+                                      film.poster, // Ensure film.poster is correct
+                                      width: 80,
+                                      height: 120,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          film.judul,
+                                          style: const TextStyle(
+                                            fontFamily: 'Poppins',
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 5),
+                                        Text(
+                                          film.deskripsi,
+                                          style: const TextStyle(
+                                            fontFamily: 'Poppins',
+                                            fontSize: 14,
+                                            color: Colors.white70,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Text(
+                                          "Durasi: ${film.durasi}",
+                                          style: const TextStyle(
+                                            fontFamily: 'Poppins',
+                                            fontSize: 12,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  movie['title']!,
-                                  style: const TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                const SizedBox(height: 5),
-                                Text(
-                                  movie['description']!,
-                                  style: const TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontSize: 14,
-                                    color: Colors.white70,
-                                  ),
-                                ),
-                                const SizedBox(height: 10),
-                                Text(
-                                  "Showtimes: ${movie['showtime']!}",
-                                  style: const TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontSize: 12,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
+                        );
+                      },
+                    );
+                  }
                 },
               ),
             ),

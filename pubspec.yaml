@@ -46,3 +46,10 @@ flutter:
     - assets/images/spiderman.jpg
     - assets/images/ironman.jpeg
     - assets/images/ryan.jpg
+    - assets/posterFilm/cars2Poster.jpg
+    - assets/posterFilm/dunePoster.jpg
+    - assets/posterFilm/dunkirkPoster.jpg
+    - assets/posterFilm/gotg2Poster.jpg
+    - assets/posterFilm/interstellarPoster.jpg
+    - assets/posterFilm/parasitePoster.jpg
+    - assets/backgroundLoading.jpg
