@@ -2,23 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tubes_pbp_9/requests/userReq.dart';
 
-class EditEmailPage extends StatefulWidget {
-  final String currentValue;
+class EditNoTelpPage extends StatefulWidget {
+  final String currentNoTelp;
 
-  const EditEmailPage({Key? key, required this.currentValue}) : super(key: key);
+  const EditNoTelpPage({Key? key, required this.currentNoTelp})
+      : super(key: key);
 
   @override
-  _EditEmailPageState createState() => _EditEmailPageState();
+  _EditNoTelpPageState createState() => _EditNoTelpPageState();
 }
 
-class _EditEmailPageState extends State<EditEmailPage> {
+class _EditNoTelpPageState extends State<EditNoTelpPage> {
   late TextEditingController _controller;
   final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController(text: widget.currentValue);
+    _controller = TextEditingController(text: widget.currentNoTelp);
   }
 
   @override
@@ -29,11 +30,11 @@ class _EditEmailPageState extends State<EditEmailPage> {
 
   void _saveChanges() async {
     if (_formKey.currentState!.validate()) {
-      String updatedEmail = _controller.text;
+      String updatedNoTelp = _controller.text;
 
-      if (updatedEmail == widget.currentValue) {
+      if (updatedNoTelp == widget.currentNoTelp) {
         Fluttertoast.showToast(
-          msg: "Email is the same as the previous one.",
+          msg: "Nomor telepon sama dengan yang sebelumnya.",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           backgroundColor: Colors.red,
@@ -43,20 +44,20 @@ class _EditEmailPageState extends State<EditEmailPage> {
       }
 
       try {
-        await UserReq.updateUserEmail(updatedEmail);
+        await UserReq.updateUserPhone(updatedNoTelp);
 
         Fluttertoast.showToast(
-          msg: "Email successfully updated",
+          msg: "Nomor telepon berhasil diperbarui",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           backgroundColor: Colors.green,
           textColor: Colors.white,
         );
 
-        Navigator.pop(context, updatedEmail);
+        Navigator.pop(context, updatedNoTelp);
       } catch (e) {
         Fluttertoast.showToast(
-          msg: "Failed to update email. Please try again.",
+          msg: "Gagal memperbarui nomor telepon. Silakan coba lagi.",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           backgroundColor: Colors.red,
@@ -65,7 +66,7 @@ class _EditEmailPageState extends State<EditEmailPage> {
       }
     } else {
       Fluttertoast.showToast(
-        msg: "Please enter a valid email address.",
+        msg: "Masukkan nomor telepon yang valid.",
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.red,
@@ -82,7 +83,7 @@ class _EditEmailPageState extends State<EditEmailPage> {
         backgroundColor: const Color(0xFF384357),
         elevation: 0,
         title: const Text(
-          'Edit Email',
+          'Edit Nomor Telepon',
           style: TextStyle(
             color: Colors.white,
             fontSize: 20,
@@ -111,8 +112,9 @@ class _EditEmailPageState extends State<EditEmailPage> {
               TextFormField(
                 controller: _controller,
                 style: const TextStyle(color: Colors.white),
+                keyboardType: TextInputType.phone,
                 decoration: const InputDecoration(
-                  labelText: 'Email Address',
+                  labelText: 'Nomor Telepon',
                   labelStyle: TextStyle(color: Colors.white),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.white),
@@ -120,17 +122,16 @@ class _EditEmailPageState extends State<EditEmailPage> {
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.white),
                   ),
-                  hintText: 'Enter your email address',
+                  hintText: 'Masukkan nomor telepon',
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter an email';
+                    return 'Nomor telepon tidak boleh kosong';
                   }
-                  String pattern =
-                      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$';
+                  String pattern = r'^[0-9]{12,}$';
                   RegExp regExp = RegExp(pattern);
                   if (!regExp.hasMatch(value)) {
-                    return 'Please enter a valid email';
+                    return 'Nomor telepon harus terdiri dari minimal 12 digit';
                   }
                   return null;
                 },
@@ -145,7 +146,7 @@ class _EditEmailPageState extends State<EditEmailPage> {
                   ),
                 ),
                 child: const Text(
-                  'Save Changes',
+                  'Simpan Perubahan',
                   style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
               ),

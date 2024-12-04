@@ -32,6 +32,7 @@ class _RegisterViewState extends State<RegisterView> {
       'email': emailController.text,
       'password': passwordController.text,
       'no_telp': noTelpController.text,
+      'foto': '',
     };
 
     setState(() {
@@ -318,6 +319,9 @@ class _RegisterViewState extends State<RegisterView> {
             }
             if (isPassword && value != confirmPasswordController.text) {
               return 'Passwords do not match';
+            }
+            if (phone && value.length < 12) {
+              return 'Phone number must be at least 12 characters';
             }
             return null;
           },

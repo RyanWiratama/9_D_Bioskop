@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart'; // Import FlutterToast
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:tubes_pbp_9/requests/userReq.dart';
 
 class EditPasswordPage extends StatefulWidget {
-  final String currentValue; // Menyimpan nilai password saat ini
-
-  const EditPasswordPage({Key? key, required this.currentValue}) : super(key: key);
+  const EditPasswordPage({Key? key}) : super(key: key);
 
   @override
   _EditPasswordPageState createState() => _EditPasswordPageState();
@@ -14,6 +13,7 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
   late TextEditingController _currentPasswordController;
   late TextEditingController _newPasswordController;
   late TextEditingController _confirmPasswordController;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -31,48 +31,63 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
     super.dispose();
   }
 
-  void _saveChanges() {
-    String currentPassword = _currentPasswordController.text;
-    String newPassword = _newPasswordController.text;
-    String confirmPassword = _confirmPasswordController.text;
+  void _saveChanges() async {
+    if (_formKey.currentState!.validate()) {
+      String currentPassword = _currentPasswordController.text;
+      String newPassword = _newPasswordController.text;
+      String confirmPassword = _confirmPasswordController.text;
 
-    if (currentPassword.isEmpty || newPassword.isEmpty || confirmPassword.isEmpty) {
+      if (newPassword != confirmPassword) {
+        Fluttertoast.showToast(
+          msg: "Kata sandi baru dan konfirmasi kata sandi tidak cocok!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+        );
+        return;
+      }
+
+      try {
+        final response =
+            await UserReq.updateUserPassword(currentPassword, newPassword);
+
+        if (response.statusCode == 200) {
+          Fluttertoast.showToast(
+            msg: "Kata sandi berhasil diubah!",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+          );
+          Navigator.pop(context);
+        } else {
+          Fluttertoast.showToast(
+            msg: "Gagal mengubah kata sandi!",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+          );
+        }
+      } catch (e) {
+        Fluttertoast.showToast(
+          msg: "Terjadi kesalahan: $e",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+        );
+      }
+    } else {
       Fluttertoast.showToast(
-        msg: "Semua kolom harus diisi!",
+        msg: "Semua kolom harus diisi dengan benar.",
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
         backgroundColor: Colors.red,
         textColor: Colors.white,
-        fontSize: 16.0,
       );
-      return;
     }
-
-    if (newPassword != confirmPassword) {
-      Fluttertoast.showToast(
-        msg: "Kata sandi baru dan konfirmasi kata sandi tidak cocok!",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
-      return;
-    }
-
-    Fluttertoast.showToast(
-      msg: "Kata sandi berhasil diubah!",
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      timeInSecForIosWeb: 1,
-      backgroundColor: Colors.green,
-      textColor: Colors.white,
-      fontSize: 16.0,
-    );
-
-    Navigator.pop(context); // Kembali ke halaman sebelumnya
   }
 
   @override
@@ -103,72 +118,93 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 20),
-            TextField(
-              controller: _currentPasswordController,
-              obscureText: true,
-              style: const TextStyle(color: Colors.white),
-              decoration: const InputDecoration(
-                labelText: 'Current Password',
-                labelStyle: TextStyle(color: Colors.white),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 20),
+              TextFormField(
+                controller: _currentPasswordController,
+                obscureText: true,
+                style: const TextStyle(color: Colors.white),
+                decoration: const InputDecoration(
+                  labelText: 'Current Password',
+                  labelStyle: TextStyle(color: Colors.white),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                  ),
                 ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Kata sandi saat ini tidak boleh kosong';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 20),
+              TextFormField(
+                controller: _newPasswordController,
+                obscureText: true,
+                style: const TextStyle(color: Colors.white),
+                decoration: const InputDecoration(
+                  labelText: 'New Password',
+                  labelStyle: TextStyle(color: Colors.white),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                  ),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Kata sandi baru tidak boleh kosong';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 20),
+              TextFormField(
+                controller: _confirmPasswordController,
+                obscureText: true,
+                style: const TextStyle(color: Colors.white),
+                decoration: const InputDecoration(
+                  labelText: 'Confirm New Password',
+                  labelStyle: TextStyle(color: Colors.white),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                  ),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Konfirmasi kata sandi tidak boleh kosong';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _saveChanges,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+                child: const Text(
+                  'Save Changes',
+                  style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
               ),
-            ),
-            const SizedBox(height: 20),
-            TextField(
-              controller: _newPasswordController,
-              obscureText: true,
-              style: const TextStyle(color: Colors.white),
-              decoration: const InputDecoration(
-                labelText: 'New Password',
-                labelStyle: TextStyle(color: Colors.white),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            TextField(
-              controller: _confirmPasswordController,
-              obscureText: true,
-              style: const TextStyle(color: Colors.white),
-              decoration: const InputDecoration(
-                labelText: 'Confirm New Password',
-                labelStyle: TextStyle(color: Colors.white),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _saveChanges,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-              child: const Text(
-                'Save Changes',
-                style: TextStyle(color: Colors.white, fontSize: 16),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
