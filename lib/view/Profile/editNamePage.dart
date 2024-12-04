@@ -1,43 +1,64 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:tubes_pbp_9/requests/userReq.dart';
 
-class EditLastNamePage extends StatefulWidget {
+class EditNamePage extends StatefulWidget {
   final String currentValue;
 
-  const EditLastNamePage({Key? key, required this.currentValue}) : super(key: key);
+  const EditNamePage({Key? key, required this.currentValue}) : super(key: key);
 
   @override
-  EditLastNamePageState createState() => EditLastNamePageState();
+  _EditNamePageState createState() => _EditNamePageState();
 }
 
-class EditLastNamePageState extends State<EditLastNamePage> {
-  late TextEditingController _lastNameController;
+class _EditNamePageState extends State<EditNamePage> {
+  late TextEditingController _controller;
 
   @override
   void initState() {
     super.initState();
-    _lastNameController = TextEditingController(text: widget.currentValue);
+    _controller = TextEditingController(text: widget.currentValue);
   }
 
   @override
   void dispose() {
-    _lastNameController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
-  void _saveChanges() {
-    String updatedLastName = _lastNameController.text;
-    Navigator.pop(context, updatedLastName); // Kembali ke halaman sebelumnya dengan data baru
+  void _saveChanges() async {
+    String updatedName = _controller.text;
+    if (updatedName.isNotEmpty) {
+      try {
+        final response = await UserReq.updateUserName(updatedName);
+
+        if (response.statusCode == 200) {
+          Navigator.pop(context, updatedName);
+          Fluttertoast.showToast(msg: 'Name updated successfully');
+        } else {
+          throw Exception('Failed to update name');
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to update name')),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Name cannot be empty')),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF384357),
+      backgroundColor: const Color(0xFF2C3E50),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF384357),
+        backgroundColor: const Color(0xFF2C3E50),
         elevation: 0,
         title: const Text(
-          'Edit Last Name',
+          'Edit Name',
           style: TextStyle(
             color: Colors.white,
             fontSize: 20,
@@ -62,10 +83,10 @@ class EditLastNamePageState extends State<EditLastNamePage> {
           children: [
             const SizedBox(height: 20),
             TextField(
-              controller: _lastNameController,
+              controller: _controller,
               style: const TextStyle(color: Colors.white),
               decoration: const InputDecoration(
-                labelText: 'Last Name',
+                labelText: 'Name',
                 labelStyle: TextStyle(color: Colors.white),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.white),
@@ -79,7 +100,7 @@ class EditLastNamePageState extends State<EditLastNamePage> {
             ElevatedButton(
               onPressed: _saveChanges,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue, // Menggunakan backgroundColor, bukan primary
+                backgroundColor: Colors.blue,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
