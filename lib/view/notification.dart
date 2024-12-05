@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_pbp_9/view/Food%20&%20Bev/fnb_view.dart';
 import 'package:tubes_pbp_9/view/list_view.dart';
-import 'package:tubes_pbp_9/view/movie_details.dart';
 import 'package:tubes_pbp_9/view/Profile/profile_view.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:tubes_pbp_9/view/profile/profile_view.dart';
 import 'package:tubes_pbp_9/view/home_view.dart';
 
 class NotificationPage extends StatefulWidget {
@@ -34,7 +31,7 @@ class _NotificationPageState extends State<NotificationPage> {
     {
       "date": "18 October 2024",
       "content":
-          "Rate it! - How was Joker: folie à deux? Don’t forget to leave a review for the film!"
+          "Rate it! - How was Joker: folie à deux? Don't forget to leave a review for the film!"
     },
   ];
 
