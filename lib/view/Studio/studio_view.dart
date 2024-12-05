@@ -121,7 +121,6 @@ class _StudioViewState extends State<StudioView>{
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Poster
                   Expanded(
                     flex: 1,
                     child: AspectRatio(
@@ -130,7 +129,6 @@ class _StudioViewState extends State<StudioView>{
                     ),
                   ),
                   const SizedBox(width: 16),
-
                   Expanded(
                     flex: 1,
                     child: Column(

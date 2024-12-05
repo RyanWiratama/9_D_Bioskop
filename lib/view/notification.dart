@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_pbp_9/view/Food%20&%20Bev/fnb_view.dart';
 import 'package:tubes_pbp_9/view/list_view.dart';
+import 'package:tubes_pbp_9/view/movie_details.dart';
+import 'package:tubes_pbp_9/view/Profile/profile_view.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:tubes_pbp_9/view/profile/profile_view.dart';
 import 'package:tubes_pbp_9/view/home_view.dart';
 
