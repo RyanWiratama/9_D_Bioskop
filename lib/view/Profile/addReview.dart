@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_pbp_9/entity/history.dart';
+import 'package:tubes_pbp_9/entity/review.dart';
+import 'package:tubes_pbp_9/entity/user.dart';
+import 'package:tubes_pbp_9/requests/reviewReq.dart';
 
 class ReviewView extends StatefulWidget {
   final History history;
@@ -63,50 +66,6 @@ class _ReviewViewState extends State<ReviewView> {
               ),
               const SizedBox(height: 16),
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text('Cinema', style: TextStyle(color: Colors.white)),
-                      Text('Date', style: TextStyle(color: Colors.white)),
-                      Text('Time', style: TextStyle(color: Colors.white)),
-                      Text('Studio', style: TextStyle(color: Colors.white)),
-                      Text('Seats', style: TextStyle(color: Colors.white)),
-                    ],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      //   Text(
-                      //     widget.history.cinema,
-                      //     style: const TextStyle(color: Colors.white),
-                      //   ),
-                      Text(
-                        widget.history.tanggalNonton,
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                      //   Text(
-                      //     widget.history.jamNonton,
-                      //     style: const TextStyle(color: Colors.white),
-                      //   ),
-                      //   Text(
-                      //     widget.history.studio,
-                      //     style: const TextStyle(color: Colors.white),
-                      //   ),
-                      //   Text(
-                      //     widget.history.seat,
-                      //     style: const TextStyle(color: Colors.white),
-                      //   ),
-                    ],
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              const Divider(color: Colors.white),
-              const SizedBox(height: 16),
-
               // Rating Section
               const Text(
                 'Rating',
@@ -117,7 +76,7 @@ class _ReviewViewState extends State<ReviewView> {
                   return IconButton(
                     onPressed: () {
                       setState(() {
-                        _rating = index + 1; // Update rating
+                        _rating = index + 1;
                       });
                     },
                     icon: Icon(
@@ -151,28 +110,80 @@ class _ReviewViewState extends State<ReviewView> {
               ),
               const SizedBox(height: 16),
 
+              // Submit Button
               Center(
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     String review = _reviewController.text;
-                    if (_rating > 0 && review.isNotEmpty) {
+
+                    // Validation checks
+                    if (_rating == 0) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Review submitted!')),
+                        const SnackBar(
+                            content: Text('Please provide a rating.')),
                       );
-                    } else {
+                      return;
+                    }
+
+                    if (review.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                            content:
-                                Text('Please provide a rating and review.')),
+                        const SnackBar(content: Text('Please write a review.')),
+                      );
+                      return;
+                    }
+
+                    if (widget.history.id == 0) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Invalid movie history.')),
+                      );
+                      return;
+                    }
+
+                    try {
+                      // Assuming you get the logged-in user ID correctly from your auth system
+                      int userId = 123; // Replace with actual logged-in user ID
+
+                      final newReview = Review(
+                        id: 0, // ID auto-generated in backend
+                        idUser: userId, // User ID from logged-in user
+                        idHistory: widget.history.id,
+                        rating: _rating,
+                        komentar: review,
+                        history: widget.history,
+                        user: User(
+                          id: userId,
+                          name:
+                              'John Doe', // Replace with the actual logged-in user's name
+                          email:
+                              'johndoe@example.com', // Replace with actual email
+                          password: '',
+                          no_telp: BigInt.from(0),
+                          foto: '',
+                        ),
+                      );
+
+                      // Create the review and send to the server
+                      final submittedReview =
+                          await ReviewReq.createReview(newReview);
+
+                      // Show success message
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text('Review submitted successfully!')),
+                      );
+                      // Return to the previous screen
+                      Navigator.pop(context);
+                    } catch (e) {
+                      // Handle any errors during submission
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Failed to submit review: $e')),
                       );
                     }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 32,
-                      vertical: 12,
-                    ),
+                        horizontal: 32, vertical: 12),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),

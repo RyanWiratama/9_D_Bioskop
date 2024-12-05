@@ -5,7 +5,7 @@ import 'package:tubes_pbp_9/entity/review.dart';
 
 class ReviewReq {
   static final String baseUrl = '10.0.2.2:8000';
-  static final String endpoint = '/api/reviews';
+  static final String endpoint = '/api/review';
   final FlutterSecureStorage storage = FlutterSecureStorage();
 
   // Fetch all reviews
@@ -80,7 +80,7 @@ class ReviewReq {
 
   // Create a new review
   static Future<Review> createReview(Review review) async {
-    final Uri url = Uri.http(baseUrl, endpoint);
+    final Uri url = Uri.http(baseUrl, '/api/review/create');
 
     try {
       final String? token = await FlutterSecureStorage().read(key: 'token');

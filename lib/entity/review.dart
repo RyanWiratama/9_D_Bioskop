@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'history.dart'; 
+import 'history.dart';
 import 'user.dart';
 
 class Review {
@@ -29,13 +29,7 @@ class Review {
       rating: json['rating'],
       komentar: json['komentar'] ?? '',
       history: History.fromJson(json['history']),
-      user: User.fromJson(json['user']), 
-      // history: json['history'] != null
-      //     ? History.fromJson(json['history'])
-      //     : History(id: 0, idFilm: 0, idUser: 0, tanggalNonton: '', film: {}),
-      // user: json['user'] != null
-      //     ? User.fromJson(json['user']) // Mengambil data user
-      //     : User(id: 0, name: '', email: ''), // Menyediakan data default jika user tidak ada
+      user: User.fromJson(json['user']),
     );
   }
 
