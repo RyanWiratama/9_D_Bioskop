@@ -4,7 +4,7 @@ import 'package:tubes_pbp_9/requests/filmReq.dart';
 import 'package:tubes_pbp_9/view/Food%20&%20Bev/fnb_view.dart';
 import 'package:tubes_pbp_9/view/Profile/profile_view.dart';
 import 'package:tubes_pbp_9/view/home_view.dart';
-import 'package:tubes_pbp_9/view/list_viewDetails.dart'; // Import the movie detail page
+import 'package:tubes_pbp_9/view/list_viewDetails.dart';
 
 class ListPageView extends StatefulWidget {
   const ListPageView({super.key});
@@ -109,7 +109,6 @@ class _ListPageState extends State<ListPageView> {
                         final film = films[index];
                         return GestureDetector(
                           onTap: () {
-                            // Navigate to the movie detail page
                             Navigator.push(
                               context,
                               MaterialPageRoute(

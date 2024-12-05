@@ -29,7 +29,6 @@ class HistoryReq {
       if (response.statusCode == 200) {
         List<dynamic> jsonData = jsonDecode(response.body);
 
-        // Mengecek setiap history untuk memastikan film ada
         for (var historyData in jsonData) {
           if (historyData['film'] == null) {
             throw Exception('Film data is missing in the history');
@@ -45,7 +44,6 @@ class HistoryReq {
     }
   }
 
-  // Ambil history berdasarkan ID
   static Future<History> fetchHistoryById(int id) async {
     final Uri url = Uri.http(baseUrl, '$endpoint/$id');
 
@@ -74,7 +72,6 @@ class HistoryReq {
     }
   }
 
-  // Menyimpan history baru
   static Future<History> createHistory(History history) async {
     final Uri url = Uri.http(baseUrl, endpoint);
 
