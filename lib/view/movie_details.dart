@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:tubes_pbp_9/requests/filmReq.dart';
 import 'package:tubes_pbp_9/entity/film.dart';
+import 'package:tubes_pbp_9/entity/review.dart';
+import 'package:tubes_pbp_9/requests/reviewReq.dart';
+import 'package:tubes_pbp_9/view/Studio/studio_view.dart';
 
 class MovieDetailsView extends StatefulWidget {
   final int filmId;
@@ -19,11 +22,13 @@ class _MovieDetailsViewState extends State<MovieDetailsView> {
   late YoutubePlayerController _youtubeController;
   bool _isError = false;
   Film? _film;
+  List<Review> _reviews = [];
 
   @override
   void initState() {
     super.initState();
     _fetchFilmDetails();
+    _fetchReviews();
   }
 
   void _fetchFilmDetails() async {
@@ -43,12 +48,23 @@ class _MovieDetailsViewState extends State<MovieDetailsView> {
     }
   }
 
+  void _fetchReviews() async {
+    try {
+      final reviews = await ReviewReq.fetchAllReviews();
+      setState(() {
+        _reviews = reviews.where((review) => review.history.idFilm == widget.filmId).toList();
+      });
+    } catch (error) {
+      debugPrint('Error fetching reviews: $error');
+    }
+  }
+
   void _initializeYoutubePlayer(String trailerUrl) {
     final videoId = YoutubePlayer.convertUrlToId(trailerUrl);
     if (videoId != null) {
       _youtubeController = YoutubePlayerController(
         initialVideoId: videoId,
-        flags: YoutubePlayerFlags(
+        flags: const YoutubePlayerFlags(
           autoPlay: true,
           mute: false,
         ),
@@ -157,62 +173,102 @@ class _MovieDetailsViewState extends State<MovieDetailsView> {
               ),
               const SizedBox(height: 16),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  _buildInfoBox(
-                    icon: Icons.star,
-                    text: _film!.ratingUsia,
+                  TextButton(
+                    onPressed: () {
+                      debugPrint('Already in About');
+                    },
+                    child: const Text(
+                      'About',
+                      style: TextStyle(color: Colors.white70),
+                    ),
                   ),
-                  _buildInfoBox(
-                    icon: Icons.calendar_today,
-                    text: 'Release date: ${_film!.ratingUsia}',
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => StudioView(filmId: widget.filmId),
+                        ),
+                      );
+                    },
+                    child: const Text(
+                      'Sessions',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
+              const SizedBox(height: 24),
+              const Text(
+                'Synopsis:',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Deskripsi',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      _film!.deskripsi,
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                  ],
                 ),
               ),
+              const SizedBox(height: 8),
+              Text(
+                _film!.deskripsi,
+                style: const TextStyle(fontSize: 16, color: Colors.white),
+              ),
               const SizedBox(height: 24),
+              const Text(
+                'Reviews:',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 8),
+              _reviews.isEmpty
+                  ? const Text(
+                      'No reviews yet.',
+                      style: TextStyle(fontSize: 16, color: Colors.white70),
+                    )
+                  : ListView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: _reviews.length,
+                      itemBuilder: (context, index) {
+                        final review = _reviews[index];
+                        return Card(
+                          color: Colors.white10,
+                          margin: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  review.user.name,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  'Rating: ${review.rating}',
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  review.komentar,
+                                  style: const TextStyle(color: Colors.white70),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildInfoBox({required IconData icon, required String text}) {
-    return Container(
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.5),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        children: [
-          Icon(icon, color: Colors.black, size: 16),
-          const SizedBox(width: 4),
-          Text(text, style: const TextStyle(color: Colors.black, fontSize: 14)),
-        ],
       ),
     );
   }
