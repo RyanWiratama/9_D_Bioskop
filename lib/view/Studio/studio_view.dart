@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tubes_pbp_9/entity/film.dart';
-import 'package:tubes_pbp_9/requests/filmReq.dart';
-import 'package:tubes_pbp_9/view/Food & Bev/fnb_view.dart';
-import 'package:tubes_pbp_9/view/home_view.dart';
-import 'package:tubes_pbp_9/view/list_view.dart';
-import 'package:tubes_pbp_9/view/Profile/profile_view.dart';
+import 'package:tubes_pbp_9/view/movie_details.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:tubes_pbp_9/requests/filmReq.dart';
+import 'package:tubes_pbp_9/entity/film.dart';
 
 class StudioView extends StatefulWidget {
   final int filmId;
@@ -16,11 +12,10 @@ class StudioView extends StatefulWidget {
     required this.filmId,
   }) : super(key: key);
 
-  @override
-  State<StudioView> createState() => _StudioViewState();
+  _StudioViewState createState() => _StudioViewState();
 }
 
-class _StudioViewState extends State<StudioView> {
+class _StudioViewState extends State<StudioView>{
   late YoutubePlayerController _youtubeController;
   bool _isError = false;
   Film? _film;
@@ -122,6 +117,7 @@ class _StudioViewState extends State<StudioView> {
                 ],
               ),
               const SizedBox(height: 16),
+
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -160,11 +156,129 @@ class _StudioViewState extends State<StudioView> {
                   ),
                 ],
               ),
+              const SizedBox(height: 16),
+
+              // about & sessions
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MovieDetailsView(filmId: widget.filmId),
+                          ),
+                        );
+                      },
+                      child: const Text(
+                        'About',
+                        style: TextStyle(color: Colors.white70),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {},
+                      child: const Text(
+                        'Sessions',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              SizedBox(
+                height: 40,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    _buildDateButton('18 Okt Jumat', true),
+                    _buildDateButton('19 Okt Sabtu', false),
+                    _buildDateButton('20 Okt Minggu', false),
+                    _buildDateButton('21 Okt Senin', false),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[900],
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    _buildTheaterRow('AMBARRUKMO XXI', '2.60 km', '10:30, 12:30, 13:45, 15:20, 18:30'),
+                    _buildTheaterRow('EMPIRE XXI', '3.40 km', '10:15, 11:45, 13:30, 14:45'),
+                    _buildTheaterRow('JOGJA CITY MALL XXI', '6.30 km', '11:30, 13:45, 14:30, 18:15, 20:30'),
+                    _buildTheaterRow('SLEMAN CITY HALL XXI', '11.3 km', '10:45, 13:00, 16:30, 20:30'),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
       ),
     );
-// throw UnimplementedError();
+  }
+
+  Widget _buildDateButton(String date, bool isSelected) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: ElevatedButton(
+        onPressed: () {},
+        style: ElevatedButton.styleFrom(
+          backgroundColor: isSelected ? Colors.red : Colors.grey[800],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+        child: Text(
+          date,
+          style: TextStyle(
+            color: isSelected ? Colors.white : Colors.white70,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTheaterRow(String name, String distance, String showtimes) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Icon(Icons.location_on, color: Colors.red, size: 20),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  name,
+                  style: const TextStyle(color: Colors.white, fontSize: 16),
+                ),
+                Text(
+                  distance,
+                  style: const TextStyle(color: Colors.white70, fontSize: 12),
+                ),
+                Text(
+                  showtimes,
+                  style: const TextStyle(color: Colors.white, fontSize: 12),
+                ),
+              ],
+            ),
+          ),
+          Text(
+            'Rp40.000',
+            style: const TextStyle(color: Colors.white, fontSize: 14),
+          ),
+        ],
+      ),
+    );
   }
 }
