@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:tubes_pbp_9/entity/review.dart';
@@ -97,6 +98,12 @@ class ReviewReq {
         },
         body: jsonEncode(review.toJson()),
       );
+
+      debugPrint(review.rating.toString());
+      debugPrint(review.id.toString());
+      debugPrint(review.idHistory.toString());
+      debugPrint(review.idUser.toString());
+      debugPrint(review.rating.toString());
 
       if (response.statusCode == 201) {
         return Review.fromJson(jsonDecode(response.body));

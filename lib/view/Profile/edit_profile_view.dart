@@ -76,6 +76,45 @@ class _EditProfileViewState extends State<EditProfileView> {
     );
   }
 
+  void _showPhotoOptions() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Container(
+          color: Colors.white,
+          child: Wrap(
+            children: [
+              ListTile(
+                leading: const Icon(Icons.camera_alt),
+                title: const Text("Take Photo"),
+                onTap: () {
+                  Navigator.pop(context);
+                  _pickImage(ImageSource.camera);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo),
+                title: const Text("Choose from Gallery"),
+                onTap: () {
+                  Navigator.pop(context);
+                  _pickImage(ImageSource.gallery);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.delete),
+                title: const Text("Delete Photo"),
+                onTap: () {
+                  Navigator.pop(context);
+                  _deletePhoto();
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
@@ -85,9 +124,9 @@ class _EditProfileViewState extends State<EditProfileView> {
     }
 
     return Scaffold(
-      backgroundColor: const Color(0xFF2C3E50),
+      backgroundColor: const Color(0xFF384357),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF2C3E50),
+        backgroundColor: const Color(0xFF384357),
         elevation: 0,
         title: const Text(
           'Edit Profile',
@@ -115,7 +154,7 @@ class _EditProfileViewState extends State<EditProfileView> {
               _buildEditableField(context, 'Name', user!.name),
               _buildEditableField(context, 'Email', user!.email),
               _buildEditableField(context, 'No Telp', user!.no_telp.toString()),
-              _buildEditableField(context, 'Password', '**********'),
+              _buildEditableField(context, 'Password', ''),
             ],
           ),
         ),
@@ -154,7 +193,7 @@ class _EditProfileViewState extends State<EditProfileView> {
           bottom: 0,
           right: 0,
           child: InkWell(
-            onTap: () => _pickImage(ImageSource.gallery),
+            onTap: _showPhotoOptions,
             child: Container(
               decoration: const BoxDecoration(
                 color: Colors.white,
@@ -216,7 +255,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                     );
                     if (updatedPassword != null && updatedPassword.isNotEmpty) {
                       setState(() {
-                        // You can store updated password if needed
+                        // Handle updated password
                       });
                     }
                   } else if (label == 'No Telp') {
@@ -224,8 +263,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => EditNoTelpPage(
-                          currentNoTelp: user!.no_telp
-                              .toString(), // Mengirimkan nomor telepon saat ini
+                          currentNoTelp: user!.no_telp.toString(),
                         ),
                       ),
                     );

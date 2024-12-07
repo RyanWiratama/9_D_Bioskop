@@ -161,9 +161,61 @@ class _ReviewViewState extends State<ReviewView> {
                       );
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
+<<<<<<< Updated upstream
                         SnackBar(
                             content:
                                 Text('Please provide a rating and review.')),
+=======
+                        const SnackBar(content: Text('Please write a review.')),
+                      );
+                      return;
+                    }
+
+                    if (widget.history.id == 0) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Invalid movie history.')),
+                      );
+                      return;
+                    }
+
+                    try {
+                      // Assuming you get the logged-in user ID correctly from your auth system
+                      // int userId = 123; // Replace with actual logged-in user ID
+
+                      final newReview = Review(
+                        id: 19, // ID auto-generated in backend
+                        idUser: 7, // User ID from logged-in user
+                        idHistory: widget.history.id,
+                        rating: _rating,
+                        komentar: review,
+                        history: widget.history,
+                        user: User(
+                          id: 7,
+                          name:
+                              'Diof Tsunami', // Replace with the actual logged-in user's name
+                          email: 'tasik@gmail.com', // Replace with actual email
+                          password: '',
+                          no_telp: BigInt.from(0),
+                          foto: '',
+                        ),
+                      );
+
+                      // Create the review and send to the server
+                      final submittedReview =
+                          await ReviewReq.createReview(newReview);
+
+                      // Show success message
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text('Review submitted successfully!')),
+                      );
+                      // Return to the previous screen
+                      Navigator.pop(context);
+                    } catch (e) {
+                      // Handle any errors during submission
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Failed to submit review: $e')),
+>>>>>>> Stashed changes
                       );
                     }
                   },
