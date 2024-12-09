@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:tubes_pbp_9/requests/filmReq.dart';
 import 'package:tubes_pbp_9/entity/film.dart';
@@ -23,12 +24,63 @@ class _MovieDetailsViewState extends State<MovieDetailsView> {
   bool _isError = false;
   Film? _film;
   List<Review> _reviews = [];
+  late FlutterTts _flutterTts; // TTS instance
 
   @override
   void initState() {
     super.initState();
+    _flutterTts = FlutterTts();
+    _initializeTTS();
     _fetchFilmDetails();
     _fetchReviews();
+  }
+
+  void _initializeTTS() {
+    _flutterTts.setLanguage("en-US");
+    _flutterTts.setPitch(1.0);
+    _flutterTts.setSpeechRate(0.5);
+
+    _flutterTts.setStartHandler(() {
+      debugPrint("TTS started");
+    });
+
+    _flutterTts.setCompletionHandler(() {
+      debugPrint("TTS completed");
+      // Resume YouTube playback after TTS completes
+      if (!_youtubeController.value.isPlaying) {
+        _youtubeController.play();
+      }
+    });
+
+    _flutterTts.setErrorHandler((msg) {
+      debugPrint("TTS Error: $msg");
+    });
+  }
+
+  void _speakSynopsis(String text) async {
+    try {
+      if (text.isEmpty) {
+        debugPrint("Synopsis is empty, cannot speak.");
+        return;
+      }
+
+      // Pause the YouTube player if it's playing
+      if (_youtubeController.value.isPlaying) {
+        _youtubeController.pause();
+      }
+
+      await _flutterTts.speak(text);
+    } catch (e) {
+      debugPrint("Error during TTS: $e");
+    }
+  }
+
+  void _stopSpeaking() async {
+    await _flutterTts.stop();
+    // Resume the YouTube video after TTS stops
+    if (!_youtubeController.value.isPlaying) {
+      _youtubeController.play();
+    }
   }
 
   void _fetchFilmDetails() async {
@@ -52,7 +104,9 @@ class _MovieDetailsViewState extends State<MovieDetailsView> {
     try {
       final reviews = await ReviewReq.fetchAllReviews();
       setState(() {
-        _reviews = reviews.where((review) => review.history.idFilm == widget.filmId).toList();
+        _reviews = reviews
+            .where((review) => review.history.idFilm == widget.filmId)
+            .toList();
       });
     } catch (error) {
       debugPrint('Error fetching reviews: $error');
@@ -76,11 +130,18 @@ class _MovieDetailsViewState extends State<MovieDetailsView> {
     }
   }
 
+  Widget _buildPoster(String path) {
+    if (path.startsWith('http')) {
+      return Image.network(path, fit: BoxFit.cover);
+    } else {
+      return Image.asset(path, fit: BoxFit.cover);
+    }
+  }
+
   @override
   void dispose() {
-    if (_youtubeController != null) {
-      _youtubeController.dispose();
-    }
+    _youtubeController?.dispose();
+    _flutterTts.stop(); // Stop TTS when widget is disposed
     super.dispose();
   }
 
@@ -140,7 +201,7 @@ class _MovieDetailsViewState extends State<MovieDetailsView> {
                     flex: 1,
                     child: AspectRatio(
                       aspectRatio: 2 / 3,
-                      child: Image.asset(posterPath, fit: BoxFit.cover),
+                      child: _buildPoster(posterPath),
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -189,7 +250,8 @@ class _MovieDetailsViewState extends State<MovieDetailsView> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => StudioView(filmId: widget.filmId),
+                          builder: (context) =>
+                              StudioView(filmId: widget.filmId),
                         ),
                       );
                     },
@@ -210,9 +272,27 @@ class _MovieDetailsViewState extends State<MovieDetailsView> {
                 ),
               ),
               const SizedBox(height: 8),
-              Text(
-                _film!.deskripsi,
-                style: const TextStyle(fontSize: 16, color: Colors.white),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      _film!.deskripsi,
+                      style: const TextStyle(fontSize: 16, color: Colors.white),
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.volume_up, color: Colors.white),
+                    onPressed: () async {
+                      _speakSynopsis(_film!.deskripsi);
+                    },
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.stop, color: Colors.red),
+                    onPressed: () {
+                      _stopSpeaking();
+                    },
+                  ),
+                ],
               ),
               const SizedBox(height: 24),
               const Text(
