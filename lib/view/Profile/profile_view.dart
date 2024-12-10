@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tubes_pbp_9/requests/userReq.dart';
 import 'package:tubes_pbp_9/view/home_view.dart';
 import 'package:tubes_pbp_9/view/list_view.dart';
+import 'package:tubes_pbp_9/view/Auth/login_view.dart';
 import 'package:tubes_pbp_9/view/Food & Bev/fnb_view.dart';
 import 'package:tubes_pbp_9/view/Profile/edit_profile_view.dart';
 import 'package:tubes_pbp_9/view/Profile/history_profile_view.dart';
@@ -169,7 +170,15 @@ class _ProfileViewState extends State<ProfileView> {
                         _buildProfileOption(Icons.settings, 'Settings'),
                         const Spacer(),
                         ElevatedButton.icon(
-                          onPressed: () {},
+                          onPressed: () async {
+                            await UserReq.logout();
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const LoginView()),
+                              (route) => false,
+                            );
+                          },
                           icon:
                               const Icon(Icons.arrow_back, color: Colors.white),
                           label: const Text(

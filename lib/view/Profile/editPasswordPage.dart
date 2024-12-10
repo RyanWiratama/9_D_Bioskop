@@ -14,6 +14,9 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
   late TextEditingController _newPasswordController;
   late TextEditingController _confirmPasswordController;
   final _formKey = GlobalKey<FormState>();
+  bool _isCurrentPasswordHidden = true;
+  bool _isNewPasswordHidden = true;
+  bool _isConfirmPasswordHidden = true;
 
   @override
   void initState() {
@@ -102,7 +105,7 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
         backgroundColor: const Color(0xFF384357),
         elevation: 0,
         title: const Text(
-          'Edit Password',
+          'Edit password',
           style: TextStyle(
             color: Colors.white,
             fontSize: 20,
@@ -127,90 +130,113 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 20),
-              TextFormField(
-                controller: _currentPasswordController,
-                obscureText: true,
-                style: const TextStyle(color: Colors.white),
-                decoration: const InputDecoration(
-                  labelText: 'Current Password',
-                  labelStyle: TextStyle(color: Colors.white),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Kata sandi saat ini tidak boleh kosong';
-                  }
-                  return null;
-                },
+              const SizedBox(height: 10),
+              const Text(
+                'Change the password regularly for account security',
+                style: TextStyle(color: Colors.white70, fontSize: 14),
+              ),
+              const SizedBox(height: 30),
+              _buildPasswordField(
+                'CURRENT PASSWORD',
+                _currentPasswordController,
+                _isCurrentPasswordHidden,
+                () => setState(() {
+                  _isCurrentPasswordHidden = !_isCurrentPasswordHidden;
+                }),
               ),
               const SizedBox(height: 20),
-              TextFormField(
-                controller: _newPasswordController,
-                obscureText: true,
-                style: const TextStyle(color: Colors.white),
-                decoration: const InputDecoration(
-                  labelText: 'New Password',
-                  labelStyle: TextStyle(color: Colors.white),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Kata sandi baru tidak boleh kosong';
-                  }
-                  return null;
-                },
+              _buildPasswordField(
+                'NEW PASSWORD',
+                _newPasswordController,
+                _isNewPasswordHidden,
+                () => setState(() {
+                  _isNewPasswordHidden = !_isNewPasswordHidden;
+                }),
               ),
               const SizedBox(height: 20),
-              TextFormField(
-                controller: _confirmPasswordController,
-                obscureText: true,
-                style: const TextStyle(color: Colors.white),
-                decoration: const InputDecoration(
-                  labelText: 'Confirm New Password',
-                  labelStyle: TextStyle(color: Colors.white),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Konfirmasi kata sandi tidak boleh kosong';
-                  }
-                  return null;
-                },
+              _buildPasswordField(
+                'CONFIRM PASSWORD',
+                _confirmPasswordController,
+                _isConfirmPasswordHidden,
+                () => setState(() {
+                  _isConfirmPasswordHidden = !_isConfirmPasswordHidden;
+                }),
               ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _saveChanges,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
+              const Spacer(),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _saveChanges,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF2B2B38),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
                   ),
-                ),
-                child: const Text(
-                  'Save Changes',
-                  style: TextStyle(color: Colors.white, fontSize: 16),
+                  child: const Text(
+                    'Change Password',
+                    style: TextStyle(color: Colors.white, fontSize: 14),
+                  ),
                 ),
               ),
+              const SizedBox(height: 16), // Spacing di bawah tombol
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildPasswordField(
+    String label,
+    TextEditingController controller,
+    bool isHidden,
+    VoidCallback toggleVisibility,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 10),
+        TextFormField(
+          controller: controller,
+          obscureText: isHidden,
+          style: const TextStyle(color: Colors.white),
+          decoration: InputDecoration(
+            hintText: label == 'CONFIRM PASSWORD'
+                ? 'Retype the password'
+                : 'Enter your ${label.toLowerCase()}',
+            hintStyle: const TextStyle(color: Colors.white70),
+            suffixIcon: IconButton(
+              icon: Icon(
+                isHidden ? Icons.visibility_off : Icons.visibility,
+                color: Colors.white70,
+              ),
+              onPressed: toggleVisibility,
+            ),
+            focusedBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.white),
+            ),
+            enabledBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.white70),
+            ),
+          ),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return '$label cannot be empty';
+            }
+            return null;
+          },
+        ),
+      ],
     );
   }
 }

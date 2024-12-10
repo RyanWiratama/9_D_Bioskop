@@ -53,9 +53,9 @@ class _EditNamePageState extends State<EditNamePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF2C3E50),
+      backgroundColor: const Color(0xFF384357),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF2C3E50),
+        backgroundColor: const Color(0xFF384357),
         elevation: 0,
         title: const Text(
           'Edit Name',
@@ -71,43 +71,50 @@ class _EditNamePageState extends State<EditNamePage> {
             Navigator.pop(context);
           },
         ),
+        actions: [
+          TextButton(
+            onPressed: _saveChanges,
+            child: const Text(
+              'Save',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+              ),
+            ),
+          ),
+        ],
         bottom: const PreferredSize(
           preferredSize: Size.fromHeight(1.0),
           child: Divider(color: Colors.white),
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 20),
+            const SizedBox(height: 40),
+            const Text(
+              'FIRST NAME',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 10),
             TextField(
               controller: _controller,
               style: const TextStyle(color: Colors.white),
               decoration: const InputDecoration(
-                labelText: 'Name',
-                labelStyle: TextStyle(color: Colors.white),
-                focusedBorder: OutlineInputBorder(
+                hintText: 'Enter First Name',
+                hintStyle: TextStyle(color: Colors.white70),
+                focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.white),
                 ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white70),
                 ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _saveChanges,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-              child: const Text(
-                'Save Changes',
-                style: TextStyle(color: Colors.white, fontSize: 16),
               ),
             ),
           ],
