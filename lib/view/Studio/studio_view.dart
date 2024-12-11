@@ -71,7 +71,7 @@ class _StudioViewState extends State<StudioView> {
       setState(() {
         _jadwals = jadwals;
         if (_jadwals.isNotEmpty) {
-          _selectedDate = _jadwals.first.tanggal; // Default to the first date
+          _selectedDate = _jadwals.first.tanggal;
         }
       });
     } catch (error) {

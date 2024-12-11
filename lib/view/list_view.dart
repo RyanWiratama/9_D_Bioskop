@@ -43,30 +43,20 @@ class _ListPageState extends State<ListPageView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   backgroundColor: const Color(0xFF384357),
-      //   title: const Center(
-      //     child: Text(
-      //       'Cineatma',
-      //       style: TextStyle(
-      //         fontFamily: 'Poppins',
-      //         color: Colors.white,
-      //         fontWeight: FontWeight.bold,
-      //         fontSize: 24,
-      //       ),
-      //     ),
-      //   ),
-      //   leading: IconButton(
-      //     icon: const Icon(Icons.search, color: Colors.white),
-      //     onPressed: () {},
-      //   ),
-      //   actions: [
-      //     IconButton(
-      //       icon: const Icon(Icons.notifications, color: Colors.white),
-      //       onPressed: () {},
-      //     ),
-      //   ],
-      // ),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF384357),
+        title: const Text(
+          'Cineatma',
+          style: TextStyle(
+            fontFamily: 'Poppins',
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 24,
+          ),
+        ),
+        centerTitle: true,
+        automaticallyImplyLeading: false,
+      ),
       body: Container(
         color: const Color(0xFF384357),
         padding: const EdgeInsets.all(10.0),
@@ -132,7 +122,7 @@ class _ListPageState extends State<ListPageView> {
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(8.0),
                                     child: Image.asset(
-                                      film.poster, // Ensure film.poster is correct
+                                      film.poster,
                                       width: 80,
                                       height: 120,
                                       fit: BoxFit.cover,
