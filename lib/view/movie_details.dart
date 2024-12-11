@@ -64,7 +64,6 @@ class _MovieDetailsViewState extends State<MovieDetailsView> {
         return;
       }
 
-      // Pause the YouTube player if it's playing
       if (_youtubeController.value.isPlaying) {
         _youtubeController.pause();
       }
@@ -141,7 +140,7 @@ class _MovieDetailsViewState extends State<MovieDetailsView> {
   @override
   void dispose() {
     _youtubeController?.dispose();
-    _flutterTts.stop(); // Stop TTS when widget is disposed
+    _flutterTts.stop();
     super.dispose();
   }
 

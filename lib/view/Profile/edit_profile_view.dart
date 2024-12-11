@@ -51,15 +51,31 @@ class _EditProfileViewState extends State<EditProfileView> {
       setState(() {
         _image = File(image.path);
       });
-      Fluttertoast.showToast(
-        msg: source == ImageSource.camera
-            ? "Photo taken"
-            : "Photo selected from gallery",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.black,
-        textColor: Colors.white,
-      );
+      try {
+        final response = await UserReq.updatePhotoProfile(image.path);
+        if (response.statusCode == 200) {
+          Fluttertoast.showToast(
+            msg: "Photo updated successfully",
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+          );
+          setState(() {
+            user!.foto = response.body;
+          });
+        } else {
+          Fluttertoast.showToast(
+            msg: "Failed to update photo: ${response.reasonPhrase}",
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+          );
+        }
+      } catch (e) {
+        Fluttertoast.showToast(
+          msg: "Error: $e",
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+        );
+      }
     }
   }
 
@@ -172,22 +188,41 @@ class _EditProfileViewState extends State<EditProfileView> {
             color: Colors.grey.shade400,
             borderRadius: BorderRadius.circular(50),
           ),
-          child: _image != null
-              ? ClipOval(
-                  child: Image.file(
+          child: ClipOval(
+            child: _image != null
+                ? Image.file(
                     _image!,
                     fit: BoxFit.cover,
-                  ),
-                )
-              : (user?.foto.isEmpty ?? true
-                  ? const Icon(Icons.camera_alt,
-                      color: Colors.black54, size: 50)
-                  : ClipOval(
-                      child: Image.network(
+                  )
+                : (user?.foto != null && user!.foto.isNotEmpty
+                    ? Image.network(
                         user!.foto,
                         fit: BoxFit.cover,
-                      ),
-                    )),
+                        loadingBuilder: (BuildContext context, Widget child,
+                            ImageChunkEvent? loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return Center(
+                            child: CircularProgressIndicator(
+                              value: loadingProgress.expectedTotalBytes != null
+                                  ? loadingProgress.cumulativeBytesLoaded /
+                                      (loadingProgress.expectedTotalBytes ?? 1)
+                                  : null,
+                            ),
+                          );
+                        },
+                        errorBuilder: (context, error, stackTrace) =>
+                            const Icon(
+                          Icons.error,
+                          color: Colors.red,
+                          size: 50,
+                        ),
+                      )
+                    : const Icon(
+                        Icons.camera_alt,
+                        color: Colors.black54,
+                        size: 50,
+                      )),
+          ),
         ),
         Positioned(
           bottom: 0,

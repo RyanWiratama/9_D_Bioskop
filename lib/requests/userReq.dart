@@ -200,6 +200,34 @@ class UserReq {
     }
   }
 
+  static Future<http.Response> updatePhotoProfile(String filePath) async {
+    final Uri url = Uri.http(baseUrl, '/api/user/update/photo');
+    final FlutterSecureStorage storage = FlutterSecureStorage();
+    final String? token = await storage.read(key: 'token');
+
+    if (token == null) {
+      throw Exception('No token found');
+    }
+
+    try {
+      final request = http.MultipartRequest('POST', url)
+        ..headers['Authorization'] = 'Bearer $token'
+        ..files.add(await http.MultipartFile.fromPath('foto', filePath));
+
+      final streamedResponse = await request.send();
+      final response = await http.Response.fromStream(streamedResponse);
+
+      if (response.statusCode == 200) {
+        return response;
+      } else {
+        throw Exception(
+            'Failed to update Profile Picture: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      throw Exception('Error: $e');
+    }
+  }
+
   static Future<http.Response> updateUserPassword(
       String currentPassword, String newPassword) async {
     final Uri url = Uri.http(baseUrl, '/api/user/update/password');
