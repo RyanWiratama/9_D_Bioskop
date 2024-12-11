@@ -19,6 +19,7 @@ dependencies:
   flutter_secure_storage: ^5.0.2
   youtube_player_flutter: ^8.0.0
   flutter_tts: ^3.6.4
+  intl: ^0.18.0
 
 dev_dependencies:
   flutter_test:
