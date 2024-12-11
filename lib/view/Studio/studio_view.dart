@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_pbp_9/entity/film.dart';
+import 'package:tubes_pbp_9/entity/studio.dart';
 import 'package:tubes_pbp_9/view/movie_details.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:tubes_pbp_9/requests/filmReq.dart';
+import 'package:tubes_pbp_9/requests/studioReq.dart';
+import 'package:tubes_pbp_9/requests/jadwalReq.dart';
 import 'package:intl/intl.dart';
+import 'package:tubes_pbp_9/entity/jadwal.dart';
 
 class StudioView extends StatefulWidget {
   final int filmId;
@@ -21,11 +25,16 @@ class _StudioViewState extends State<StudioView> {
   late YoutubePlayerController _youtubeController;
   bool _isError = false;
   Film? _film;
+  List<Studio> _studios = [];
+  List<Jadwal> _jadwals = [];
+  String? _selectedDate;
 
   @override
   void initState() {
     super.initState();
     _fetchFilmDetails();
+    _fetchStudios();
+    _fetchJadwals();
   }
 
   void _fetchFilmDetails() async {
@@ -45,12 +54,37 @@ class _StudioViewState extends State<StudioView> {
     }
   }
 
+  void _fetchStudios() async {
+    try {
+      final studios = await StudioReq.fetchAllStudios();
+      setState(() {
+        _studios = studios;
+      });
+    } catch (error) {
+      debugPrint('Error fetching studios: $error');
+    }
+  }
+
+  void _fetchJadwals() async {
+    try {
+      final jadwals = await JadwalReq.fetchShowtimesByFilmId(widget.filmId);
+      setState(() {
+        _jadwals = jadwals;
+        if (_jadwals.isNotEmpty) {
+          _selectedDate = _jadwals.first.tanggal; // Default to the first date
+        }
+      });
+    } catch (error) {
+      debugPrint('Error fetching jadwals: $error');
+    }
+  }
+
   void _initializeYoutubePlayer(String trailerUrl) {
     final videoId = YoutubePlayer.convertUrlToId(trailerUrl);
     if (videoId != null) {
       _youtubeController = YoutubePlayerController(
         initialVideoId: videoId,
-        flags: YoutubePlayerFlags(
+        flags: const YoutubePlayerFlags(
           autoPlay: true,
           mute: false,
         ),
@@ -71,18 +105,12 @@ class _StudioViewState extends State<StudioView> {
   }
 
   List<Widget> buildDateButtons() {
-    DateTime today = DateTime.now();
-    DateTime tomorrow = today.add(Duration(days: 1));
-    DateTime dayAfterTomorrow = today.add(Duration(days: 2));
-    DateTime threeDaysAfter = today.add(Duration(days: 3));
+    final uniqueDates =
+        _jadwals.map((jadwal) => jadwal.tanggal).toSet().toList();
 
-    return [
-      _buildDateButton(DateFormat('EEEE, d MMM').format(today), true),
-      _buildDateButton(DateFormat('EEEE, d MMM').format(tomorrow), false),
-      _buildDateButton(
-          DateFormat('EEEE, d MMM').format(dayAfterTomorrow), false),
-      _buildDateButton(DateFormat('EEEE, d MMM').format(threeDaysAfter), false),
-    ];
+    return uniqueDates.map((date) {
+      return _buildDateButton(date, _selectedDate == date);
+    }).toList();
   }
 
   @override
@@ -137,16 +165,24 @@ class _StudioViewState extends State<StudioView> {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Poster
                   Expanded(
                     flex: 1,
                     child: AspectRatio(
                       aspectRatio: 2 / 3,
-                      child: Image.asset(posterPath, fit: BoxFit.cover),
+                      child: Image.asset(
+                        posterPath,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return const Icon(
+                            Icons.broken_image,
+                            color: Colors.white,
+                            size: 100,
+                          );
+                        },
+                      ),
                     ),
                   ),
                   const SizedBox(width: 16),
-
                   Expanded(
                     flex: 1,
                     child: Column(
@@ -175,39 +211,36 @@ class _StudioViewState extends State<StudioView> {
                 ],
               ),
               const SizedBox(height: 16),
-
-              // about & sessions
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                MovieDetailsView(filmId: widget.filmId),
-                          ),
-                        );
-                      },
-                      child: const Text(
-                        'About',
-                        style: TextStyle(color: Colors.white70),
-                      ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              MovieDetailsView(filmId: widget.filmId),
+                        ),
+                      );
+                    },
+                    child: const Text(
+                      'About',
+                      style: TextStyle(color: Colors.white70),
                     ),
-                    TextButton(
-                      onPressed: () {},
-                      child: const Text(
-                        'Sessions',
-                        style: TextStyle(color: Colors.white),
-                      ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      debugPrint('Already in Sessions');
+                    },
+                    child: const Text(
+                      'Sessions',
+                      style: TextStyle(color: Colors.white),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-
+              const SizedBox(height: 16),
               SizedBox(
                 height: 40,
                 child: ListView(
@@ -216,131 +249,103 @@ class _StudioViewState extends State<StudioView> {
                 ),
               ),
               const SizedBox(height: 16),
-
-              Container(
-                decoration: BoxDecoration(
-                  color: const Color(0xFF384357),
-                ),
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  children: [
-                    _buildTheaterRow('AMBARRUKMO XXI', '2.60 km',
-                        'Plaza Ambarrukmo Lt. 3', '10:30'),
-                    _buildTheaterRow('EMPIRE XXI', '3.40 km',
-                        'Jl. Urip Sumoharjo No. 104', '13:30'),
-                    _buildTheaterRow('JOGJA CITY MALL XXI', '6.30 km',
-                        'Jl. Magelang KM 6', '18:15'),
-                  ],
-                ),
-              ),
+              _studios.isEmpty
+                  ? const Center(
+                      child: Text(
+                        'No studios available',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    )
+                  : Column(
+                      children: _studios.map((studio) {
+                        final filteredJadwals = _jadwals
+                            .where((jadwal) => jadwal.tanggal == _selectedDate)
+                            .toList();
+                        return _buildStudioRow(studio, filteredJadwals);
+                      }).toList(),
+                    ),
             ],
           ),
         ),
       ),
     );
-// throw UnimplementedError();
   }
 
   Widget _buildDateButton(String date, bool isSelected) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          setState(() {
+            _selectedDate = date;
+          });
+        },
         style: ElevatedButton.styleFrom(
-          backgroundColor: isSelected ? Colors.white : const Color(0xFF384357),
+          backgroundColor: isSelected ? Colors.white : Colors.transparent,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-            side: BorderSide(color: Colors.white, width: 2),
+            borderRadius: BorderRadius.circular(12),
+            side: BorderSide(
+              color: Colors.white,
+              width: 2,
+            ),
           ),
+          elevation: isSelected ? 4 : 0,
+          shadowColor: isSelected ? Colors.white : Colors.transparent,
         ),
         child: Text(
-          date,
+          DateFormat('dd MMM E', 'id_ID').format(DateTime.parse(date)),
           style: TextStyle(
-            color: isSelected ? const Color(0xFF384357) : Colors.white70,
+            color: isSelected ? const Color(0xFF384357) : Colors.white,
+            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
           ),
         ),
       ),
     );
   }
 
-  Widget _buildTheaterRow(
-      String name, String distance, String address, String showtimes) {
+  Widget _buildStudioRow(Studio studio, List<Jadwal> jadwals) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Icon(Icons.location_on,
-              color: Color.fromARGB(255, 255, 255, 255), size: 25),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  name,
-                  style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold),
+      child: Card(
+        color: const Color(0xFF2C3E50),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                studio.nama,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
-                Row(
-                  children: [
-                    Text(
-                      distance,
-                      style:
-                          const TextStyle(color: Colors.white70, fontSize: 12),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Kapasitas: ${studio.kapasitas} seats',
+                style: const TextStyle(color: Colors.white70),
+              ),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 8.0,
+                children: jadwals.map((jadwal) {
+                  return ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: const Color(0xFF384357),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
-                    const SizedBox(
-                        width: 8), // Space between distance and address
-                    Text(
-                      address,
-                      style:
-                          const TextStyle(color: Colors.white70, fontSize: 12),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '2D',
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      'Rp40.000',
-                      style: const TextStyle(color: Colors.white, fontSize: 14),
-                    ),
-                  ],
-                ),
-                TextButton(
-                  onPressed: () {
-                    // Add your onPressed functionality here
-                  },
-                  style: TextButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0, vertical: 8.0),
-                  ),
-                  child: Text(
-                    showtimes,
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+                    child: Text(jadwal.jamTayang),
+                  );
+                }).toList(),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
