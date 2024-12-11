@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:tubes_pbp_9/entity/film.dart';
 import 'package:tubes_pbp_9/view/movie_details.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:tubes_pbp_9/requests/filmReq.dart';
-import 'package:tubes_pbp_9/entity/film.dart';
+import 'package:intl/intl.dart';
 
 class StudioView extends StatefulWidget {
   final int filmId;
@@ -12,10 +13,11 @@ class StudioView extends StatefulWidget {
     required this.filmId,
   }) : super(key: key);
 
-  _StudioViewState createState() => _StudioViewState();
+  @override
+  State<StudioView> createState() => _StudioViewState();
 }
 
-class _StudioViewState extends State<StudioView>{
+class _StudioViewState extends State<StudioView> {
   late YoutubePlayerController _youtubeController;
   bool _isError = false;
   Film? _film;
@@ -68,6 +70,21 @@ class _StudioViewState extends State<StudioView>{
     super.dispose();
   }
 
+  List<Widget> buildDateButtons() {
+    DateTime today = DateTime.now();
+    DateTime tomorrow = today.add(Duration(days: 1));
+    DateTime dayAfterTomorrow = today.add(Duration(days: 2));
+    DateTime threeDaysAfter = today.add(Duration(days: 3));
+
+    return [
+      _buildDateButton(DateFormat('EEEE, d MMM').format(today), true),
+      _buildDateButton(DateFormat('EEEE, d MMM').format(tomorrow), false),
+      _buildDateButton(
+          DateFormat('EEEE, d MMM').format(dayAfterTomorrow), false),
+      _buildDateButton(DateFormat('EEEE, d MMM').format(threeDaysAfter), false),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_film == null) {
@@ -106,7 +123,7 @@ class _StudioViewState extends State<StudioView>{
                       ? const Center(
                           child: Text(
                             'Failed to load video',
-                            style: TextStyle(color: Colors.red, fontSize: 16),
+                            style: TextStyle(color: Colors.white, fontSize: 16),
                           ),
                         )
                       : YoutubePlayer(
@@ -117,10 +134,10 @@ class _StudioViewState extends State<StudioView>{
                 ],
               ),
               const SizedBox(height: 16),
-
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Poster
                   Expanded(
                     flex: 1,
                     child: AspectRatio(
@@ -129,6 +146,7 @@ class _StudioViewState extends State<StudioView>{
                     ),
                   ),
                   const SizedBox(width: 16),
+
                   Expanded(
                     flex: 1,
                     child: Column(
@@ -169,7 +187,8 @@ class _StudioViewState extends State<StudioView>{
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => MovieDetailsView(filmId: widget.filmId),
+                            builder: (context) =>
+                                MovieDetailsView(filmId: widget.filmId),
                           ),
                         );
                       },
@@ -193,28 +212,24 @@ class _StudioViewState extends State<StudioView>{
                 height: 40,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
-                  children: [
-                    _buildDateButton('18 Okt Jumat', true),
-                    _buildDateButton('19 Okt Sabtu', false),
-                    _buildDateButton('20 Okt Minggu', false),
-                    _buildDateButton('21 Okt Senin', false),
-                  ],
+                  children: buildDateButtons(),
                 ),
               ),
               const SizedBox(height: 16),
 
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.grey[900],
-                  borderRadius: BorderRadius.circular(8),
+                  color: const Color(0xFF384357),
                 ),
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   children: [
-                    _buildTheaterRow('AMBARRUKMO XXI', '2.60 km', '10:30, 12:30, 13:45, 15:20, 18:30'),
-                    _buildTheaterRow('EMPIRE XXI', '3.40 km', '10:15, 11:45, 13:30, 14:45'),
-                    _buildTheaterRow('JOGJA CITY MALL XXI', '6.30 km', '11:30, 13:45, 14:30, 18:15, 20:30'),
-                    _buildTheaterRow('SLEMAN CITY HALL XXI', '11.3 km', '10:45, 13:00, 16:30, 20:30'),
+                    _buildTheaterRow('AMBARRUKMO XXI', '2.60 km',
+                        'Plaza Ambarrukmo Lt. 3', '10:30'),
+                    _buildTheaterRow('EMPIRE XXI', '3.40 km',
+                        'Jl. Urip Sumoharjo No. 104', '13:30'),
+                    _buildTheaterRow('JOGJA CITY MALL XXI', '6.30 km',
+                        'Jl. Magelang KM 6', '18:15'),
                   ],
                 ),
               ),
@@ -223,6 +238,7 @@ class _StudioViewState extends State<StudioView>{
         ),
       ),
     );
+// throw UnimplementedError();
   }
 
   Widget _buildDateButton(String date, bool isSelected) {
@@ -231,28 +247,31 @@ class _StudioViewState extends State<StudioView>{
       child: ElevatedButton(
         onPressed: () {},
         style: ElevatedButton.styleFrom(
-          backgroundColor: isSelected ? Colors.red : Colors.grey[800],
+          backgroundColor: isSelected ? Colors.white : const Color(0xFF384357),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
+            side: BorderSide(color: Colors.white, width: 2),
           ),
         ),
         child: Text(
           date,
           style: TextStyle(
-            color: isSelected ? Colors.white : Colors.white70,
+            color: isSelected ? const Color(0xFF384357) : Colors.white70,
           ),
         ),
       ),
     );
   }
 
-  Widget _buildTheaterRow(String name, String distance, String showtimes) {
+  Widget _buildTheaterRow(
+      String name, String distance, String address, String showtimes) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(Icons.location_on, color: Colors.red, size: 20),
+          const Icon(Icons.location_on,
+              color: Color.fromARGB(255, 255, 255, 255), size: 25),
           const SizedBox(width: 8),
           Expanded(
             child: Column(
@@ -260,22 +279,66 @@ class _StudioViewState extends State<StudioView>{
               children: [
                 Text(
                   name,
-                  style: const TextStyle(color: Colors.white, fontSize: 16),
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold),
                 ),
-                Text(
-                  distance,
-                  style: const TextStyle(color: Colors.white70, fontSize: 12),
+                Row(
+                  children: [
+                    Text(
+                      distance,
+                      style:
+                          const TextStyle(color: Colors.white70, fontSize: 12),
+                    ),
+                    const SizedBox(
+                        width: 8), // Space between distance and address
+                    Text(
+                      address,
+                      style:
+                          const TextStyle(color: Colors.white70, fontSize: 12),
+                    ),
+                  ],
                 ),
-                Text(
-                  showtimes,
-                  style: const TextStyle(color: Colors.white, fontSize: 12),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '2D',
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      'Rp40.000',
+                      style: const TextStyle(color: Colors.white, fontSize: 14),
+                    ),
+                  ],
+                ),
+                TextButton(
+                  onPressed: () {
+                    // Add your onPressed functionality here
+                  },
+                  style: TextButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 8.0),
+                  ),
+                  child: Text(
+                    showtimes,
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ],
             ),
-          ),
-          Text(
-            'Rp40.000',
-            style: const TextStyle(color: Colors.white, fontSize: 14),
           ),
         ],
       ),
