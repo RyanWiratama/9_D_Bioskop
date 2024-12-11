@@ -11,6 +11,18 @@ dependencies:
     sdk: flutter
   font_awesome_flutter: ^10.1.0
   carousel_slider: ^5.0.0
+<<<<<<< Updated upstream
+=======
+  http: ^1.2.2
+  flutter_riverpod: ^2.6.1
+  image_picker: ^0.8.7+5
+  fluttertoast: ^8.0.9
+  photo_manager: ^2.6.0
+  flutter_secure_storage: ^5.0.2
+  youtube_player_flutter: ^8.0.0
+  flutter_tts: ^3.6.4
+  intl: ^0.18.0
+>>>>>>> Stashed changes
 
 dev_dependencies:
   flutter_test:
