@@ -171,13 +171,18 @@ class _ProfileViewState extends State<ProfileView> {
                         const Spacer(),
                         ElevatedButton.icon(
                           onPressed: () async {
-                            await UserReq.logout();
-                            Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const LoginView()),
-                              (route) => false,
-                            );
+                            try {
+                              await UserReq.logout();
+                            } catch (error) {
+                              debugPrint('Logout failed: $error');
+                            } finally {
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const LoginView()),
+                                (route) => false,
+                              );
+                            }
                           },
                           icon:
                               const Icon(Icons.arrow_back, color: Colors.white),

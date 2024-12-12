@@ -2,26 +2,30 @@ import 'dart:convert';
 
 class Studio {
   int id;
-  int kapasitas;
   String nama;
+  int kapasitas;
 
   Studio({
     required this.id,
-    required this.kapasitas,
     required this.nama,
+    required this.kapasitas,
   });
 
-  factory Studio.fromRawJson(String str) => Studio.fromJson(json.decode(str));
-  factory Studio.fromJson(Map<String, dynamic> json) => Studio(
-        id: json['id'],
-        kapasitas: json['kapasitas'],
-        nama: json['nama'],
-      );
+  factory Studio.fromJson(Map<String, dynamic> json) {
+    return Studio(
+      id: json['id'],
+      nama: json['nama'],
+      kapasitas: json['kapasitas'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'nama': nama,
+      'kapasitas': kapasitas,
+    };
+  }
 
   String toRawJson() => json.encode(toJson());
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'kapasitas': kapasitas,
-        'nama': nama,
-      };
 }

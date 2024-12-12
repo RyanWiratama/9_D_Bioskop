@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_pbp_9/entity/film.dart';
 import 'package:tubes_pbp_9/entity/studio.dart';
+import 'package:tubes_pbp_9/view/home_view.dart';
 import 'package:tubes_pbp_9/view/movie_details.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:tubes_pbp_9/requests/filmReq.dart';
@@ -22,22 +23,38 @@ class StudioView extends StatefulWidget {
 }
 
 class _StudioViewState extends State<StudioView> {
-  late YoutubePlayerController _youtubeController;
+  YoutubePlayerController? _youtubeController;
   bool _isError = false;
+  bool _isLoading = true;
   Film? _film;
   List<Studio> _studios = [];
   List<Jadwal> _jadwals = [];
-  String? _selectedDate;
+  Map<int, List<Jadwal>> _studioJadwals = {};
 
   @override
   void initState() {
     super.initState();
-    _fetchFilmDetails();
-    _fetchStudios();
-    _fetchJadwals();
+    _initializeData();
   }
 
-  void _fetchFilmDetails() async {
+  Future<void> _initializeData() async {
+    try {
+      await Future.wait([
+        _fetchFilmDetails(),
+        _fetchStudios(),
+        _fetchJadwals(),
+      ]);
+      _organizeJadwals();
+    } catch (e) {
+      debugPrint('Error initializing data: $e');
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _fetchFilmDetails() async {
     try {
       final film = await FilmReq.fetchFilmById(widget.filmId);
       setState(() {
@@ -54,7 +71,7 @@ class _StudioViewState extends State<StudioView> {
     }
   }
 
-  void _fetchStudios() async {
+  Future<void> _fetchStudios() async {
     try {
       final studios = await StudioReq.fetchAllStudios();
       setState(() {
@@ -65,17 +82,22 @@ class _StudioViewState extends State<StudioView> {
     }
   }
 
-  void _fetchJadwals() async {
+  Future<void> _fetchJadwals() async {
     try {
-      final jadwals = await JadwalReq.fetchShowtimesByFilmId(widget.filmId);
+      final jadwals = await JadwalReq.fetchAllJadwal(widget.filmId);
       setState(() {
         _jadwals = jadwals;
-        if (_jadwals.isNotEmpty) {
-          _selectedDate = _jadwals.first.tanggal;
-        }
       });
     } catch (error) {
       debugPrint('Error fetching jadwals: $error');
+    }
+  }
+
+  void _organizeJadwals() {
+    _studioJadwals.clear();
+    for (var studio in _studios) {
+      _studioJadwals[studio.id] =
+          _jadwals.where((jadwal) => jadwal.idStudio == studio.id).toList();
     }
   }
 
@@ -85,7 +107,7 @@ class _StudioViewState extends State<StudioView> {
       _youtubeController = YoutubePlayerController(
         initialVideoId: videoId,
         flags: const YoutubePlayerFlags(
-          autoPlay: true,
+          autoPlay: false,
           mute: false,
         ),
       );
@@ -98,26 +120,21 @@ class _StudioViewState extends State<StudioView> {
 
   @override
   void dispose() {
-    if (_youtubeController != null) {
-      _youtubeController.dispose();
-    }
+    _youtubeController?.dispose();
     super.dispose();
-  }
-
-  List<Widget> buildDateButtons() {
-    final uniqueDates =
-        _jadwals.map((jadwal) => jadwal.tanggal).toSet().toList();
-
-    return uniqueDates.map((date) {
-      return _buildDateButton(date, _selectedDate == date);
-    }).toList();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_film == null) {
+    if (_isLoading) {
       return const Scaffold(
         body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (_film == null) {
+      return const Scaffold(
+        body: Center(child: Text('Error loading film details')),
       );
     }
 
@@ -129,9 +146,7 @@ class _StudioViewState extends State<StudioView> {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          onPressed: () => Navigator.pop(context),
         ),
         title: Text(_film!.judul, style: const TextStyle(color: Colors.white)),
       ),
@@ -144,126 +159,32 @@ class _StudioViewState extends State<StudioView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  _isError || _film!.trailer.isEmpty
+              if (_film!.trailer.isNotEmpty)
+                AspectRatio(
+                  aspectRatio: 16 / 9,
+                  child: _isError
                       ? const Center(
                           child: Text(
                             'Failed to load video',
-                            style: TextStyle(color: Colors.white, fontSize: 16),
+                            style: TextStyle(color: Colors.white),
                           ),
                         )
-                      : YoutubePlayer(
-                          controller: _youtubeController,
-                          showVideoProgressIndicator: true,
-                          progressIndicatorColor: Colors.blueAccent,
-                        ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: AspectRatio(
-                      aspectRatio: 2 / 3,
-                      child: Image.asset(
-                        posterPath,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return const Icon(
-                            Icons.broken_image,
-                            color: Colors.white,
-                            size: 100,
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    flex: 1,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          _film!.judul,
-                          style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text('Genre: ${_film!.genre}',
-                            style: const TextStyle(color: Colors.white)),
-                        Text('Durasi: ${_film!.durasi}',
-                            style: const TextStyle(color: Colors.white)),
-                        Text('Sutradara: ${_film!.sutradara}',
-                            style: const TextStyle(color: Colors.white)),
-                        Text('Rating Usia: ${_film!.ratingUsia}',
-                            style: const TextStyle(color: Colors.white)),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              MovieDetailsView(filmId: widget.filmId),
-                        ),
-                      );
-                    },
-                    child: const Text(
-                      'About',
-                      style: TextStyle(color: Colors.white70),
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      debugPrint('Already in Sessions');
-                    },
-                    child: const Text(
-                      'Sessions',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              SizedBox(
-                height: 40,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: buildDateButtons(),
+                      : _youtubeController == null
+                          ? const Center(
+                              child: CircularProgressIndicator(),
+                            )
+                          : YoutubePlayer(
+                              controller: _youtubeController!,
+                              showVideoProgressIndicator: true,
+                              progressIndicatorColor: Colors.blueAccent,
+                            ),
                 ),
-              ),
               const SizedBox(height: 16),
-              _studios.isEmpty
-                  ? const Center(
-                      child: Text(
-                        'No studios available',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    )
-                  : Column(
-                      children: _studios.map((studio) {
-                        final filteredJadwals = _jadwals
-                            .where((jadwal) => jadwal.tanggal == _selectedDate)
-                            .toList();
-                        return _buildStudioRow(studio, filteredJadwals);
-                      }).toList(),
-                    ),
+              _buildMovieInfo(posterPath),
+              const SizedBox(height: 16),
+              _buildNavigationButtons(context),
+              const SizedBox(height: 16),
+              _buildShowtimesSection(),
             ],
           ),
         ),
@@ -271,82 +192,161 @@ class _StudioViewState extends State<StudioView> {
     );
   }
 
-  Widget _buildDateButton(String date, bool isSelected) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: ElevatedButton(
-        onPressed: () {
-          setState(() {
-            _selectedDate = date;
-          });
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: isSelected ? Colors.white : Colors.transparent,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-            side: BorderSide(
-              color: Colors.white,
-              width: 2,
+  Widget _buildMovieInfo(String posterPath) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          flex: 1,
+          child: AspectRatio(
+            aspectRatio: 2 / 3,
+            child: Image.asset(
+              posterPath,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return const Icon(
+                  Icons.broken_image,
+                  color: Colors.white,
+                  size: 100,
+                );
+              },
             ),
           ),
-          elevation: isSelected ? 4 : 0,
-          shadowColor: isSelected ? Colors.white : Colors.transparent,
         ),
-        child: Text(
-          DateFormat('dd MMM E', 'id_ID').format(DateTime.parse(date)),
-          style: TextStyle(
-            color: isSelected ? const Color(0xFF384357) : Colors.white,
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildStudioRow(Studio studio, List<Jadwal> jadwals) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Card(
-        color: const Color(0xFF2C3E50),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
+        const SizedBox(width: 16),
+        Expanded(
+          flex: 1,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                studio.nama,
+                _film!.judul,
                 style: const TextStyle(
-                  fontSize: 18,
+                  fontSize: 24,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
               ),
               const SizedBox(height: 8),
-              Text(
-                'Kapasitas: ${studio.kapasitas} seats',
-                style: const TextStyle(color: Colors.white70),
-              ),
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 8.0,
-                children: jadwals.map((jadwal) {
-                  return ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: const Color(0xFF384357),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    child: Text(jadwal.jamTayang),
-                  );
-                }).toList(),
-              ),
+              Text('Genre: ${_film!.genre}',
+                  style: const TextStyle(color: Colors.white)),
+              Text('Durasi: ${_film!.durasi}',
+                  style: const TextStyle(color: Colors.white)),
+              Text('Sutradara: ${_film!.sutradara}',
+                  style: const TextStyle(color: Colors.white)),
+              Text('Rating Usia: ${_film!.ratingUsia}',
+                  style: const TextStyle(color: Colors.white)),
             ],
           ),
         ),
-      ),
+      ],
+    );
+  }
+
+  Widget _buildNavigationButtons(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        TextButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MovieDetailsView(filmId: widget.filmId),
+              ),
+            );
+          },
+          child: const Text(
+            'About',
+            style: TextStyle(color: Colors.white70),
+          ),
+        ),
+        TextButton(
+          onPressed: null,
+          child: const Text(
+            'Sessions',
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildShowtimesSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: _studios.map((studio) => _buildStudioRow(studio)).toList(),
+    );
+  }
+
+  Widget _buildStudioRow(Studio studio) {
+    final filteredJadwals = _studioJadwals[studio.id] ?? [];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          studio.nama,
+          style: const TextStyle(color: Colors.white, fontSize: 18),
+        ),
+        const SizedBox(height: 8),
+        if (filteredJadwals.isEmpty)
+          const Text(
+            "No sessions available.",
+            style: TextStyle(color: Colors.white),
+          )
+        else
+          ...filteredJadwals.map((jadwal) => InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          HomeView(), // Ganti dengan halaman tujuan Anda
+                    ),
+                  );
+                },
+                splashColor: Colors.blueAccent
+                    .withOpacity(0.2), // Efek splash saat ditekan
+                hoverColor:
+                    Colors.blueGrey.withOpacity(0.2), // Warna saat hover
+                borderRadius: BorderRadius.circular(
+                    8), // Tambahkan jika ingin efek melingkar
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment
+                        .spaceBetween, // Untuk mengatur posisi kanan/kiri
+                    children: [
+                      // Bagian kiri (Tanggal dan Jam)
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Tanggal: ${jadwal.tanggal}",
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 14),
+                          ),
+                          Text(
+                            "Jam: ${jadwal.jamTayang}",
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 14),
+                          ),
+                        ],
+                      ),
+                      // Bagian kanan (Harga)
+                      Text(
+                        "Price: ${jadwal.harga}",
+                        style: const TextStyle(
+                            color: Colors.white70, fontSize: 14),
+                      ),
+                    ],
+                  ),
+                ),
+              )),
+        const Divider(color: Colors.white),
+      ],
     );
   }
 }
