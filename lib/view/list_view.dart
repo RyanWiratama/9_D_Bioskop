@@ -113,7 +113,7 @@ class _ListPageState extends State<ListPageView> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    MovieDetailPage(film: film),
+                                    ListMovieDetailPage(film: film),
                               ),
                             );
                           },

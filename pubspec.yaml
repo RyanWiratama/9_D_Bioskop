@@ -18,6 +18,11 @@ dependencies:
   photo_manager: ^2.6.0
   flutter_secure_storage: ^5.0.2
   youtube_player_flutter: ^8.0.0
+<<<<<<< Updated upstream
+=======
+  flutter_tts: ^3.6.4
+  barcode_widget: ^2.0.4
+>>>>>>> Stashed changes
 
 dev_dependencies:
   flutter_test:
