@@ -62,6 +62,7 @@ class _FnBPageViewState extends ConsumerState<FnBPageView> {
             fontSize: 24,
           ),
         ),
+        centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.search, color: Colors.white),
           onPressed: () {},

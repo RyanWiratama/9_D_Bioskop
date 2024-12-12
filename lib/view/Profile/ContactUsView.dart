@@ -16,7 +16,7 @@ class ContactUsView extends StatelessWidget {
             color: Colors.white,
             fontSize: 22,
             fontWeight: FontWeight.bold,
-            letterSpacing: 1.5, // Menambahkan jarak antar huruf untuk kesan elegan
+            letterSpacing: 1.5,
           ),
         ),
         leading: IconButton(
@@ -26,10 +26,10 @@ class ContactUsView extends StatelessWidget {
           },
         ),
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(1.0), // tinggi garis
+          preferredSize: Size.fromHeight(1.0),
           child: Container(
             height: 1.0,
-            color: Colors.white70, // warna garis
+            color: Colors.white70,
           ),
         ),
       ),
@@ -41,30 +41,31 @@ class ContactUsView extends StatelessWidget {
               padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Colors.white.withOpacity(0.3), const Color(0xFFD9D9D9).withOpacity(0.6)], // Gradasi lembut
+                  colors: [
+                    Colors.white.withOpacity(0.3),
+                    const Color(0xFFD9D9D9).withOpacity(0.6)
+                  ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
-                borderRadius: BorderRadius.circular(20), // Radius lebih besar untuk sudut lebih halus
+                borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.3),
-                    blurRadius: 15, // Lebih blur untuk tampilan lebih halus
+                    blurRadius: 15,
                     offset: const Offset(0, 8),
                   ),
                 ],
               ),
               child: Column(
                 children: [
-                  const SizedBox(height: 30), // Memberi ruang kecil di atas
-                  // Ikon kontak
+                  const SizedBox(height: 30),
                   const Icon(
                     Icons.mail_outline,
                     size: 50,
-                    color: Colors.blueAccent, // Warna ikon yang mencolok
+                    color: Colors.blueAccent,
                   ),
                   const SizedBox(height: 20),
-                  // Deskripsi Contact Us dengan sedikit pemformatan
                   const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16.0),
                     child: Text(
@@ -75,24 +76,24 @@ class ContactUsView extends StatelessWidget {
                       'Follow us on social media:\n\n'
                       '@cineatma on Instagram, Facebook, and Twitter',
                       style: TextStyle(
-                        color: Colors.white, // Warna teks putih
+                        color: Colors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.w400,
                         fontFamily: 'Poppins',
-                        height: 1.6, // Menambahkan jarak antar baris agar lebih mudah dibaca
+                        height: 1.6,
                       ),
                       textAlign: TextAlign.left,
                     ),
                   ),
-                  const SizedBox(height: 30), // Jarak bawah lebih banyak
-                  // Tombol untuk menghubungi
+                  const SizedBox(height: 30),
                   ElevatedButton(
                     onPressed: () {
-                      // Aksi untuk tombol, misalnya membuka email
+                      //action
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blueAccent, // Ganti 'primary' dengan 'backgroundColor'
-                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                      backgroundColor: Colors.blueAccent,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 32, vertical: 12),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(25),
                       ),

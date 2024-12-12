@@ -288,11 +288,6 @@ class _EditProfileViewState extends State<EditProfileView> {
                         builder: (context) => const EditPasswordPage(),
                       ),
                     );
-                    if (updatedPassword != null && updatedPassword.isNotEmpty) {
-                      setState(() {
-                        // Handle updated password
-                      });
-                    }
                   } else if (label == 'No Telp') {
                     final updatedNoTelp = await Navigator.push(
                       context,
