@@ -7,6 +7,7 @@ import 'package:tubes_pbp_9/view/notification.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:tubes_pbp_9/requests/filmReq.dart';
 import 'package:tubes_pbp_9/entity/film.dart';
+import 'package:tubes_pbp_9/view/searchPage.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
@@ -43,10 +44,10 @@ class _HomeViewState extends State<HomeView> {
 
   static const List<String> topRatedImgList = [
     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxhs43qHULjieIhZVbT2OmDafk6ke6nf_mvQ&s',
-    'https://m.media-amazon.com/images/M/MV5BYTJkNGQyZDgtZDQ0NC00MDM0LWEzZWQtYzUzZDEwMDljZWNjXkEyXkFqcGc@._V1_.jpg',
+    'https://m.media-amazon.com/images/M/MV5BYTJkNGQyZDgtZDQ0NC00MDM0LWEzZWQtYzUzZDEwMDljZWNjXkEyXkFqcGc@.V1.jpg',
     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXFdWVZc-JCJibNWStx4DWWAOAN4dBYlF0Ug&s',
     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxhs43qHULjieIhZVbT2OmDafk6ke6nf_mvQ&s',
-    'https://m.media-amazon.com/images/M/MV5BYTJkNGQyZDgtZDQ0NC00MDM0LWEzZWQtYzUzZDEwMDljZWNjXkEyXkFqcGc@._V1_.jpg',
+    'https://m.media-amazon.com/images/M/MV5BYTJkNGQyZDgtZDQ0NC00MDM0LWEzZWQtYzUzZDEwMDljZWNjXkEyXkFqcGc@.V1.jpg',
     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXFdWVZc-JCJibNWStx4DWWAOAN4dBYlF0Ug&s',
   ];
 
@@ -80,7 +81,12 @@ class _HomeViewState extends State<HomeView> {
         ),
         leading: IconButton(
           icon: const Icon(Icons.search, color: Colors.white),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const SearchPage()),
+            );
+          },
         ),
         actions: [
           IconButton(
