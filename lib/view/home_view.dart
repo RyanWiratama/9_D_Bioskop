@@ -9,7 +9,9 @@ import 'package:tubes_pbp_9/requests/filmReq.dart';
 import 'package:tubes_pbp_9/entity/film.dart';
 
 class HomeView extends StatefulWidget {
-  const HomeView({Key? key}) : super(key: key);
+  final int userId;
+
+  const HomeView({Key? key, required this.userId}) : super(key: key);
 
   @override
   State<HomeView> createState() => _HomeViewState();
@@ -26,17 +28,26 @@ class _HomeViewState extends State<HomeView> {
     if (index == 1) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const ListPageView()),
+        MaterialPageRoute(
+          builder: (context) =>
+              ListPageView(userId: widget.userId), // Passing userId
+        ),
       );
     } else if (index == 2) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const FnBPageView()),
+        MaterialPageRoute(
+          builder: (context) =>
+              FnBPageView(userId: widget.userId), // Passing userId
+        ),
       );
     } else if (index == 3) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const ProfileView()),
+        MaterialPageRoute(
+          builder: (context) =>
+              ProfileView(userId: widget.userId), // Passing userId
+        ),
       );
     }
   }
@@ -89,7 +100,8 @@ class _HomeViewState extends State<HomeView> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const NotificationPage()),
+                    builder: (context) =>
+                        NotificationPage(userId: widget.userId)),
               );
             },
           ),
@@ -192,6 +204,7 @@ class _HomeViewState extends State<HomeView> {
                           MaterialPageRoute(
                             builder: (context) => MovieDetailsView(
                               filmId: film.id,
+                              userId: widget.userId,
                             ),
                           ),
                         );

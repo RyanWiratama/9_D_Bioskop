@@ -10,10 +10,12 @@ import 'package:tubes_pbp_9/requests/historyReq.dart';
 
 class MovieDetailsView extends StatefulWidget {
   final int filmId;
+  final int userId;
 
   const MovieDetailsView({
     Key? key,
     required this.filmId,
+    required this.userId,
   }) : super(key: key);
 
   @override
@@ -259,8 +261,8 @@ class _MovieDetailsViewState extends State<MovieDetailsView> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              StudioView(filmId: widget.filmId),
+                          builder: (context) => StudioView(
+                              filmId: widget.filmId, userId: widget.userId),
                         ),
                       );
                     },

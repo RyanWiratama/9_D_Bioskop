@@ -1,7 +1,9 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:tubes_pbp_9/view/Auth/register_view.dart';
 import 'package:tubes_pbp_9/view/home_view.dart';
 import 'package:tubes_pbp_9/requests/userReq.dart';
+import 'package:http/http.dart' as http;
 
 class LoginView extends StatefulWidget {
   final Map? data;
@@ -146,10 +148,19 @@ class _LoginViewState extends State<LoginView> {
                               final response = await UserReq.login(data);
 
                               if (response.statusCode == 200) {
+                                // Decode the response body and extract the id_user
+                                final Map<String, dynamic> responseBody =
+                                    json.decode(response
+                                        .body); // assuming response is JSON
+
+                                var idUser = responseBody[
+                                    'id_user']; // Access the id_user
+
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const HomeView(),
+                                    builder: (context) =>
+                                        HomeView(userId: idUser),
                                   ),
                                 );
                               } else {

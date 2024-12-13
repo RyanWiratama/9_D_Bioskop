@@ -12,11 +12,13 @@ import 'package:intl/intl.dart';
 import 'package:tubes_pbp_9/entity/jadwal.dart';
 
 class StudioView extends StatefulWidget {
+  final int userId;
   final int filmId;
 
   const StudioView({
     Key? key,
     required this.filmId,
+    required this.userId,
   }) : super(key: key);
 
   @override
@@ -253,7 +255,8 @@ class _StudioViewState extends State<StudioView> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => MovieDetailsView(filmId: widget.filmId),
+                builder: (context) => MovieDetailsView(
+                    filmId: widget.filmId, userId: widget.userId),
               ),
             );
           },
@@ -303,8 +306,9 @@ class _StudioViewState extends State<StudioView> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => TransaksiPage(
-                          jadwalId:
-                              jadwal.id), // Ganti dengan halaman tujuan Anda
+                          jadwalId: jadwal.id,
+                          userId: widget
+                              .userId), // Ganti dengan halaman tujuan Anda
                     ),
                   );
                 },

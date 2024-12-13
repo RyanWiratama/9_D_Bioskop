@@ -7,7 +7,9 @@ import 'package:tubes_pbp_9/view/home_view.dart';
 import 'package:tubes_pbp_9/view/list_viewDetails.dart';
 
 class ListPageView extends StatefulWidget {
-  const ListPageView({super.key});
+  final int userId;
+
+  const ListPageView({Key? key, required this.userId}) : super(key: key);
 
   @override
   State<ListPageView> createState() => _ListPageState();
@@ -25,17 +27,20 @@ class _ListPageState extends State<ListPageView> {
     if (index == 0) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const HomeView()),
+        MaterialPageRoute(
+            builder: (context) => HomeView(userId: widget.userId)),
       );
     } else if (index == 2) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const FnBPageView()),
+        MaterialPageRoute(
+            builder: (context) => FnBPageView(userId: widget.userId)),
       );
     } else if (index == 3) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const ProfileView()),
+        MaterialPageRoute(
+            builder: (context) => ProfileView(userId: widget.userId)),
       );
     }
   }

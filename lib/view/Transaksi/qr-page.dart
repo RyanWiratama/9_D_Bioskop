@@ -1,9 +1,52 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:tubes_pbp_9/entity/transaksi.dart';
 import 'package:tubes_pbp_9/view/Transaksi/payment_details_page.dart';
+import 'package:tubes_pbp_9/view/home_view.dart';
+import 'package:tubes_pbp_9/requests/transaksiReq.dart';
 
-class GenerateQRPage extends StatelessWidget {
-  const GenerateQRPage({super.key});
+class QrPage extends StatefulWidget {
+  final double? totalHarga;
+  final int idUser;
+  final int idJadwal;
+  final int totalTiket;
+
+  const QrPage({
+    Key? key,
+    required this.totalHarga,
+    required this.idUser,
+    required this.idJadwal,
+    required this.totalTiket,
+  }) : super(key: key);
+
+  @override
+  _QrPageState createState() => _QrPageState();
+}
+
+class _QrPageState extends State<QrPage> {
+  Future<void> createTransaksi() async {
+    try {
+      // Create the Transaksi object
+      final transaksi = Transaksi(
+        id: 0,
+        idUser: widget.idUser,
+        idJadwal: widget.idJadwal,
+        totalTiket: widget.totalTiket,
+        totalHarga: widget.totalHarga,
+      );
+
+      // Call the createTransaksi method from TransaksiReq
+      final createdTransaksi = await TransaksiReq.createTransaksi(transaksi);
+
+      // Show the payment success dialog
+      showPaymentSuccessDialog(context);
+    } catch (e) {
+      print('Error in createTransaksi: $e');
+      showErrorDialog(context, 'Failed to create transaction');
+    }
+  }
 
   void showPaymentSuccessDialog(BuildContext context) {
     showDialog(
@@ -50,8 +93,55 @@ class GenerateQRPage extends StatelessWidget {
     );
   }
 
+  void showErrorDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Container(
+                width: 350,
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.error,
+                      size: 100,
+                      color: Colors.red,
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      message,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final total = widget.totalHarga ?? 0.0;
+
     return Scaffold(
       backgroundColor: const Color(0xFF384357),
       appBar: AppBar(
@@ -91,7 +181,7 @@ class GenerateQRPage extends StatelessWidget {
             ),
             const SizedBox(height: 30),
             GestureDetector(
-              onTap: () => showPaymentSuccessDialog(context),
+              onTap: createTransaksi,
               child: Container(
                 padding: const EdgeInsets.all(20.0),
                 decoration: BoxDecoration(
@@ -133,7 +223,7 @@ class GenerateQRPage extends StatelessWidget {
                   const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
+                    children: [
                       Text(
                         'Total',
                         style: TextStyle(
@@ -143,7 +233,7 @@ class GenerateQRPage extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        'Rp 130.500,00',
+                        'Rp ${widget.totalHarga.toString()}',
                         style: TextStyle(
                           fontFamily: 'Poppins',
                           fontWeight: FontWeight.bold,
@@ -206,7 +296,37 @@ class GenerateQRPage extends StatelessWidget {
                         ),
                       ),
                       child: const Text(
-                        'Download QR Code',
+                        'Download Receipt',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                HomeView(userId: widget.idUser),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF2B2B38),
+                        padding: const EdgeInsets.symmetric(vertical: 14.0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                      child: const Text(
+                        'Back to Home',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,

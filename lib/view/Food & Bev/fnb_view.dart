@@ -12,7 +12,9 @@ final fnbProvider =
 });
 
 class FnBPageView extends ConsumerStatefulWidget {
-  const FnBPageView({Key? key}) : super(key: key);
+  final int userId;
+
+  const FnBPageView({Key? key, required this.userId}) : super(key: key);
 
   @override
   _FnBPageViewState createState() => _FnBPageViewState();
@@ -29,17 +31,20 @@ class _FnBPageViewState extends ConsumerState<FnBPageView> {
     if (index == 0) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const HomeView()),
+        MaterialPageRoute(
+            builder: (context) => HomeView(userId: widget.userId)),
       );
     } else if (index == 1) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const ListPageView()),
+        MaterialPageRoute(
+            builder: (context) => ListPageView(userId: widget.userId)),
       );
     } else if (index == 3) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const ProfileView()),
+        MaterialPageRoute(
+            builder: (context) => ProfileView(userId: widget.userId)),
       );
     }
   }

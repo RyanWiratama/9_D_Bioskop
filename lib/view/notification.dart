@@ -5,7 +5,9 @@ import 'package:tubes_pbp_9/view/Profile/profile_view.dart';
 import 'package:tubes_pbp_9/view/home_view.dart';
 
 class NotificationPage extends StatefulWidget {
-  const NotificationPage({super.key});
+  final int userId;
+
+  const NotificationPage({Key? key, required this.userId}) : super(key: key);
 
   @override
   State<NotificationPage> createState() => _NotificationPageState();
@@ -45,22 +47,26 @@ class _NotificationPageState extends State<NotificationPage> {
     if (index == 1) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const HomeView()),
+        MaterialPageRoute(
+            builder: (context) => HomeView(userId: widget.userId)),
       );
     } else if (index == 2) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const ListPageView()),
+        MaterialPageRoute(
+            builder: (context) => ListPageView(userId: widget.userId)),
       );
     } else if (index == 3) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const FnBPageView()),
+        MaterialPageRoute(
+            builder: (context) => FnBPageView(userId: widget.userId)),
       );
     } else if (index == 4) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const ProfileView()),
+        MaterialPageRoute(
+            builder: (context) => ProfileView(userId: widget.userId)),
       );
     }
   }

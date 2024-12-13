@@ -9,7 +9,9 @@ import 'package:tubes_pbp_9/view/Profile/history_profile_view.dart';
 import 'package:tubes_pbp_9/view/Profile/settings_profile_view.dart';
 
 class ProfileView extends StatefulWidget {
-  const ProfileView({super.key});
+  final int userId;
+
+  const ProfileView({Key? key, required this.userId}) : super(key: key);
 
   @override
   State<ProfileView> createState() => _ProfileViewState();
@@ -58,17 +60,22 @@ class _ProfileViewState extends State<ProfileView> {
     if (index == 0) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const HomeView()),
+        MaterialPageRoute(
+            builder: (context) => HomeView(userId: widget.userId)),
       );
     } else if (index == 1) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const ListPageView()),
+        MaterialPageRoute(
+            builder: (context) => ListPageView(
+                  userId: widget.userId,
+                )),
       );
     } else if (index == 2) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const FnBPageView()),
+        MaterialPageRoute(
+            builder: (context) => FnBPageView(userId: widget.userId)),
       );
     }
   }

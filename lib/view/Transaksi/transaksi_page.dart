@@ -10,9 +10,11 @@ import 'package:tubes_pbp_9/requests/filmReq.dart';
 import 'package:tubes_pbp_9/view/transaksi/transaksiDetailPage.dart';
 
 class TransaksiPage extends StatefulWidget {
+  final int userId;
   final int jadwalId;
 
-  const TransaksiPage({Key? key, required this.jadwalId}) : super(key: key);
+  const TransaksiPage({Key? key, required this.jadwalId, required this.userId})
+      : super(key: key);
 
   @override
   _TransaksiPageState createState() => _TransaksiPageState();
@@ -174,7 +176,8 @@ class _TransaksiPageState extends State<TransaksiPage> {
       MaterialPageRoute(
         builder: (context) => TransaksiDetailPage(
           jadwalId: widget.jadwalId, // Pass `jadwalId` as a fallback
-          jumlahTiket: _jumlahKursi, // Pass the number of tickets
+          jumlahTiket: _jumlahKursi,
+          userId: widget.userId, // Pass the number of tickets
         ),
       ),
     );

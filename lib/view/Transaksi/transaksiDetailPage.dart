@@ -5,9 +5,10 @@ import 'package:tubes_pbp_9/entity/studio.dart';
 import 'package:tubes_pbp_9/requests/filmReq.dart';
 import 'package:tubes_pbp_9/requests/jadwalReq.dart';
 import 'package:tubes_pbp_9/requests/studioReq.dart';
-import 'package:tubes_pbp_9/view/transaksi/payment_qris_page.dart';
+import 'package:tubes_pbp_9/view/Transaksi/qr-page.dart';
 
 class TransaksiDetailPage extends StatefulWidget {
+  final int userId;
   final int jadwalId;
   final int jumlahTiket;
 
@@ -15,6 +16,7 @@ class TransaksiDetailPage extends StatefulWidget {
     Key? key,
     required this.jadwalId,
     required this.jumlahTiket,
+    required this.userId,
   }) : super(key: key);
 
   @override
@@ -28,33 +30,7 @@ class _TransaksiDetailPageState extends State<TransaksiDetailPage> {
   Film? _film;
   Jadwal? _jadwal;
   Studio? _studio;
-
-  @override
-  void initState() {
-    super.initState();
-    _initializePage();
-  }
-
-  Future<void> _initializePage() async {
-    await _fetchJadwalData();
-    await _fetchDataStudio();
-  }
-
-  void _navigateToDetailPage() {
-    if (_jadwal == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Data jadwal tidak tersedia!')),
-      );
-      return;
-    }
-
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => GenerateQRPage(),
-      ),
-    );
-  }
+  double? total_harga;
 
   Future<void> _fetchJadwalData() async {
     try {
@@ -116,6 +92,41 @@ class _TransaksiDetailPageState extends State<TransaksiDetailPage> {
         _errorMessage = 'Gagal mengambil data film: $e';
       });
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initializePage();
+  }
+
+  Future<void> _initializePage() async {
+    await _fetchJadwalData();
+    await _fetchDataStudio();
+  }
+
+  void _navigateToDetailPage() {
+    if (_jadwal == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Data jadwal tidak tersedia!')),
+      );
+      return;
+    }
+
+    // Calculate total_harga
+    total_harga =
+        _jadwal != null ? double.parse(_jadwal!.harga) * widget.jumlahTiket : 0;
+
+    // Navigate to GenerateQRPage with total_harga
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => QrPage(
+              idUser: widget.userId,
+              idJadwal: widget.jadwalId,
+              totalTiket: widget.jumlahTiket,
+              totalHarga: total_harga)),
+    );
   }
 
   @override
@@ -224,7 +235,7 @@ class _TransaksiDetailPageState extends State<TransaksiDetailPage> {
         ),
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 16),
-          minimumSize: const Size.fromHeight(56),
+          // minimumSize: const Size.fromHeight(56),
         ),
         onPressed: _navigateToDetailPage,
       ),

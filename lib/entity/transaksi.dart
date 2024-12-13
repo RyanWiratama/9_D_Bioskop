@@ -7,7 +7,7 @@ class Transaksi {
   final int idUser;
   final int idJadwal;
   int totalTiket;
-  final double totalHarga;
+  final double? totalHarga;
   final User? user; // Relasi ke User
   final Jadwal? jadwal; // Relasi ke Jadwal
 
