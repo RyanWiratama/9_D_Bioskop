@@ -6,6 +6,7 @@ import 'package:tubes_pbp_9/entity/film.dart';
 import 'package:tubes_pbp_9/entity/review.dart';
 import 'package:tubes_pbp_9/requests/reviewReq.dart';
 import 'package:tubes_pbp_9/view/Studio/studio_view.dart';
+import 'package:tubes_pbp_9/requests/historyReq.dart';
 
 class MovieDetailsView extends StatefulWidget {
   final int filmId;
@@ -102,10 +103,19 @@ class _MovieDetailsViewState extends State<MovieDetailsView> {
   void _fetchReviews() async {
     try {
       final reviews = await ReviewReq.fetchAllReviews();
+      debugPrint('Fetched Reviews: $reviews');
+
+      final histories = await HistoryReq.fetchAllHistories();
+      final filteredHistories = histories
+          .where((history) => history.idFilm == widget.filmId)
+          .toList();
+      final filteredReviews = reviews
+          .where((review) => filteredHistories
+              .any((history) => history.id == review.idHistory))
+          .toList();
+
       setState(() {
-        _reviews = reviews
-            .where((review) => review.history.idFilm == widget.filmId)
-            .toList();
+        _reviews = filteredReviews;
       });
     } catch (error) {
       debugPrint('Error fetching reviews: $error');
@@ -323,7 +333,7 @@ class _MovieDetailsViewState extends State<MovieDetailsView> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  review.user.name,
+                                  'User: ${review.idUser}',
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white,

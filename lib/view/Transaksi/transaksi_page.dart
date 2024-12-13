@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:tubes_pbp_9/entity/studio.dart';
+import 'package:tubes_pbp_9/entity/transaksi.dart';
 import 'package:tubes_pbp_9/entity/jadwal.dart';
-import 'package:tubes_pbp_9/entity/user.dart';
+import 'package:tubes_pbp_9/entity/film.dart';
+import 'package:tubes_pbp_9/requests/studioReq.dart';
+import 'package:tubes_pbp_9/requests/transaksiReq.dart';
 import 'package:tubes_pbp_9/requests/jadwalReq.dart';
-import 'package:tubes_pbp_9/requests/userReq.dart';
+import 'package:tubes_pbp_9/requests/filmReq.dart';
+import 'package:tubes_pbp_9/view/transaksi/transaksiDetailPage.dart';
 
 class TransaksiPage extends StatefulWidget {
-  final int idUser;
+  final int jadwalId;
 
-  const TransaksiPage({Key? key, required this.idUser}) : super(key: key);
+  const TransaksiPage({Key? key, required this.jadwalId}) : super(key: key);
 
   @override
   _TransaksiPageState createState() => _TransaksiPageState();
@@ -16,34 +21,163 @@ class TransaksiPage extends StatefulWidget {
 class _TransaksiPageState extends State<TransaksiPage> {
   bool _isLoading = true;
   bool _isError = false;
-  User? _user;
-  List<Jadwal> _jadwals = [];
+  String _errorMessage = '';
+
+  Jadwal? _jadwal;
+  Studio? _studio;
+  Film? _film;
+  int _jumlahKursi = 1;
+
+  Future<void> _fetchJadwalData() async {
+    try {
+      setState(() {
+        _isLoading = true;
+        _isError = false;
+      });
+
+      final fetchedJadwal = await JadwalReq.fetchAllJadwal(widget.jadwalId);
+      final jadwalDetail = fetchedJadwal.firstWhere(
+        (jadwal) => jadwal.id == widget.jadwalId,
+        orElse: () => throw Exception('Jadwal tidak ditemukan'),
+      );
+
+      setState(() {
+        _jadwal = jadwalDetail;
+        _studio = _jadwal?.studio; // Ambil studio langsung dari jadwal
+      });
+
+      await _fetchFilmData();
+    } catch (e) {
+      setState(() {
+        _isError = true;
+        _errorMessage = e.toString();
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _fetchFilmData() async {
+    if (_jadwal == null) return;
+
+    try {
+      final fetchedFilm = await FilmReq.fetchFilmById(_jadwal!.idFilm);
+      setState(() {
+        _film = fetchedFilm;
+      });
+    } catch (e) {
+      debugPrint('Gagal mengambil data film: $e');
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    _fetchData();
+    _initializePage();
   }
 
-  Future<void> _fetchData() async {
-    try {
-      final userFuture = UserReq.getUserDetails();
-      final jadwalsFuture = JadwalReq.fetchAllJadwal();
+  Future<void> _initializePage() async {
+    await _fetchJadwalData();
+    await _fetchDataStudio();
+  }
 
-      final results = await Future.wait([userFuture, jadwalsFuture]);
+  Future<void> _fetchDataStudio() async {
+    debugPrint('test');
+    if (_jadwal == null) return;
+
+    try {
+      debugPrint('Fetching studio with ID: ${_jadwal!.idStudio}');
+      final fetchedStudio = await StudioReq.fetchStudioById(_jadwal!.idStudio);
+
+      debugPrint('Studio fetched: ${fetchedStudio.nama}');
 
       setState(() {
-        _user = results[0] as User;
-        _jadwals = results[1] as List<Jadwal>;
-        _isLoading = false;
+        _studio = fetchedStudio;
       });
     } catch (e) {
-      setState(() {
-        _isError = true;
-        _isLoading = false;
-      });
-      print('Error fetching data: $e');
+      debugPrint('Gagal mengambil data studio: $e');
     }
+  }
+
+  // Future<void> _createInitialTransaksi() async {
+  //   try {
+  //     Transaksi newTransaksi = Transaksi(
+  //       id: 0,
+  //       idUser: 1,
+  //       idJadwal: widget.jadwalId,
+  //       totalTiket: _jumlahKursi,
+  //       totalHarga: double.parse(_jadwal!.harga) * _jumlahKursi,
+  //     );
+
+  //     final transaksiResponse =
+  //         await TransaksiReq.createTransaksi(newTransaksi);
+
+  //     setState(() {
+  //       _transaksi = transaksiResponse;
+  //     });
+  //   } catch (e) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text('Gagal membuat transaksi: $e')),
+  //     );
+  //   }
+  // }
+
+  // Future<void> _updateTransaksi() async {
+  //   try {
+  //     Transaksi updatedTransaksi = Transaksi(
+  //       id: _transaksi!.id,
+  //       idUser: _transaksi!.idUser,
+  //       idJadwal: _transaksi!.idJadwal,
+  //       totalTiket: _jumlahKursi,
+  //       totalHarga: double.parse(_jadwal!.harga) * _jumlahKursi,
+  //     );
+
+  //     final updatedResponse =
+  //         await TransaksiReq.updateTransaksi(_transaksi!.id, updatedTransaksi);
+
+  //     setState(() {
+  //       _transaksi = updatedResponse;
+  //     });
+  //   } catch (e) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text('Gagal memperbarui transaksi: $e')),
+  //     );
+  //   }
+  // }
+
+  void _incrementKursi() {
+    setState(() {
+      _jumlahKursi++;
+    });
+  }
+
+  void _decrementKursi() {
+    if (_jumlahKursi > 1) {
+      setState(() {
+        _jumlahKursi--;
+      });
+    }
+  }
+
+  void _navigateToDetailPage() {
+    if (_jadwal == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Data jadwal tidak tersedia!')),
+      );
+      return; // Exit early if `_jadwal` is not loaded
+    }
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => TransaksiDetailPage(
+          jadwalId: widget.jadwalId, // Pass `jadwalId` as a fallback
+          jumlahTiket: _jumlahKursi, // Pass the number of tickets
+        ),
+      ),
+    );
   }
 
   @override
@@ -63,137 +197,114 @@ class _TransaksiPageState extends State<TransaksiPage> {
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: Container(
-        color: const Color(0xFF384357),
-        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-        child: _isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : _isError
-                ? const Center(
-                    child: Text(
-                      'Failed to load data',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  )
-                : ListView.builder(
-                    itemCount: _jadwals.length,
-                    itemBuilder: (context, index) {
-                      final jadwal = _jadwals[index];
-                      return Card(
-                        color: const Color(0xFF404E5A),
-                        margin: const EdgeInsets.symmetric(vertical: 10.0),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child: Image.asset(
-                                  'assets/posterFilm/${jadwal.idFilm}_poster.jpg',
-                                  height: 200,
-                                  width: double.infinity,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return const Icon(
-                                      Icons.broken_image,
-                                      size: 100,
-                                      color: Colors.white70,
-                                    );
-                                  },
-                                ),
-                              ),
-                              const SizedBox(height: 10),
-                              Text(
-                                'Film: ${jadwal.idFilm}', // Replace with actual film name
-                                style: const TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              const SizedBox(height: 5),
-                              Text(
-                                'Studio: ${jadwal.idStudio}',
-                                style: const TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 14,
-                                  color: Colors.white70,
-                                ),
-                              ),
-                              const SizedBox(height: 5),
-                              Text(
-                                'Tanggal: ${jadwal.tanggal}',
-                                style: const TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 14,
-                                  color: Colors.white70,
-                                ),
-                              ),
-                              const SizedBox(height: 5),
-                              Text(
-                                'Jam: ${jadwal.jamTayang}',
-                                style: const TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 14,
-                                  color: Colors.white70,
-                                ),
-                              ),
-                              const SizedBox(height: 20),
-                              if (_user != null)
-                                Text(
-                                  'User: ${_user!.name}',
-                                  style: const TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontSize: 14,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              const SizedBox(height: 10),
-                              ElevatedButton(
-                                onPressed: () {
-                                  // Navigator.push(
-                                  //   context,
-                                  //   MaterialPageRoute(
-                                  //     builder: (context) => TransaksiDetailPage(
-                                  //       jadwal: jadwal,
-                                  //       user: _user!,
-                                  //     ),
-                                  //   ),
-                                  // );
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor:
-                                      const Color.fromARGB(255, 246, 246, 246),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                ),
-                                child: const Text(
-                                  'Lanjutkan Transaksi',
-                                  style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    color: Colors.black,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ],
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : _isError
+              ? Center(
+                  child: Text(
+                    'Error: $_errorMessage',
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                )
+              : SingleChildScrollView(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    color: const Color(0xFF384357),
+                    child: Column(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.asset(
+                            _film!.poster,
+                            height: 450,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
                           ),
                         ),
-                      );
-                    },
+                        const SizedBox(height: 20),
+                        _jadwalInfo(),
+                        const SizedBox(height: 20),
+                        _jumlahKursiControl(),
+                        const SizedBox(height: 30),
+                        _buildContinueButton(),
+                      ],
+                    ),
                   ),
+                ),
+    );
+  }
+
+  Widget _jadwalInfo() {
+    return Column(
+      children: [
+        Text(
+          'Film: ${_jadwal?.film?.judul ?? 'Unknown'}',
+          style: const TextStyle(
+            fontFamily: 'Poppins',
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        const SizedBox(height: 5),
+        Text(
+          'Tanggal: ${_jadwal?.tanggal ?? 'Unknown'}',
+          style: const TextStyle(color: Colors.white70, fontSize: 16),
+        ),
+        Text(
+          'Studio: ${_studio?.nama ?? 'Studio tidak ditemukan'}',
+          style: const TextStyle(color: Colors.white70, fontSize: 16),
+        ),
+        Text(
+          'Waktu: ${_jadwal?.jamTayang ?? 'Unknown'}',
+          style: const TextStyle(color: Colors.white70, fontSize: 16),
+        ),
+        Text(
+          'Harga: ${_jadwal?.harga ?? 'Unknown'}',
+          style: const TextStyle(color: Colors.white70, fontSize: 16),
+        ),
+      ],
+    );
+  }
+
+  Widget _jumlahKursiControl() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        IconButton(
+          icon: const Icon(Icons.remove, color: Colors.white),
+          onPressed: _decrementKursi,
+        ),
+        Text(
+          '$_jumlahKursi',
+          style: const TextStyle(
+            fontFamily: 'Poppins',
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        IconButton(
+          icon: const Icon(Icons.add, color: Colors.white),
+          onPressed: _incrementKursi,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildContinueButton() {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      child: ElevatedButton.icon(
+        icon: const Icon(Icons.confirmation_number, color: Colors.black),
+        label: const Text(
+          'Lanjutkan',
+          style: TextStyle(color: Colors.black),
+        ),
+        onPressed: _navigateToDetailPage,
       ),
     );
   }

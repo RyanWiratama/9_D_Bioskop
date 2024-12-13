@@ -78,8 +78,8 @@ class JadwalReq {
         },
       );
 
-      print('Response status: ${response.statusCode}'); 
-      print('Response body: ${response.body}'); 
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
@@ -108,7 +108,7 @@ class JadwalReq {
             }
           }).toList();
         } else {
-          return []; 
+          return [];
         }
       } else {
         throw Exception('Failed to load showtimes: ${response.reasonPhrase}');

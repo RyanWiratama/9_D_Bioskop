@@ -78,13 +78,14 @@ class ReviewReq {
     }
   }
 
-  // Create a new review
   static Future<Review> createReview(Review review) async {
     final Uri url = Uri.http(baseUrl, '/api/review/create');
 
     try {
-      final String? token = await FlutterSecureStorage().read(key: 'token');
+      print('Debug: URL - $url');
 
+      final storage = FlutterSecureStorage();
+      final String? token = await storage.read(key: 'token');
       if (token == null) {
         throw Exception('User is not authenticated');
       }
@@ -95,16 +96,26 @@ class ReviewReq {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
-        body: jsonEncode(review.toJson()),
+        body: jsonEncode({
+          'id_history': review.idHistory,
+          'rating': review.rating,
+          'komentar': review.komentar.trim(),
+        }),
       );
 
+      print('Debug: Response status code - ${response.statusCode}');
+      print('Debug: Response body - ${response.body}');
+
       if (response.statusCode == 201) {
-        return Review.fromJson(jsonDecode(response.body));
+        final responseBody = jsonDecode(response.body);
+        return Review.fromJson(responseBody['post']);
       } else {
-        throw Exception('Failed to create review: ${response.reasonPhrase}');
+        final responseBody = jsonDecode(response.body);
+        throw Exception(
+            'Failed to create review: ${responseBody['error'] ?? response.body}');
       }
     } catch (e) {
-      throw Exception('Error: $e');
+      throw Exception('Error creating review: $e');
     }
   }
 }

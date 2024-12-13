@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_pbp_9/entity/history.dart';
 import 'package:tubes_pbp_9/entity/review.dart';
-import 'package:tubes_pbp_9/entity/user.dart';
 import 'package:tubes_pbp_9/requests/reviewReq.dart';
 
 class ReviewView extends StatefulWidget {
@@ -132,49 +131,22 @@ class _ReviewViewState extends State<ReviewView> {
                       return;
                     }
 
-                    if (widget.history.id == 0) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Invalid movie history.')),
-                      );
-                      return;
-                    }
-
                     try {
-                      // Assuming you get the logged-in user ID correctly from your auth system
-                      int userId = 123; // Replace with actual logged-in user ID
-
                       final newReview = Review(
-                        id: 0, // ID auto-generated in backend
-                        idUser: userId, // User ID from logged-in user
+                        id: 0,
                         idHistory: widget.history.id,
                         rating: _rating,
                         komentar: review,
-                        history: widget.history,
-                        user: User(
-                          id: userId,
-                          name:
-                              'John Doe', // Replace with the actual logged-in user's name
-                          email:
-                              'johndoe@example.com', // Replace with actual email
-                          password: '',
-                          no_telp: BigInt.from(0),
-                          foto: '',
-                        ),
                       );
 
-                      // Create the review and send to the server
-                      final submittedReview =
-                          await ReviewReq.createReview(newReview);
+                      await ReviewReq.createReview(newReview);
 
-                      // Show success message
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                             content: Text('Review submitted successfully!')),
                       );
-                      // Return to the previous screen
                       Navigator.pop(context);
                     } catch (e) {
-                      // Handle any errors during submission
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('Failed to submit review: $e')),
                       );

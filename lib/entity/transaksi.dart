@@ -1,9 +1,15 @@
+import 'dart:convert';
+import 'package:tubes_pbp_9/entity/user.dart';
+import 'package:tubes_pbp_9/entity/jadwal.dart';
+
 class Transaksi {
   final int id;
   final int idUser;
   final int idJadwal;
-  final int totalTiket;
+  int totalTiket;
   final double totalHarga;
+  final User? user; // Relasi ke User
+  final Jadwal? jadwal; // Relasi ke Jadwal
 
   Transaksi({
     required this.id,
@@ -11,6 +17,8 @@ class Transaksi {
     required this.idJadwal,
     required this.totalTiket,
     required this.totalHarga,
+    this.user,
+    this.jadwal,
   });
 
   factory Transaksi.fromJson(Map<String, dynamic> json) {
@@ -20,6 +28,8 @@ class Transaksi {
       idJadwal: json['id_jadwal'],
       totalTiket: json['total_tiket'],
       totalHarga: json['total_harga'].toDouble(),
+      user: json['user'] != null ? User.fromJson(json['user']) : null,
+      jadwal: json['jadwal'] != null ? Jadwal.fromJson(json['jadwal']) : null,
     );
   }
 
@@ -30,6 +40,8 @@ class Transaksi {
       'id_jadwal': idJadwal,
       'total_tiket': totalTiket,
       'total_harga': totalHarga,
+      'user': user?.toJson(),
+      'jadwal': jadwal?.toJson(),
     };
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_pbp_9/entity/film.dart';
 import 'package:tubes_pbp_9/entity/studio.dart';
+import 'package:tubes_pbp_9/view/Transaksi/transaksi_page.dart';
 import 'package:tubes_pbp_9/view/home_view.dart';
 import 'package:tubes_pbp_9/view/movie_details.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
@@ -301,8 +302,9 @@ class _StudioViewState extends State<StudioView> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          HomeView(), // Ganti dengan halaman tujuan Anda
+                      builder: (context) => TransaksiPage(
+                          jadwalId:
+                              jadwal.id), // Ganti dengan halaman tujuan Anda
                     ),
                   );
                 },
