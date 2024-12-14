@@ -5,7 +5,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:tubes_pbp_9/entity/transaksi.dart';
 import 'package:tubes_pbp_9/view/Transaksi/payment_details_page.dart';
 import 'package:tubes_pbp_9/view/home_view.dart';
-import 'package:tubes_pbp_9/requests/transaksiReq.dart';
+import 'package:http/http.dart' as http;
 
 class QrPage extends StatefulWidget {
   final double? totalHarga;
@@ -26,26 +26,117 @@ class QrPage extends StatefulWidget {
 }
 
 class _QrPageState extends State<QrPage> {
-  Future<void> createTransaksi() async {
+  int _alert = 0;
+  // Future<void> createTransaksi() async {
+  //   try {
+  //     // Create the Transaksi object
+  //     final transaksi = Transaksi(
+  //       id: 0,
+  //       idUser: widget.idUser,
+  //       idJadwal: widget.idJadwal,
+  //       totalTiket: widget.totalTiket,
+  //       totalHarga: widget.totalHarga,
+  //     );
+
+  //     debugPrint('test belumsukses created');
+
+  //     // Call the createTransaksi method from TransaksiReq
+  //     final createdTransaksi = await TransaksiReq.createTransaksi(transaksi);
+
+  //     debugPrint('test sukses created');
+  //     // Show the payment success dialog
+  //     showPaymentSuccessDialog(context);
+  //   } catch (e) {
+  //     print('Error in createTransaksi: $e');
+  //     showErrorDialog(context, 'Failed to create transaction');
+  //   }
+  // }
+
+  static final String baseUrl =
+      '10.0.2.2:8000'; // Use the local development server for Android emulator
+  static final String endpoint = '/api/transaksi/create';
+  final FlutterSecureStorage storage = FlutterSecureStorage();
+
+  // Method to create transaksi
+  Future<Transaksi> createTransaksi(Transaksi transaksi) async {
+    final Uri url =
+        Uri.http(baseUrl, endpoint); // Full URL combining baseUrl and endpoint
+
     try {
-      // Create the Transaksi object
-      final transaksi = Transaksi(
-        id: 0,
-        idUser: widget.idUser,
-        idJadwal: widget.idJadwal,
-        totalTiket: widget.totalTiket,
-        totalHarga: widget.totalHarga,
+      final String? token = await FlutterSecureStorage().read(key: 'token');
+
+      if (token == null) {
+        throw Exception('User is not authenticated');
+      }
+      final response = await http.post(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: json.encode({
+          'id_user': transaksi.idUser,
+          'id_jadwal': transaksi.idJadwal,
+          'total_tiket': transaksi.totalTiket,
+          'total_harga': transaksi.totalHarga,
+        }),
       );
+      debugPrint(transaksi.idUser.toString());
+      debugPrint(response.statusCode.toString());
+      if (response.statusCode == 201) {
+        // Transaction created successfully
 
-      // Call the createTransaksi method from TransaksiReq
-      final createdTransaksi = await TransaksiReq.createTransaksi(transaksi);
+        final responseBody = json.decode(response.body);
 
-      // Show the payment success dialog
-      showPaymentSuccessDialog(context);
+        return Transaksi.fromJson(responseBody['post']);
+
+        _alert = 1;
+      } else {
+        debugPrint('test after post');
+        throw Exception(
+            'Failed to create transaksi ALILUELEO: ${response.body}');
+        _alert - 0;
+      }
     } catch (e) {
-      print('Error in createTransaksi: $e');
-      showErrorDialog(context, 'Failed to create transaction');
+      debugPrint('test after post');
+      throw Exception('Error in createTransaksi CUYYYY: $e');
     }
+  }
+
+  void showSuccessDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Success'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void showErrorDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Error'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
   }
 
   void showPaymentSuccessDialog(BuildContext context) {
@@ -75,51 +166,6 @@ class _QrPageState extends State<QrPage> {
                     const SizedBox(height: 16),
                     const Text(
                       'Pembayaran Berhasil!',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  void showErrorDialog(BuildContext context, String message) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          backgroundColor: Colors.transparent,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              Container(
-                width: 350,
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(
-                      Icons.error,
-                      size: 100,
-                      color: Colors.red,
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      message,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontFamily: 'Poppins',
@@ -179,9 +225,33 @@ class _QrPageState extends State<QrPage> {
                 color: Colors.white,
               ),
             ),
+            const Text(
+              'Klik untuk membayar',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
             const SizedBox(height: 30),
             GestureDetector(
-              onTap: createTransaksi,
+              onTap: () async {
+                try {
+                  await createTransaksi(Transaksi(
+                    id: 0,
+                    idUser: widget.idUser,
+                    idJadwal: widget.idJadwal,
+                    totalTiket: widget.totalTiket,
+                    totalHarga: widget.totalHarga,
+                  ));
+                } catch (e) {
+                  // Handle any error if necessary
+                  print('Error: $e');
+                }
+                showPaymentSuccessDialog(context);
+              },
               child: Container(
                 padding: const EdgeInsets.all(20.0),
                 decoration: BoxDecoration(
@@ -284,7 +354,7 @@ class _QrPageState extends State<QrPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const PaymentDetailsPage(),
+                            builder: (context) => PaymentDetailsPage(),
                           ),
                         );
                       },

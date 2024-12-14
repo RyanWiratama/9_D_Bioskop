@@ -28,8 +28,8 @@ class Transaksi {
       idJadwal: json['id_jadwal'],
       totalTiket: json['total_tiket'],
       totalHarga: json['total_harga'].toDouble(),
-      user: json['user'] != null ? User.fromJson(json['user']) : null,
-      jadwal: json['jadwal'] != null ? Jadwal.fromJson(json['jadwal']) : null,
+      // user: json['user'] != null ? User.fromJson(json['user']) : null,
+      // jadwal: json['jadwal'] != null ? Jadwal.fromJson(json['jadwal']) : null,
     );
   }
 
@@ -40,8 +40,8 @@ class Transaksi {
       'id_jadwal': idJadwal,
       'total_tiket': totalTiket,
       'total_harga': totalHarga,
-      'user': user?.toJson(),
-      'jadwal': jadwal?.toJson(),
+      // 'user': user?.toJson(),
+      // 'jadwal': jadwal?.toJson(),
     };
   }
 }

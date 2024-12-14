@@ -14,6 +14,7 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
+  int _idUser = 0;
   final _formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -146,22 +147,22 @@ class _LoginViewState extends State<LoginView> {
                               };
 
                               final response = await UserReq.login(data);
+                              final Map<String, dynamic> responseBody =
+                                  json.decode(response.body);
 
+                              // Extract the 'id' or 'id_user' from the response
+                              var idUser = responseBody['detail']['id'];
+
+                              _idUser = idUser;
+                              debugPrint(_idUser.toString());
                               if (response.statusCode == 200) {
-                                // Decode the response body and extract the id_user
-                                final Map<String, dynamic> responseBody =
-                                    json.decode(response
-                                        .body); // assuming response is JSON
-
-                                var idUser = responseBody[
-                                    'id_user']; // Access the id_user
-
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        HomeView(userId: idUser),
-                                  ),
+                                      builder: (context) => HomeView(
+                                          userId:
+                                              _idUser) // Passing id_user here
+                                      ),
                                 );
                               } else {
                                 setState(() {
