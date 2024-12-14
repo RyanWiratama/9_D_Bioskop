@@ -43,11 +43,15 @@ class _ReviewViewState extends State<ReviewView> {
               Center(
                 child: Column(
                   children: [
-                    Image.asset(
-                      widget.history.film.poster.isNotEmpty
-                          ? widget.history.film.poster
-                          : 'assets/images/avengers.jpeg',
-                      height: 200,
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.4,
+                      width: double.infinity,
+                      child: Image.asset(
+                        widget.history.film.poster.isNotEmpty
+                            ? widget.history.film.poster
+                            : 'assets/images/avengers.jpeg',
+                        fit: BoxFit.cover,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     Text(
@@ -60,6 +64,12 @@ class _ReviewViewState extends State<ReviewView> {
                         color: Colors.white,
                       ),
                     ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Tanggal Nonton: ${widget.history.tanggalNonton}',
+                      style: const TextStyle(color: Colors.white, fontSize: 16),
+                    ),
+                    const SizedBox(height: 4),
                   ],
                 ),
               ),

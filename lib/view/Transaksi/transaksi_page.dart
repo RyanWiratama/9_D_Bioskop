@@ -168,14 +168,14 @@ class _TransaksiPageState extends State<TransaksiPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Data jadwal tidak tersedia!')),
       );
-      return; // Exit early if `_jadwal` is not loaded
+      return; // Exit early if _jadwal is not loaded
     }
 
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => TransaksiDetailPage(
-          jadwalId: widget.jadwalId, // Pass `jadwalId` as a fallback
+          jadwalId: widget.jadwalId, // Pass jadwalId as a fallback
           jumlahTiket: _jumlahKursi,
           userId: widget.userId, // Pass the number of tickets
         ),
@@ -186,21 +186,24 @@ class _TransaksiPageState extends State<TransaksiPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF384357),
-        title: const Text(
-          'Transaksi',
-          style: TextStyle(
-            fontFamily: 'Poppins',
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 24,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(70),
+        child: AppBar(
+          backgroundColor: const Color(0xFF384357),
+          title: const Text(
+            'Transaksi',
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 24,
+            ),
           ),
-        ),
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
+          centerTitle: true,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () => Navigator.pop(context),
+          ),
         ),
       ),
       body: _isLoading
@@ -212,28 +215,34 @@ class _TransaksiPageState extends State<TransaksiPage> {
                     style: const TextStyle(color: Colors.red),
                   ),
                 )
-              : SingleChildScrollView(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    color: const Color(0xFF384357),
-                    child: Column(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Image.asset(
-                            _film!.poster,
-                            height: 450,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
+              : Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  color: const Color(0xFF384357),
+                  child: Center(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.asset(
+                              _film?.poster ??
+                                  'assets/images/default_poster.jpg',
+                              height: MediaQuery.of(context).size.height * 0.45,
+                              width: MediaQuery.of(context).size.width * 0.8,
+                              fit: BoxFit.cover,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 20),
-                        _jadwalInfo(),
-                        const SizedBox(height: 20),
-                        _jumlahKursiControl(),
-                        const SizedBox(height: 30),
-                        _buildContinueButton(),
-                      ],
+                          const SizedBox(height: 20),
+                          _jadwalInfo(),
+                          const SizedBox(height: 20),
+                          _jumlahKursiControl(),
+                          const SizedBox(height: 30),
+                          _buildContinueButton(),
+                        ],
+                      ),
                     ),
                   ),
                 ),

@@ -102,27 +102,22 @@ class _MovieDetailsViewState extends State<MovieDetailsView> {
     }
   }
 
-  void _fetchReviews() async {
+   void _fetchReviews() async {
     try {
       final reviews = await ReviewReq.fetchAllReviews();
       debugPrint('Fetched Reviews: $reviews');
 
-      final histories = await HistoryReq.fetchAllHistories();
-      final filteredHistories = histories
-          .where((history) => history.idFilm == widget.filmId)
-          .toList();
-      final filteredReviews = reviews
-          .where((review) => filteredHistories
-              .any((history) => history.id == review.idHistory))
-          .toList();
-
       setState(() {
-        _reviews = filteredReviews;
+        _reviews = reviews.where((review) => review.idHistory == widget.filmId).toList();
       });
     } catch (error) {
       debugPrint('Error fetching reviews: $error');
+      setState(() {
+        _reviews = [];
+      });
     }
   }
+
 
   void _initializeYoutubePlayer(String trailerUrl) {
     final videoId = YoutubePlayer.convertUrlToId(trailerUrl);
@@ -312,13 +307,18 @@ class _MovieDetailsViewState extends State<MovieDetailsView> {
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
+                  fontFamily: 'Poppins',
                 ),
               ),
               const SizedBox(height: 8),
               _reviews.isEmpty
                   ? const Text(
                       'No reviews yet.',
-                      style: TextStyle(fontSize: 16, color: Colors.white70),
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white70,
+                        fontFamily: 'Poppins',
+                      ),
                     )
                   : ListView.builder(
                       physics: const NeverScrollableScrollPhysics(),
@@ -327,36 +327,48 @@ class _MovieDetailsViewState extends State<MovieDetailsView> {
                       itemBuilder: (context, index) {
                         final review = _reviews[index];
                         return Card(
-                          color: Colors.white10,
+                          color: Colors.white,
                           margin: const EdgeInsets.symmetric(vertical: 8.0),
                           child: Padding(
-                            padding: const EdgeInsets.all(16.0),
+                            padding: const EdgeInsets.all(8.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'User: ${review.idUser}',
+                                  'User ID: ${review.idUser ?? 'Unknown'}',
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.white,
+                                    color: Colors.black,
+                                    fontFamily: 'Poppins',
                                   ),
                                 ),
                                 const SizedBox(height: 4),
-                                Text(
-                                  'Rating: ${review.rating}',
-                                  style: const TextStyle(color: Colors.white),
+                                Row(
+                                  children: List.generate(
+                                    review.rating ?? 0,
+                                    (index) => const Icon(
+                                      Icons.star,
+                                      color: Colors.amber,
+                                    ),
+                                  ),
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
-                                  review.komentar,
-                                  style: const TextStyle(color: Colors.white70),
+                                  review.komentar.isNotEmpty
+                                      ? review.komentar
+                                      : "No comment provided",
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Poppins',
+                                  ),
                                 ),
                               ],
                             ),
                           ),
                         );
                       },
-                    ),
+                    )
             ],
           ),
         ),
