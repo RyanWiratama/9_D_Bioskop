@@ -35,10 +35,10 @@ class PaymentDetailsPage extends StatelessWidget {
       paymentId: 'PBP123',
       paymentMethod: 'QRIS',
       paymentDate: '17 OCT 2024',
-      movieTitle: 'Joker : folie à deux',
+      movieTitle: 'CARS 2',
       movieSchedule: '10:30 WIB | 18 OCT 2024\nAMBARRUKMO XXI\nC2, C3, C4',
       seats: ['C2', 'C3', 'C4'],
-      totalPayment: 'Rp 130.500',
+      totalPayment: 'Rp 180.000',
     );
 
     return Scaffold(
@@ -89,7 +89,7 @@ class PaymentDetailsPage extends StatelessWidget {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
                       image: const DecorationImage(
-                        image: AssetImage('assets/posterFilm/gotg2Poster.jpg'),
+                        image: AssetImage('assets/posterFilm/cars2Poster.jpg'),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -185,10 +185,8 @@ class PaymentDetailsPage extends StatelessWidget {
                     const SizedBox(height: 10),
                     buildPaymentDetailRow(
                       'Kursi Regular\n${paymentDetails.seats.join(', ')}',
-                      'Rp 40.000 x 3',
+                      'Rp 80.000 x 3',
                     ),
-                    const Divider(color: Colors.white24),
-                    buildPaymentDetailRow('Biaya Layanan', 'Rp 3.500 x 3'),
                     const Divider(color: Colors.white24),
                     buildPaymentDetailRow(
                       'Total Bayar',

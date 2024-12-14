@@ -118,7 +118,7 @@ class PdfPreviewPage extends StatelessWidget {
                       children: [
                         pw.Center(
                           child: pw.Text(
-                            '🎬 JOKER: FOLIE À DEUX 🎬',
+                            '🎬 CARS 2 🎬',
                             style: pw.TextStyle(
                               fontSize: 22,
                               fontWeight: pw.FontWeight.bold,
@@ -128,7 +128,7 @@ class PdfPreviewPage extends StatelessWidget {
                         ),
                         pw.SizedBox(height: 15),
                         pw.Text(
-                          'Showtime: 10:30 WIB | 18 OCT 2024',
+                          'Showtime: 10:30 WIB | 17 OCT 2024',
                           style: pw.TextStyle(
                               fontSize: 14, color: PdfColors.white),
                         ),
